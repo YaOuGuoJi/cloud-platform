@@ -2,13 +2,15 @@ package com.yaouguoji.platform.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class ShopEntity {
 
     /**
      * 商户id
      */
-    private int shopId;
+    private int id;
 
     /**
      * 商户名
@@ -24,4 +26,14 @@ public class ShopEntity {
      * 分区id
      */
     private int regionId;
+
+    /**
+     * 添加时间
+     */
+    private Date addTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 }
