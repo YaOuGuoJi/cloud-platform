@@ -1,7 +1,7 @@
 package com.yaouguoji.platform.controller;
 
-import com.yaouguoji.platform.constant.CommonResult;
-import com.yaouguoji.platform.constant.HttpStatus;
+import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.dto.ShopDTO;
 import com.yaouguoji.platform.service.ShopInfoService;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,6 @@
-package com.yaouguoji.platform.constant;
+package com.yaouguoji.platform.common;
 
+import com.yaouguoji.platform.enums.HttpStatus;
 import lombok.Getter;
 
 /**
@@ -46,17 +47,24 @@ public class CommonResult<Content> {
 
     public static <Content> CommonResult<Content> success(Content data) {
         CommonResult<Content> result = success();
-        result.setData(data);
-        return result;
+        return result.setData(data);
     }
 
     public static <Content> CommonResult<Content> fail(HttpStatus status) {
-        return fail(status, "");
+        return fail(status.value, status.message);
     }
 
-    public static <Content> CommonResult<Content> fail(HttpStatus status, String message) {
+    public static <Content> CommonResult<Content> fail(int code) {
+        return fail(code, "");
+    }
+
+    public static <Content> CommonResult<Content> fail(String message) {
+        return fail(HttpStatus.ERROR.value, message);
+    }
+
+    public static <Content> CommonResult<Content> fail(int code, String message) {
         CommonResult<Content> result = new CommonResult<>();
-        result.setCode(status.value);
+        result.setCode(code);
         result.setSuccess(false);
         result.setMessage(message);
         return result;
