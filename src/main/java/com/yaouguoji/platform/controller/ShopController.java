@@ -27,18 +27,33 @@ public class ShopController {
     }
 
     @PostMapping("/shop")
-    public CommonResult addShop(@RequestBody ShopDTO shopDTO) {
-        if (shopDTO == null || StringUtils.isBlank(shopDTO.getShopName())) {
+    public CommonResult addShop(String shopName, int brandId, int regionId) {
+        if (StringUtils.isBlank(shopName)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+        ShopDTO shopDTO = new ShopDTO();
+        shopDTO.setShopName(shopName);
+        shopDTO.setBrandId(brandId > 0 ? brandId : 0);
+        shopDTO.setRegionId(regionId > 0 ? regionId : 0);
         int result = shopInfoService.insertShopInfo(shopDTO);
         return result > 0 ? CommonResult.success() : CommonResult.fail(HttpStatus.PARAMETER_ERROR);
     }
 
     @PutMapping("/shop")
-    public CommonResult updateShop(@RequestBody ShopDTO shopDTO) {
-        if (shopDTO == null || StringUtils.isBlank(shopDTO.getShopName())) {
+    public CommonResult updateShop(int id, String shopName, int brandId, int regionId) {
+        if (id <= 0) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+        ShopDTO shopDTO = new ShopDTO();
+        shopDTO.setId(id);
+        if (StringUtils.isNotBlank(shopName)) {
+            shopDTO.setShopName(shopName);
+        }
+        if (brandId > 0) {
+            shopDTO.setBrandId(brandId);
+        }
+        if (regionId > 0) {
+            shopDTO.setRegionId(regionId);
         }
         int result = shopInfoService.updateShopInfo(shopDTO);
         return result > 0 ? CommonResult.success() : CommonResult.fail(HttpStatus.PARAMETER_ERROR);
