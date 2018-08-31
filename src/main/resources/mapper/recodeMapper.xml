@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.recodeMapper">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.recode">
+        <id column="c_recode_id" jdbcType="INTEGER" property="cRecodeId" />
+        <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
+        <result column="time" jdbcType="TIMESTAMP" property="time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        c_recode_id, camera_id, time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from camera_recode
+        where c_recode_id = #{cRecodeId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from camera_recode
+        where c_recode_id = #{cRecodeId,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.yaouguoji.platform.entity.recode">
+        insert into camera_recode (c_recode_id, camera_id, time
+          )
+        values (#{cRecodeId,jdbcType=INTEGER}, #{cameraId,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}
+          )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.recode">
+        insert into camera_recode
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cRecodeId != null">
+          c_recode_id,
+        </if>
+          <if test="cameraId != null">
+            camera_id,
+          </if>
+          <if test="time != null">
+            time,
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cRecodeId != null">
+              #{cRecodeId,jdbcType=INTEGER},
+            </if>
+            <if test="cameraId != null">
+              #{cameraId,jdbcType=INTEGER},
+            </if>
+            <if test="time != null">
+              #{time,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.yaouguoji.platform.entity.recode">
+        update camera_recode
+        <set>
+            <if test="cameraId != null">
+              camera_id = #{cameraId,jdbcType=INTEGER},
+            </if>
+            <if test="time != null">
+              time = #{time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where c_recode_id = #{cRecodeId,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.yaouguoji.platform.entity.recode">
+        update camera_recode
+        set camera_id = #{cameraId,jdbcType=INTEGER},
+          time = #{time,jdbcType=TIMESTAMP}
+        where c_recode_id = #{cRecodeId,jdbcType=INTEGER}
+    </update>
+</mapper>

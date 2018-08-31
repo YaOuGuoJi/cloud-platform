@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.areaMapper">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.area">
+        <id column="area_id" jdbcType="INTEGER" property="areaId" />
+        <result column="a_name" jdbcType="VARCHAR" property="aName" />
+        <result column="a_sort" jdbcType="VARCHAR" property="aSort" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        area_id,
+        a_name,
+        a_sort
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from area
+        where area_id = #{areaId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from area
+        where area_id = #{areaId,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.yaouguoji.platform.entity.area">
+        insert into area (area_id, a_name, a_sort
+          )
+        values (#{areaId,jdbcType=INTEGER}, #{aName,jdbcType=VARCHAR}, #{aSort,jdbcType=VARCHAR}
+          )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.area">
+        insert into area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">
+              area_id,
+            </if>
+            <if test="aName != null">
+              a_name,
+            </if>
+            <if test="aSort != null">
+              a_sort,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">
+              #{areaId,jdbcType=INTEGER},
+            </if>
+            <if test="aName != null">
+              #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="aSort != null">
+              #{aSort,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.yaouguoji.platform.entity.area">
+        update area
+        <set>
+            <if test="aName != null">
+              a_name = #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="aSort != null">
+              a_sort = #{aSort,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where area_id = #{areaId,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.yaouguoji.platform.entity.area">
+        update area
+        set a_name = #{aName,jdbcType=VARCHAR},
+          a_sort = #{aSort,jdbcType=VARCHAR}
+        where area_id = #{areaId,jdbcType=INTEGER}
+    </update>
+</mapper>

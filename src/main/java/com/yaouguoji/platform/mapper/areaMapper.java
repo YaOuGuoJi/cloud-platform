@@ -1,0 +1,53 @@
+package com.yaouguoji.platform.mapper;
+
+import com.yaouguoji.platform.entity.area;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 分区
+ */
+
+public interface areaMapper {
+
+    /**
+     * 根据分区id删除分区
+     * @param areaId
+     * @return
+     */
+    int deleteByPrimaryKey(@Param("areaId") int areaId);
+
+    /**
+     * 添加分区信息
+     * @param record
+     * @return
+     */
+    int insert(@Param("recode") area record);
+
+    /**
+     * 选择性添加分区信息
+     * @param record
+     * @return
+     */
+    int insertSelective(@Param("recode") area record);
+
+    /**
+     * 根据主键id查询分区信息
+     * @param areaId
+     * @return
+     */
+    area selectByPrimaryKey(@Param("areaId") int areaId);
+
+    /**
+     * 修改分区信息
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(@Param("recode") area record);
+
+    /**
+     * 根据主键id修改分区信息
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKey(@Param("recode") area record);
+}
