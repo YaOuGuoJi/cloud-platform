@@ -36,8 +36,11 @@ public class ShopInfoServiceImpl implements ShopInfoService {
             return 0;
         }
         ShopEntity shopEntity = new ShopEntity();
-        BeanUtils.copyProperties(shopDTO, shopEntity);
-        return shopMapper.insert(shopEntity);
+        shopEntity.setShopName(shopDTO.getShopName());
+        shopEntity.setBrandId(shopDTO.getBrandId());
+        shopEntity.setRegionId(shopDTO.getRegionId());
+        shopMapper.insert(shopEntity);
+        return shopEntity.getId();
     }
 
     @Override

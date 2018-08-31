@@ -19,7 +19,7 @@
         UpdateTime
     </sql>
     
-    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="shopEntity.id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="shopEntity.id">
         INSERT INTO shop_test
         (
             ShopName,

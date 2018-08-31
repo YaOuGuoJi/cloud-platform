@@ -32,4 +32,26 @@ public class ShopInfoServiceTest {
         Assert.assertEquals(1, i);
     }
 
+    @Test
+    public void testAdd() {
+        ShopDTO shopDTO = new ShopDTO();
+        shopDTO.setId(100);
+        shopDTO.setShopName("Nike");
+        shopDTO.setBrandId(20);
+        shopDTO.setRegionId(21);
+        int i = shopInfoService.insertShopInfo(shopDTO);
+        Assert.assertEquals(1, i);
+    }
+
+    @Test
+    public void testDelete() {
+        ShopDTO shopDTO = new ShopDTO();
+        shopDTO.setShopName("测试商户");
+        shopDTO.setBrandId(2);
+        shopDTO.setRegionId(4);
+        int i = shopInfoService.insertShopInfo(shopDTO);
+
+        shopInfoService.deleteShopInfo(i);
+    }
+
 }
