@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaouguoji.platform.mapper.UserInfoMapper">
+    <resultMap id="userInfoEntity" type="com.yaouguoji.platform.entity.UserInfoEntity">
+        <result column="UserId" property="userId"/>
+        <result column="UserName" property="userName"/>
+        <result column="Sex" property="sex" />
+        <result column="Birthday" property="birthday"/>
+        <result column="Phone" property="phone" />
+        <result column="Email" property="email" />
+        <result column="Address" property="address" />
+        <result column="Job" property="job" />
+        <result column="carId" property="carId"/>
+        <result column="Vip" property="vip"/>
+        <result column="AddTime" property="addTime"/>
+        <result column="UpdateTime" property="updateTime"/>
+    </resultMap>
+
+    <sql id="allFields">
+        UserId,
+        UserName,
+        Sex,
+        Birthday,
+        Phone,
+        Email,
+        Address,
+        Job,
+        carId,
+        Vip,
+        AddTime,
+        UpdateTime
+    </sql>
+
+    <select id="selectById" resultType="com.yaouguoji.platform.entity.UserInfoEntity">
+        SELECT
+        <include refid="allFields" />
+        FROM user_info
+        WHERE UserId=#{userId}
+    </select>
+
+    <update id="updateById">
+        UPDATE user_info SET
+        <if test="userInfoEntity.userName != null">
+            UserName=#{userInfoEntity.userName},
+        </if>
+            Sex=#{userInfoEntity.sex},
+            BirthDay=#{userInfoEntity.birthday},
+            Phone=#{userInfoEntity.phone},
+            Email=#{userInfoEntity.email},
+            Address=#{userInfoEntity.address},
+            Job=#{userInfoEntity.job},
+            CarId=#{userInfoEntity.carId},
+            Vip=#{userInfoEntity.vip},
+            UpdateTime=NOW()
+        WHERE UserId=#{userInfoEntity.userId}
+    </update>
+
+    <insert id="insertUserInfo" parameterType="map" useGeneratedKeys="true" keyProperty="userInfoEntity.userId">
+        INSERT INTO user_info
+        (
+            UserName,
+            Sex,
+            Birthday,
+            Phone,
+            Email,
+            Address,
+            Job,
+            carId,
+            Vip,
+            AddTime,
+            UpdateTime
+        )
+        VALUES
+        (
+            #{userInfoEntity.userName},
+            #{userInfoEntity.sex},
+            #{userInfoEntity.birthday},
+            #{userInfoEntity.phone},
+            #{userInfoEntity.email},
+            #{userInfoEntity.address},
+            #{userInfoEntity.job},
+            #{userInfoEntity.carId},
+            #{userInfoEntity.vip},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+</mapper>

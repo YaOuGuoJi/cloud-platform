@@ -3,7 +3,7 @@ package com.yaouguoji.platform.controller;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.dto.ShopDTO;
-import com.yaouguoji.platform.service.ShopInfoService;
+import com.yaouguoji.platform.service.ShopService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +15,11 @@ import javax.annotation.Resource;
 public class ShopController {
 
     @Resource
-    private ShopInfoService shopInfoService;
+    private ShopService shopService;
 
     @GetMapping("/shop/{id}")
     public CommonResult shopInfo(@PathVariable("id") int shopId) {
-        ShopDTO shopDTO = shopInfoService.getShopInfoByShopId(shopId);
+        ShopDTO shopDTO = shopService.getShopInfoByShopId(shopId);
         if (shopDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
@@ -35,7 +35,7 @@ public class ShopController {
         shopDTO.setShopName(shopName);
         shopDTO.setBrandId(brandId > 0 ? brandId : 0);
         shopDTO.setRegionId(regionId > 0 ? regionId : 0);
-        int result = shopInfoService.insertShopInfo(shopDTO);
+        int result = shopService.insertShopInfo(shopDTO);
         return result > 0 ? CommonResult.success() : CommonResult.fail(HttpStatus.PARAMETER_ERROR);
     }
 
@@ -55,7 +55,7 @@ public class ShopController {
         if (regionId > 0) {
             shopDTO.setRegionId(regionId);
         }
-        int result = shopInfoService.updateShopInfo(shopDTO);
+        int result = shopService.updateShopInfo(shopDTO);
         return result > 0 ? CommonResult.success() : CommonResult.fail(HttpStatus.PARAMETER_ERROR);
     }
 
@@ -64,7 +64,7 @@ public class ShopController {
         if (id <= 0) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
-        shopInfoService.deleteShopInfo(id);
+        shopService.deleteShopInfo(id);
         return CommonResult.success();
     }
 }

@@ -1,33 +1,37 @@
 package com.yaouguoji.platform.service;
 
-import com.yaouguoji.platform.dto.ShopDTO;
+import com.yaouguoji.platform.dto.ShopInfoDTO;
 
+/**
+ * 商户信息服务
+ */
 public interface ShopInfoService {
 
     /**
-     * 根据商户名获取商户信息
+     * 根据shopId查询商户详细信息
      * @param shopId
      * @return
      */
-    ShopDTO getShopInfoByShopId(int shopId);
+    ShopInfoDTO findShopInfoByShopId(int shopId);
 
     /**
-     * 插入商户信息
-     * @param shopDTO
+     * 插入商户详细信息
+     * @param shopInfoDTO
      * @return
      */
-    int insertShopInfo(ShopDTO shopDTO);
-
-    /**
-     * 删除商户信息
-     * @param shopId
-     */
-    void deleteShopInfo(int shopId);
+    int insertShopInfo(ShopInfoDTO shopInfoDTO);
 
     /**
      * 更新商户信息
-     * @param shopDTO
+     * @param shopInfoDTO
      * @return
      */
-    int updateShopInfo(ShopDTO shopDTO);
+    int updateShopInfoById(ShopInfoDTO shopInfoDTO);
+
+    /**
+     * 根据商户id删除商户信息
+     * @param shopId
+     * @return
+     */
+    int deleteShopInfoByShopId(int shopId);
 }

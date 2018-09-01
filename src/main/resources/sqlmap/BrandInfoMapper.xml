@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaouguoji.platform.mapper.BrandInfoMapper">
+    <resultMap id="brandInfoEntity" type="com.yaouguoji.platform.entity.BrandInfoEntity">
+        <result column="BrandId" property="brandId"/>
+        <result column="BrandName" property="brandName"/>
+        <result column="BrandLogo" property="brandLogo" />
+        <result column="Deleted" property="deleted" />
+        <result column="AddTime" property="addTime" />
+        <result column="UpdateTime" property="updateTime" />
+    </resultMap>
+
+    <sql id="allFields">
+        BrandId,
+        BrandName,
+        BrandLogo,
+        Deleted,
+        AddTime,
+        UpdateTime
+    </sql>
+
+    <select id="findById" parameterType="map" resultMap="brandInfoEntity">
+        SELECT
+        <include refid="allFields"/>
+        FROM brand_info
+        WHERE BrandId=#{brandId}
+    </select>
+
+    <insert id="addBrandInfo">
+        INSERT INTO brand_info
+        (
+            BrandName,
+            BrandLogo,
+            Deleted,
+            AddTime,
+            UpdateTime
+        )
+        VALUES
+        (
+            #{brandInfoEntity.brandName},
+            #{brandInfoEntity.brandLogo},
+            #{brandInfoEntity.deleted},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <update id="updateBrandInfo" parameterType="map">
+        UPDATE brand_info SET
+            BrandName=#{brandInfoEntity.brandName},
+            BrandLogo=#{brandInfoEntity.brandLogo},
+            UpdateTime=NOW()
+        WHERE BrandId=#{brandInfoEntity.brandId}
+    </update>
+
+</mapper>
