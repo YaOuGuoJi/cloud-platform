@@ -1,13 +1,15 @@
 package com.yaouguoji.platform.controller;
 
 import com.yaouguoji.platform.dto.AreaDTO;
-import com.yaouguoji.platform.entity.*;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.impl.AreaServiceImpl;
-import com.yaouguoji.platform.service.AreaService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+
+
 
 @RestController
 @RequestMapping("/creamer")
@@ -22,9 +24,9 @@ public class AreaController {
      * @return
      */
     @GetMapping(value = "/selectArea/{id}")
-    public CommonResult selectByPrimaryKey(@PathVariable("id") int areaId){
+    public CommonResult selectByPrimaryKey(@PathVariable("id") Integer areaId){
         AreaDTO areaDTO = areaServiceImpl.selectByPrimaryKey(areaId);
-        if (areaDTO == null && areaDTO.equals("")){
+        if (areaDTO == null){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
 
@@ -33,16 +35,29 @@ public class AreaController {
 
     /**
      * 添加分区信息
-     * @param recode
+     * @param aName
+     * @param aSort
      * @return
      */
     @RequestMapping(value = "/insertArea",method = RequestMethod.POST)
-    public CommonResult insertAreaInfo(@RequestBody AreaDTO recode){
-        if (recode == null && recode.equals("")){
+    public CommonResult insertAreaInfo( @RequestParam("areaId") Integer areaId,
+                                        @RequestParam("aName") String aName,
+                                        @RequestParam("aSort") String aSort
+                                        ){
+
+        System.out.println("controllet的namme"+aName);
+        System.out.println("con的id"+areaId);
+
+        AreaDTO areaDTO = new AreaDTO();
+        areaDTO.setAreaId(areaId);
+        areaDTO.setAName(aName);
+        areaDTO.setASort(aSort);
+
+        if (areaDTO == null ){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
 
-        int data = areaServiceImpl.insert(recode);
+        int data = areaServiceImpl.insert(areaDTO);
 
         return data > 0 ? CommonResult.success() : CommonResult.fail(HttpStatus.PARAMETER_ERROR);
 
@@ -68,7 +83,7 @@ public class AreaController {
      * @param id
      * @return
      */
-    @RequestMapping("/deleteAreaInfo")
+    @DeleteMapping("/deleteAreaInfo/{id}")
     public CommonResult deleteById(@PathVariable("id") int id){
         if (id <= 0){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);

@@ -1,5 +1,7 @@
 package com.yaouguoji.platform.entity;
 
+import java.util.Date;
+
 public class camera {
 
     private int cameraId;
@@ -7,6 +9,12 @@ public class camera {
     private String cName;
 
     private int areaId;
+
+    private Date cAddTime;
+
+    private Date cUpdateTime;
+
+    private String cIp;
 
     public int getCameraId() {
         return cameraId;
@@ -30,5 +38,29 @@ public class camera {
 
     public void setAreaId(int areaId) {
         this.areaId = areaId;
+    }
+
+    public Date getcAddTime() {
+        return cAddTime;
+    }
+
+    public void setcAddTime(Date cAddTime) {
+        this.cAddTime = cAddTime;
+    }
+
+    public Date getcUpdateTime() {
+        return cUpdateTime;
+    }
+
+    public void setcUpdateTime(Date cUpdateTime) {
+        this.cUpdateTime = cUpdateTime;
+    }
+
+    public String getcIp() {
+        return cIp;
+    }
+
+    public void setcIp(String cIp) {
+        this.cIp = cIp;
     }
 }

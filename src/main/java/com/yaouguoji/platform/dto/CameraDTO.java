@@ -3,6 +3,7 @@ package com.yaouguoji.platform.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 public class CameraDTO implements Serializable {
@@ -14,6 +15,12 @@ public class CameraDTO implements Serializable {
     private String cName;
 
     private Integer areaId;
+
+    private Date cAddTime;
+
+    private Date cUpdateTime;
+
+    private String cIp;
 
 
 }

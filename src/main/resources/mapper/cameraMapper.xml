@@ -5,12 +5,18 @@
         <id column="camera_id" jdbcType="INTEGER" property="cameraId" />
         <result column="c_name" jdbcType="VARCHAR" property="cName" />
         <result column="area_id" jdbcType="INTEGER" property="areaId" />
+        <result column="c_add_time" jdbcType="TIMESTAMP" property="cAddTime"/>
+        <result column="c_update_time" jdbcType="TIMESTAMP" property="cUpdateTime"/>
+        <result column="c_ip" jdbcType="VARCHAR" property="cIp"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         camera_id,
         c_name,
-        area_id
+        area_id,
+        c_add_time,
+        c_update_time,
+        c_ip
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -25,10 +31,18 @@
         where camera_id = #{cameraId,jdbcType=INTEGER}
     </delete>
 
-    <insert id="insert" parameterType="com.yaouguoji.platform.entity.camera">
-        insert into camera (camera_id, c_name, area_id
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="recode.cameraId">
+        insert into camera (c_name,
+                            area_id,
+                            c_add_time,
+                            c_update_time,
+                            c_ip
           )
-        values (#{cameraId,jdbcType=INTEGER}, #{cName,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER}
+        values (#{recode.cName,jdbcType=VARCHAR},
+                #{recode.areaId,jdbcType=INTEGER},
+                NOW(),
+                NOW(),
+                #{recode.cIp,jdbcType=VARCHAR}
           )
     </insert>
 
@@ -44,6 +58,15 @@
             <if test="areaId != null">
               area_id,
             </if>
+            <if test="cAddTime != null">
+              cAddTime,
+            </if>
+            <if test="cUpdateTime != null">
+               cUpdateTime,
+            </if>
+            <if test="cIp != null">
+                cIp,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="cameraId != null">
@@ -55,26 +78,44 @@
             <if test="areaId != null">
               #{areaId,jdbcType=INTEGER},
             </if>
+            <if test="cAddTime != null">
+              #{cAddTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cUpdateTime != null">
+              #{cUpdateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="cIp != null">
+              #{cIp,jdbcType=VARCHAR}
+            </if>
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.yaouguoji.platform.entity.camera">
+    <update id="updateByPrimaryKeySelective" parameterType="map">
         update camera
         <set>
-            <if test="cName != null">
-              c_name = #{cName,jdbcType=VARCHAR},
+            <if test="recode.cName != null">
+              c_name = #{recode.cName,jdbcType=VARCHAR},
             </if>
-            <if test="areaId != null">
-              area_id = #{areaId,jdbcType=INTEGER},
+            <if test="recode.areaId != null">
+              area_id = #{recode.areaId,jdbcType=INTEGER},
+            </if>
+            <if test="recode.cUpdateTime != null">
+              c_update_time = NOW(),
+            </if>
+            <if test="recode.cIp != null">
+              c_ip = #{recode.cIp, jdbcType=VARCHAR}
             </if>
         </set>
-        where camera_id = #{cameraId,jdbcType=INTEGER}
+        where camera_id = #{recode.cameraId,jdbcType=INTEGER}
     </update>
 
     <update id="updateByPrimaryKey" parameterType="com.yaouguoji.platform.entity.camera">
         update camera
         set c_name = #{cName,jdbcType=VARCHAR},
-          area_id = #{areaId,jdbcType=INTEGER}
+          area_id = #{areaId,jdbcType=INTEGER},
+          c_add_time = #{aAddTime,jdbcType=TIMESTAMP},
+          c_update_time = #{cUpdateTime,jdbcType=TIMESTAMP},
+          c_ip = #{cIp = jdbcType=VARCHAR}
         where camera_id = #{cameraId,jdbcType=INTEGER}
       </update>
 </mapper>

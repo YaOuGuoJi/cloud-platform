@@ -33,9 +33,13 @@ public class CameraServiceImpl implements CameraService {
         }
 
         camera camera = new camera();
-        BeanUtils.copyProperties(record,camera);
+        camera.setAreaId(record.getAreaId());
+        camera.setcName(record.getCName());
+        camera.setcIp(record.getCIp());
 
-        return cameraMapper.insert(camera);
+        cameraMapper.insert(camera);
+
+        return camera.getCameraId();
     }
 
     @Override
@@ -57,11 +61,7 @@ public class CameraServiceImpl implements CameraService {
 
     @Override
     public int updateByPrimaryKeySelective(CameraDTO record) {
-        return 0;
-    }
 
-    @Override
-    public int updateByPrimaryKey(CameraDTO record) {
         if (record != null && record.equals("")){
             return 0;
         }
@@ -69,6 +69,13 @@ public class CameraServiceImpl implements CameraService {
         camera camera = new camera();
         BeanUtils.copyProperties(record,camera);
 
-        return cameraMapper.updateByPrimaryKey(camera);
+        return cameraMapper.updateByPrimaryKeySelective(camera);
+
     }
+
+    @Override
+    public int updateByPrimaryKey(CameraDTO record) {
+        return 0;
+    }
+
 }

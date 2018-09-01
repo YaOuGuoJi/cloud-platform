@@ -30,14 +30,18 @@ public class AreaServiceImpl implements AreaService{
 
     @Override
     public int insert(AreaDTO record) {
-        if (record == null && record.equals("")){
+        if (record == null){
             return 0;
         }
+        System.out.println("name"+record.getAName());
 
         area area = new area();
-        BeanUtils.copyProperties(record,area);
+        area.setaName(record.getAName());
+        area.setaSort(record.getASort());
 
-        return areaMapper.insert(area);
+        areaMapper.insert(area);
+        System.out.println("id为"+area.getAreaId());
+        return area.getAreaId();
     }
 
     @Override

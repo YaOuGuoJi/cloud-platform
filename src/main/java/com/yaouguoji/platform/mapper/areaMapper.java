@@ -1,7 +1,10 @@
 package com.yaouguoji.platform.mapper;
 
+import com.yaouguoji.platform.dto.AreaDTO;
 import com.yaouguoji.platform.entity.area;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 
 /**
  * 分区
@@ -17,11 +20,11 @@ public interface areaMapper {
     int deleteByPrimaryKey(@Param("areaId") int areaId);
 
     /**
-     * 添加分区信息
-     * @param record
+     * 添加分类信息
+     * @param recode
      * @return
      */
-    int insert(@Param("recode") area record);
+    int insert(@Param("recode")area recode);
 
     /**
      * 选择性添加分区信息

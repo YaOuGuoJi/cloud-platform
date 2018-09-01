@@ -5,12 +5,16 @@
         <id column="area_id" jdbcType="INTEGER" property="areaId" />
         <result column="a_name" jdbcType="VARCHAR" property="aName" />
         <result column="a_sort" jdbcType="VARCHAR" property="aSort" />
+        <result column="a_add_time" jdbcType="TIMESTAMP" property="aAddTime"/>
+        <result column="a_update_time" jdbcType="TIMESTAMP" property="aUpdateTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         area_id,
         a_name,
-        a_sort
+        a_sort,
+        a_add_time,
+        a_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -25,11 +29,17 @@
         where area_id = #{areaId,jdbcType=INTEGER}
     </delete>
 
-    <insert id="insert" parameterType="com.yaouguoji.platform.entity.area">
-        insert into area (area_id, a_name, a_sort
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="recode.areaId">
+        insert into area (a_name,
+                          a_sort,
+                          a_add_time,
+                          a_update_time
           )
-        values (#{areaId,jdbcType=INTEGER}, #{aName,jdbcType=VARCHAR}, #{aSort,jdbcType=VARCHAR}
-          )
+        values (#{recode.aName,jdbcType=VARCHAR},
+                #{recode.aSort,jdbcType=VARCHAR},
+                NOW(),
+                NOW())
+
     </insert>
 
     <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.area">
@@ -44,6 +54,12 @@
             <if test="aSort != null">
               a_sort,
             </if>
+            <if test="aAddTime != null">
+              a_add_time,
+            </if>
+            <if test="aUpdateTime != null">
+              a_update_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="areaId != null">
@@ -55,26 +71,37 @@
             <if test="aSort != null">
               #{aSort,jdbcType=VARCHAR},
             </if>
+            <if test="aAddTime != null">
+              #{aAddTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="aUpdateTime != null">
+              #{aUpdateTime,jdbcType=TIMESTAMP}
+            </if>
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.yaouguoji.platform.entity.area">
+    <update id="updateByPrimaryKeySelective" parameterType="map">
         update area
         <set>
-            <if test="aName != null">
-              a_name = #{aName,jdbcType=VARCHAR},
+            <if test="recode.aName != null">
+              a_name = #{recode.aName,jdbcType=VARCHAR},
             </if>
-            <if test="aSort != null">
-              a_sort = #{aSort,jdbcType=VARCHAR},
+            <if test="recode.aSort != null">
+              a_sort = #{recode.aSort,jdbcType=VARCHAR},
+            </if>
+            <if test="recode.aUpdateTime != null">
+              a_update_time = NOW()
             </if>
         </set>
-        where area_id = #{areaId,jdbcType=INTEGER}
+        where area_id = #{recode.areaId,jdbcType=INTEGER}
     </update>
 
     <update id="updateByPrimaryKey" parameterType="com.yaouguoji.platform.entity.area">
         update area
         set a_name = #{aName,jdbcType=VARCHAR},
-          a_sort = #{aSort,jdbcType=VARCHAR}
+          a_sort = #{aSort,jdbcType=VARCHAR},
+          a_add_time = #{aAddTime,jdbcType=TIMESTAMP},
+          a_update_time = #{aUpdateTime,jdbcType=TIMESTAMP}
         where area_id = #{areaId,jdbcType=INTEGER}
     </update>
 </mapper>

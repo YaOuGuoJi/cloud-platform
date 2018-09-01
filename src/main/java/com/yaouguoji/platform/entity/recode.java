@@ -3,18 +3,22 @@ package com.yaouguoji.platform.entity;
 import java.util.Date;
 
 public class recode {
-    private Integer cRecodeId;
+    private Integer cRecordId;
 
     private Integer cameraId;
 
-    private Date time;
+    private Date crAddTime;
 
-    public Integer getcRecodeId() {
-        return cRecodeId;
+    private Date crUpdateTime;
+
+    private int crNumber;
+
+    public Integer getcRecordId() {
+        return cRecordId;
     }
 
-    public void setcRecodeId(Integer cRecodeId) {
-        this.cRecodeId = cRecodeId;
+    public void setcRecordId(Integer cRecordId) {
+        this.cRecordId = cRecordId;
     }
 
     public Integer getCameraId() {
@@ -25,11 +29,27 @@ public class recode {
         this.cameraId = cameraId;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getCrAddTime() {
+        return crAddTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setCrAddTime(Date crAddTime) {
+        this.crAddTime = crAddTime;
+    }
+
+    public Date getCrUpdateTime() {
+        return crUpdateTime;
+    }
+
+    public void setCrUpdateTime(Date crUpdateTime) {
+        this.crUpdateTime = crUpdateTime;
+    }
+
+    public int getCrNumber() {
+        return crNumber;
+    }
+
+    public void setCrNumber(int crNumber) {
+        this.crNumber = crNumber;
     }
 }
