@@ -61,6 +61,11 @@ public class UserInfoDTO implements Serializable {
     private Integer vip;
 
     /**
+     * 身份证号码
+     */
+    private String identityId;
+
+    /**
      * 添加时间
      */
     private Date addTime;

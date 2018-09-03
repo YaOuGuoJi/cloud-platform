@@ -12,6 +12,7 @@
         <result column="Job" property="job" />
         <result column="carId" property="carId"/>
         <result column="Vip" property="vip"/>
+        <result column="IdentityId" property="identityId" />
         <result column="AddTime" property="addTime"/>
         <result column="UpdateTime" property="updateTime"/>
     </resultMap>
@@ -27,6 +28,7 @@
         Job,
         carId,
         Vip,
+        IdentityId,
         AddTime,
         UpdateTime
     </sql>
@@ -51,6 +53,7 @@
             Job=#{userInfoEntity.job},
             CarId=#{userInfoEntity.carId},
             Vip=#{userInfoEntity.vip},
+            IdentityId=#{userInfoEntity.identityId},
             UpdateTime=NOW()
         WHERE UserId=#{userInfoEntity.userId}
     </update>
@@ -67,6 +70,7 @@
             Job,
             carId,
             Vip,
+            IdentityId,
             AddTime,
             UpdateTime
         )
@@ -81,6 +85,7 @@
             #{userInfoEntity.job},
             #{userInfoEntity.carId},
             #{userInfoEntity.vip},
+            #{userInfoEntity.identityId},
             NOW(),
             NOW()
         )

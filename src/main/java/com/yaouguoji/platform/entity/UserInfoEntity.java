@@ -58,6 +58,11 @@ public class UserInfoEntity {
     private int vip;
 
     /**
+     * 身份证号码
+     */
+    private String identityId;
+
+    /**
      * 添加时间
      */
     private Date addTime;
