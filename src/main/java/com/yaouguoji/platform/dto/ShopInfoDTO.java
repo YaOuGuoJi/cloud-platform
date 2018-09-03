@@ -14,7 +14,7 @@ public class ShopInfoDTO implements Serializable {
     /**
      * 商户id
      */
-    private Integer shopId;
+    private int shopId;
 
     /**
      * 商户唯一标识
@@ -34,12 +34,12 @@ public class ShopInfoDTO implements Serializable {
     /**
      * 区域id
      */
-    private Integer regionId;
+    private int regionId;
 
     /**
      * 品牌id
      */
-    private Integer brandId;
+    private int brandId;
 
     /**
      * 商户类型

@@ -13,7 +13,7 @@ public class UserInfoDTO implements Serializable {
     /**
      * 用户id
      */
-    private Integer userId;
+    private int userId;
 
     /**
      * 用户姓名
@@ -23,7 +23,7 @@ public class UserInfoDTO implements Serializable {
     /**
      * 性别 1-男 2-女 其他-未知
      */
-    private Integer sex;
+    private int sex;
 
     /**
      * 生日
@@ -53,12 +53,12 @@ public class UserInfoDTO implements Serializable {
     /**
      * 汽车id
      */
-    private Integer carId;
+    private int carId;
 
     /**
      * 是否VIP用户 1-是 0-不是
      */
-    private Integer vip;
+    private int vip;
 
     /**
      * 身份证号码
