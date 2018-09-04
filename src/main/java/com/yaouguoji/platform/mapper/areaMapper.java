@@ -5,12 +5,19 @@ import com.yaouguoji.platform.entity.area;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 分区
  */
 
 public interface areaMapper {
+
+    /**
+     * 查询所有area
+     * @return
+     */
+    List<area> selectAll();
 
     /**
      * 根据分区id删除分区

@@ -1,5 +1,6 @@
 package com.yaouguoji.platform.impl;
 
+import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.AreaDTO;
 import com.yaouguoji.platform.entity.area;
 import com.yaouguoji.platform.mapper.areaMapper;
@@ -7,7 +8,11 @@ import com.yaouguoji.platform.service.AreaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+
+import java.util.Collections;
+import java.util.List;
 
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
@@ -17,6 +22,21 @@ public class AreaServiceImpl implements AreaService{
     @Autowired
     private areaMapper areaMapper;
 
+
+    @Override
+    public List<AreaDTO> selectAll() {
+        List<area> entityList = areaMapper.selectAll();
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
+        List<AreaDTO> areaDTOList = Lists.newArrayList();
+        entityList.forEach(entity ->{
+            AreaDTO areaDTO = new AreaDTO();
+            BeanUtils.copyProperties(entity, areaDTO);
+            areaDTOList.add(areaDTO);
+        });
+        return areaDTOList;
+    }
 
     @Override
     public void deleteByPrimaryKey(Integer areaId) {
@@ -33,14 +53,12 @@ public class AreaServiceImpl implements AreaService{
         if (record == null){
             return 0;
         }
-        System.out.println("name"+record.getAName());
 
         area area = new area();
         area.setaName(record.getAName());
         area.setaSort(record.getASort());
 
         areaMapper.insert(area);
-        System.out.println("id为"+area.getAreaId());
         return area.getAreaId();
     }
 
@@ -63,7 +81,7 @@ public class AreaServiceImpl implements AreaService{
 
     @Override
     public int updateByPrimaryKeySelective(AreaDTO record) {
-        if (record == null && record.equals("")){
+        if (record == null){
             return 0;
         }
 

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class CameraDTO implements Serializable {
@@ -22,5 +23,5 @@ public class CameraDTO implements Serializable {
 
     private String cIp;
 
-
+    private List<CameraRecordDTO> cameraRecordDTOList;
 }

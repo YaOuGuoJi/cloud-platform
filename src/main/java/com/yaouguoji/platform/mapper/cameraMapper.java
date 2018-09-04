@@ -1,9 +1,18 @@
 package com.yaouguoji.platform.mapper;
 
+import com.yaouguoji.platform.entity.area;
 import com.yaouguoji.platform.entity.camera;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface cameraMapper {
+
+    /**
+     * 查询所有camera
+     * @return
+     */
+    List<camera> selectAll();
 
     /**
      * 根据id删除摄像头信息

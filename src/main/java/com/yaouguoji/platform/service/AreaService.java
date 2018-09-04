@@ -7,8 +7,12 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 public interface AreaService {
+
+    List<AreaDTO> selectAll();
 
     /**
      * 根据分区id删除分区

@@ -3,6 +3,7 @@ package com.yaouguoji.platform.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class CameraRecordDTO {

@@ -1,12 +1,19 @@
 package com.yaouguoji.platform.impl;
 
+import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.CameraDTO;
+import com.yaouguoji.platform.dto.CameraRecordDTO;
 import com.yaouguoji.platform.entity.camera;
+import com.yaouguoji.platform.entity.recode;
 import com.yaouguoji.platform.mapper.cameraMapper;
 import com.yaouguoji.platform.service.CameraService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
@@ -15,6 +22,21 @@ public class CameraServiceImpl implements CameraService {
 
     @Autowired
     private cameraMapper cameraMapper;
+
+    @Override
+    public List<CameraDTO> selectByCameraIds() {
+        List<camera> entityList = cameraMapper.selectAll();
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
+        List<CameraDTO> cameraDTOSList = Lists.newArrayList();
+        entityList.forEach(entity ->{
+            CameraDTO cameraDTO = new CameraDTO();
+            BeanUtils.copyProperties(entity, cameraDTO);
+            cameraDTOSList.add(cameraDTO);
+        });
+        return cameraDTOSList;
+    }
 
     @Override
     public void deleteByPrimaryKey(Integer cameraId) {

@@ -24,6 +24,14 @@
         where area_id = #{areaId,jdbcType=INTEGER}
     </select>
 
+    <select id="selectAll" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM area
+        WHERE 1=1
+    </select>
+
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from area
         where area_id = #{areaId,jdbcType=INTEGER}
@@ -100,8 +108,7 @@
         update area
         set a_name = #{aName,jdbcType=VARCHAR},
           a_sort = #{aSort,jdbcType=VARCHAR},
-          a_add_time = #{aAddTime,jdbcType=TIMESTAMP},
-          a_update_time = #{aUpdateTime,jdbcType=TIMESTAMP}
+          a_update_time = NOW()
         where area_id = #{areaId,jdbcType=INTEGER}
     </update>
 </mapper>

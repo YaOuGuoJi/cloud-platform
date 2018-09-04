@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class AreaDTO implements Serializable {
@@ -34,4 +35,8 @@ public class AreaDTO implements Serializable {
      * 更改时间
      */
     private Date aUpdateTime;
+
+    private int number;
+
+
 }

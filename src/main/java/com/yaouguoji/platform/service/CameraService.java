@@ -2,7 +2,11 @@ package com.yaouguoji.platform.service;
 
 import com.yaouguoji.platform.dto.CameraDTO;
 
+import java.util.List;
+
 public interface CameraService {
+
+    List<CameraDTO> selectByCameraIds();
 
     /**
      * 根据id删除摄像头信息

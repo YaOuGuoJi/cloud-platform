@@ -24,18 +24,42 @@
         where c_record_id = #{cRecordId,jdbcType=INTEGER}
     </select>
 
+    <select id="selectAll" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM camera_record
+        WHERE 1=1
+    </select>
+
+    <select id="selectAlls" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM camera_record
+        WHERE camera_id
+        IN 
+        <foreach collection="cameraIdList" item="cameraId" separator="," index="index" open="(" close=")">
+            #{cameraId}
+        </foreach>
+        GROUP BY camera_id
+        ORDER BY cr_update_time DESC
+        limit ${cameraIdList.size}
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from camera_record
         where c_record_id = #{cRecordId,jdbcType=INTEGER}
     </delete>
 
-    <insert id="insert" parameterType="com.yaouguoji.platform.entity.recode">
-        insert into camera_record (c_record_id, camera_id,
-                                    cr_add_time,cr_update_time, cr_number
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="recode.cRecordId">
+        insert into camera_record (camera_id,
+                                   cr_add_time,
+                                   cr_update_time,
+                                   cr_number
           )
-        values (#{cRecordId,jdbcType=INTEGER}, #{cameraId,jdbcType=INTEGER},
-                #{crAddTime,jdbcType=TIMESTAMP}, #{crUpdateTime,jdbcType=TIMESTAMP},
-                #{crNumber,jdbcType=VARCHAR}
+        values (#{record.cameraId,jdbcType=INTEGER},
+                NOW(),
+                NOW(),
+                #{record.crNumber,jdbcType=VARCHAR}
           )
     </insert>
 
@@ -77,26 +101,23 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.yaouguoji.platform.entity.recode">
+    <update id="updateByPrimaryKeySelective" parameterType="map">
         update camera_record
         <set>
-            <if test="cameraId != null">
-              camera_id = #{cameraId,jdbcType=INTEGER},
+            <if test="record.cameraId != null">
+              camera_id = #{record.cameraId,jdbcType=INTEGER},
             </if>
-            <if test="crAddTime != null">
-                cr_add_time = #{crAddTime,jdbcType=TIMESTAMP},
+            <if test="record.crUpdateTime != null">
+                cr_update_time = NOW(),
             </if>
-            <if test="crUpdateTime != null">
-                cr_update_time = #{crUpdateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="crNumber != null">
-                cr_number = #{crNumber,jdbcType=VARCHAR}
+            <if test="record.crNumber != null">
+                cr_number = #{record.crNumber,jdbcType=VARCHAR}
             </if>
         </set>
-        where c_record_id = #{cRecordId,jdbcType=INTEGER}
+        where c_record_id = #{record.cRecordId,jdbcType=INTEGER}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="com.yaouguoji.platform.entity.recode">
+    <update id="updateByPrimaryKey" parameterType="map">
         update camera_record
         set camera_id = #{cameraId,jdbcType=INTEGER},
           cr_add_time = #{crAddTime,jdbcType=TIMESTAMP},

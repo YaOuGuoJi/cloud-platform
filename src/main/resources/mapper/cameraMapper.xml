@@ -26,6 +26,13 @@
         where camera_id = #{cameraId,jdbcType=INTEGER}
     </select>
 
+    <select id="selectAll" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM camera
+        WHERE 1=1
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from camera
         where camera_id = #{cameraId,jdbcType=INTEGER}
@@ -113,8 +120,7 @@
         update camera
         set c_name = #{cName,jdbcType=VARCHAR},
           area_id = #{areaId,jdbcType=INTEGER},
-          c_add_time = #{aAddTime,jdbcType=TIMESTAMP},
-          c_update_time = #{cUpdateTime,jdbcType=TIMESTAMP},
+          c_update_time = NOW(),
           c_ip = #{cIp = jdbcType=VARCHAR}
         where camera_id = #{cameraId,jdbcType=INTEGER}
       </update>
