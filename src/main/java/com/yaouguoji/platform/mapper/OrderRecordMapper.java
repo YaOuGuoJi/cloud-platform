@@ -28,8 +28,8 @@ public interface OrderRecordMapper {
      * @return
      */
     List<ShopOrderNumberEntity> findOrderPriceTop(@Param("limit") int limit,
-                                                     @Param("startTime") Date startTime,
-                                                     @Param("endTime") Date endTime);
+                                                  @Param("startTime") Date startTime,
+                                                  @Param("endTime") Date endTime);
 
     /**
      * 根据orderId查询订单

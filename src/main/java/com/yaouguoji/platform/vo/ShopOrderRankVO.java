@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ShopOrderRankVo implements Serializable {
+public class ShopOrderRankVO implements Serializable {
 
     private static final long serialVersionUID = 1514838332075044027L;
 

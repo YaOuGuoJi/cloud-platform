@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.CameraMapper">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.CameraEntity">
+        <id column="camera_id" jdbcType="INTEGER" property="cameraId" />
+        <result column="c_name" jdbcType="VARCHAR" property="cName" />
+        <result column="area_id" jdbcType="INTEGER" property="areaId" />
+        <result column="c_add_time" jdbcType="TIMESTAMP" property="cAddTime"/>
+        <result column="c_update_time" jdbcType="TIMESTAMP" property="cUpdateTime"/>
+        <result column="c_ip" jdbcType="VARCHAR" property="cIp"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        camera_id,
+        c_name,
+        area_id,
+        c_add_time,
+        c_update_time,
+        c_ip
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from camera
+        where camera_id = #{cameraId}
+    </select>
+
+    <select id="selectAll" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM camera
+        WHERE 1=1
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from camera
+        where camera_id = #{cameraId}
+    </delete>
+
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="recode.cameraId">
+        insert into camera (c_name,
+                            area_id,
+                            c_add_time,
+                            c_update_time,
+                            c_ip
+          )
+        values (#{recode.cName},
+                #{recode.areaId},
+                NOW(),
+                NOW(),
+                #{recode.cIp}
+          )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.CameraEntity">
+        insert into camera
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cameraId != null">
+              camera_id,
+            </if>
+            <if test="cName != null">
+              c_name,
+            </if>
+            <if test="areaId != null">
+              area_id,
+            </if>
+            <if test="cAddTime != null">
+              cAddTime,
+            </if>
+            <if test="cUpdateTime != null">
+               cUpdateTime,
+            </if>
+            <if test="cIp != null">
+                cIp,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cameraId != null">
+              #{cameraId},
+            </if>
+            <if test="cName != null">
+              #{cName},
+            </if>
+            <if test="areaId != null">
+              #{areaId},
+            </if>
+            <if test="cAddTime != null">
+              #{cAddTime},
+            </if>
+            <if test="cUpdateTime != null">
+              #{cUpdateTime}
+            </if>
+            <if test="cIp != null">
+              #{cIp}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="map">
+        update camera
+        <set>
+            <if test="recode.cName != null">
+              c_name = #{recode.cName},
+            </if>
+            <if test="recode.areaId != null">
+              area_id = #{recode.areaId},
+            </if>
+            <if test="recode.cUpdateTime != null">
+              c_update_time = NOW(),
+            </if>
+            <if test="recode.cIp != null">
+              c_ip = #{recode.cIp}
+            </if>
+        </set>
+        where camera_id = #{recode.cameraId}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.yaouguoji.platform.entity.CameraEntity">
+        update camera
+        set c_name = #{cName},
+            area_id = #{areaId},
+            c_update_time = NOW(),
+            c_ip = #{cIp}
+        where camera_id = #{cameraId}
+      </update>
+</mapper>
