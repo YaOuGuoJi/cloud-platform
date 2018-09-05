@@ -41,7 +41,6 @@ public class AreaController {
         if (areaDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-
         return CommonResult.success(areaDTO);
     }
 
@@ -53,7 +52,7 @@ public class AreaController {
      * @param aSort
      * @return
      */
-    @RequestMapping(value = "/insertArea", method = RequestMethod.POST)
+    @PostMapping(value = "/insertArea")
     public CommonResult insertAreaInfo(@RequestParam("areaId") Integer areaId,
                                        @RequestParam("aName") String aName,
                                        @RequestParam("aSort") String aSort) {
