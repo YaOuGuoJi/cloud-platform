@@ -1,12 +1,9 @@
 package com.yaouguoji.platform.impl;
 
 import com.google.common.collect.Lists;
-import com.yaouguoji.platform.dto.AreaDTO;
 import com.yaouguoji.platform.dto.CameraRecordDTO;
-import com.yaouguoji.platform.entity.area;
 import com.yaouguoji.platform.entity.recode;
-import com.yaouguoji.platform.mapper.cameraMapper;
-import com.yaouguoji.platform.mapper.recodeMapper;
+import com.yaouguoji.platform.mapper.RecodeMapper;
 import com.yaouguoji.platform.service.CameraRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -23,8 +19,8 @@ import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 @Service
 public class CameraRecoedServiceImpl implements CameraRecordService {
 
-    @Autowired
-    private recodeMapper recodeMapper;
+    @Resource
+    private RecodeMapper recodeMapper;
 
     @Override
     public List<CameraRecordDTO> selectAlls(List<Integer> cameraIds) {
@@ -39,22 +35,6 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
             cameraRecordDTOList.add(cameraRecordDTO);
         });
         return cameraRecordDTOList;
-    }
-
-    @Override
-    public List<CameraRecordDTO> selectByCameraIds(List<Integer> cameraIds) {
-        List<recode> entityList = recodeMapper.selectAll(cameraIds);
-        if (CollectionUtils.isEmpty(entityList)) {
-            return Collections.emptyList();
-        }
-        List<CameraRecordDTO> cameraRecordDTOList = Lists.newArrayList();
-        entityList.forEach(entity ->{
-            CameraRecordDTO cameraRecordDTO = new CameraRecordDTO();
-            BeanUtils.copyProperties(entity, cameraRecordDTO);
-            cameraRecordDTOList.add(cameraRecordDTO);
-        });
-        return cameraRecordDTOList;
-
     }
 
     @Override

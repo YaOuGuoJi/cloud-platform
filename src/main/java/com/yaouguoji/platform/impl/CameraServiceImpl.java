@@ -2,16 +2,15 @@ package com.yaouguoji.platform.impl;
 
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.CameraDTO;
-import com.yaouguoji.platform.dto.CameraRecordDTO;
-import com.yaouguoji.platform.entity.camera;
-import com.yaouguoji.platform.entity.recode;
-import com.yaouguoji.platform.mapper.cameraMapper;
+import com.yaouguoji.platform.entity.CameraEntity;
+import com.yaouguoji.platform.mapper.CameraMapper;
 import com.yaouguoji.platform.service.CameraService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,12 +19,12 @@ import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 @Service
 public class CameraServiceImpl implements CameraService {
 
-    @Autowired
-    private cameraMapper cameraMapper;
+    @Resource
+    private CameraMapper cameraMapper;
 
     @Override
     public List<CameraDTO> selectByCameraIds() {
-        List<camera> entityList = cameraMapper.selectAll();
+        List<CameraEntity> entityList = cameraMapper.selectAll();
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
@@ -54,7 +53,7 @@ public class CameraServiceImpl implements CameraService {
             return 0;
         }
 
-        camera camera = new camera();
+        CameraEntity camera = new CameraEntity();
         camera.setAreaId(record.getAreaId());
         camera.setcName(record.getCName());
         camera.setcIp(record.getCIp());
@@ -72,7 +71,7 @@ public class CameraServiceImpl implements CameraService {
     @Override
     public CameraDTO selectByPrimaryKey(Integer cameraId) {
         CameraDTO cameraDTO = new CameraDTO();
-        camera camera = cameraMapper.selectByPrimaryKey(cameraId);
+        CameraEntity camera = cameraMapper.selectByPrimaryKey(cameraId);
 
         if (camera != null){
             BeanUtils.copyProperties(camera,cameraDTO);
@@ -88,7 +87,7 @@ public class CameraServiceImpl implements CameraService {
             return 0;
         }
 
-        camera camera = new camera();
+        CameraEntity camera = new CameraEntity();
         BeanUtils.copyProperties(record,camera);
 
         return cameraMapper.updateByPrimaryKeySelective(camera);

@@ -2,7 +2,7 @@ package com.yaouguoji.platform.entity;
 
 import java.util.Date;
 
-public class area {
+public class AreaEntity {
     private int areaId;
 
     private String aName;

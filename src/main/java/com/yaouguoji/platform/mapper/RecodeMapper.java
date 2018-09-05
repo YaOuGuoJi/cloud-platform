@@ -5,9 +5,10 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface recodeMapper {
-
-    List<recode> selectAll(@Param("cameraIdList") List<Integer> cameraIdList);
+/**
+ * 摄像头记录
+ */
+public interface RecodeMapper {
 
     List<recode> selectAlls(@Param("cameraIdList") List<Integer> cameraIdList);
 

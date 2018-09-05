@@ -2,7 +2,7 @@ package com.yaouguoji.platform.entity;
 
 import java.util.Date;
 
-public class camera {
+public class CameraEntity {
 
     private int cameraId;
 

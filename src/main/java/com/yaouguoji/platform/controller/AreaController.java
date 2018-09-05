@@ -47,6 +47,7 @@ public class AreaController {
 
     /**
      * 添加分区信息
+     * @param areaId
      * @param aName
      * @param aSort
      * @return
@@ -73,36 +74,10 @@ public class AreaController {
     }
 
     /**
-     * 选择性修改分区信息
-     * @param recode
+     * 查询分区人数
      * @return
      */
-    @RequestMapping(value = "/updateAreaInfo")
-    public CommonResult updateAreaInfo(@RequestBody AreaDTO recode){
-        if (recode == null && recode.equals("")){
-            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-        }
-
-        int data = areaService.updateByPrimaryKeySelective(recode);
-        return data > 0 ? CommonResult.success() : CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-    }
-
-    /**
-     * 根据id删除分区信息
-     * @param id
-     * @return
-     */
-    @DeleteMapping("/deleteAreaInfo/{id}")
-    public CommonResult deleteById(@PathVariable("id") int id){
-        if (id <= 0){
-            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-        }
-
-        areaService.deleteByPrimaryKey(id);
-        return CommonResult.success();
-    }
-
-    @GetMapping("/camera/all")
+    @GetMapping("/selectAreaPeopleNumber")
     public CommonResult findAllAreaCameraInfo(){
 
         List<AreaDTO> areaDTOS = areaService.selectAll();

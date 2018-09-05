@@ -7,49 +7,47 @@ import java.util.List;
 
 public interface CameraRecordService {
 
-    List<CameraRecordDTO> selectByCameraIds(@Param("cameraIds") List<Integer> cameraIds);
-
-    List<CameraRecordDTO> selectAlls(@Param("cameraIds") List<Integer> cameraIds);
+    List<CameraRecordDTO> selectAlls(List<Integer> cameraIds);
 
     /**
      * 根据id删除摄像头记录
      * @param cRecordId
      * @return
      */
-    void deleteByPrimaryKey(@Param("cRecordId") Integer cRecordId);
+    void deleteByPrimaryKey(Integer cRecordId);
 
     /**
      * 添加摄像头记录
      * @param record
      * @return
      */
-    int insert(@Param("record") CameraRecordDTO record);
+    int insert(CameraRecordDTO record);
 
     /**
      * 根据条件添加摄像头记录
      * @param record
      * @return
      */
-    int insertSelective(@Param("record") CameraRecordDTO record);
+    int insertSelective(CameraRecordDTO record);
 
     /**
      * 根据id查询摄像头记录
      * @param cRecordId
      * @return
      */
-    CameraRecordDTO selectByPrimaryKey(@Param("cRecordId") Integer cRecordId);
+    CameraRecordDTO selectByPrimaryKey(Integer cRecordId);
 
     /**
      * 根据条件修改摄像头记录
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelectives(@Param("record") CameraRecordDTO record);
+    int updateByPrimaryKeySelectives(CameraRecordDTO record);
 
     /**
      * 根据id查询摄像头记录
      * @param record
      * @return
      */
-    int updateByPrimaryKey(@Param("record") CameraRecordDTO record);
+    int updateByPrimaryKey(CameraRecordDTO record);
 }

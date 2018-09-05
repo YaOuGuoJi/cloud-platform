@@ -2,8 +2,8 @@ package com.yaouguoji.platform.impl;
 
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.AreaDTO;
-import com.yaouguoji.platform.entity.area;
-import com.yaouguoji.platform.mapper.areaMapper;
+import com.yaouguoji.platform.entity.AreaEntity;
+import com.yaouguoji.platform.mapper.AreaMapper;
 import com.yaouguoji.platform.service.AreaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,13 +20,13 @@ import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 @Service
 public class AreaServiceImpl implements AreaService{
 
-    @Autowired
-    private areaMapper areaMapper;
+    @Resource
+    private AreaMapper areaMapper;
 
 
     @Override
     public List<AreaDTO> selectAll() {
-        List<area> entityList = areaMapper.selectAll();
+        List<AreaEntity> entityList = areaMapper.selectAll();
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
@@ -54,7 +55,7 @@ public class AreaServiceImpl implements AreaService{
             return 0;
         }
 
-        area area = new area();
+        AreaEntity area = new AreaEntity();
         area.setaName(record.getAName());
         area.setaSort(record.getASort());
 
@@ -70,7 +71,7 @@ public class AreaServiceImpl implements AreaService{
     @Override
     public AreaDTO selectByPrimaryKey(Integer areaId) {
         AreaDTO areaDTO = new AreaDTO();
-        area area = areaMapper.selectByPrimaryKey(areaId);
+        AreaEntity area = areaMapper.selectByPrimaryKey(areaId);
 
         if (area != null){
             BeanUtils.copyProperties(area,areaDTO);
@@ -85,7 +86,7 @@ public class AreaServiceImpl implements AreaService{
             return 0;
         }
 
-        area area = new area();
+        AreaEntity area = new AreaEntity();
         BeanUtils.copyProperties(record,area);
 
         return areaMapper.updateByPrimaryKeySelective(area);

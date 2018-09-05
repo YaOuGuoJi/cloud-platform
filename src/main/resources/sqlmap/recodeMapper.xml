@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yaouguoji.platform.mapper.recodeMapper">
+<mapper namespace="com.yaouguoji.platform.mapper.RecodeMapper">
     <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.recode">
         <id column="c_record_id" jdbcType="INTEGER" property="cRecordId" />
         <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
@@ -21,7 +21,7 @@
         select
         <include refid="Base_Column_List" />
         from camera_record
-        where c_record_id = #{cRecordId,jdbcType=INTEGER}
+        where c_record_id = #{cRecordId}
     </select>
 
     <select id="selectAll" parameterType="java.util.List" resultMap="BaseResultMap">
@@ -47,7 +47,7 @@
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from camera_record
-        where c_record_id = #{cRecordId,jdbcType=INTEGER}
+        where c_record_id = #{cRecordId}
     </delete>
 
     <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="recode.cRecordId">
@@ -56,10 +56,10 @@
                                    cr_update_time,
                                    cr_number
           )
-        values (#{record.cameraId,jdbcType=INTEGER},
+        values (#{record.cameraId},
                 NOW(),
                 NOW(),
-                #{record.crNumber,jdbcType=VARCHAR}
+                #{record.crNumber}
           )
     </insert>
 
@@ -84,19 +84,19 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="cRecordId != null">
-              #{cRecordId,jdbcType=INTEGER},
+              #{cRecordId},
             </if>
             <if test="cameraId != null">
-              #{cameraId,jdbcType=INTEGER},
+              #{cameraId},
             </if>
             <if test="crAddTime != null">
-              #{crAddTime,jdbcType=TIMESTAMP},
+              #{crAddTime},
             </if>
             <if test="crUpdateTime != null">
-              #{crUpdateTime,jdbcType=TIMESTAMP}
+              #{crUpdateTime}
             </if>
             <if test="crNumber != null">
-              #{crNumber,jdbcType=VARCHAR}
+              #{crNumber}
             </if>
         </trim>
     </insert>
@@ -105,24 +105,24 @@
         update camera_record
         <set>
             <if test="record.cameraId != null">
-              camera_id = #{record.cameraId,jdbcType=INTEGER},
+              camera_id = #{record.cameraId},
             </if>
             <if test="record.crUpdateTime != null">
                 cr_update_time = NOW(),
             </if>
             <if test="record.crNumber != null">
-                cr_number = #{record.crNumber,jdbcType=VARCHAR}
+                cr_number = #{record.crNumber}
             </if>
         </set>
-        where c_record_id = #{record.cRecordId,jdbcType=INTEGER}
+        where c_record_id = #{record.cRecordId}
     </update>
 
     <update id="updateByPrimaryKey" parameterType="map">
         update camera_record
-        set camera_id = #{cameraId,jdbcType=INTEGER},
-          cr_add_time = #{crAddTime,jdbcType=TIMESTAMP},
-          cr_update_time = #{crUpdateTime,jdbcType=TIMESTAMP},
-          cr_number = #{crNumber,jdbcType=VARCHAR}
-        where c_record_id = #{cRecordId,jdbcType=INTEGER}
+        set camera_id = #{cameraId},
+            cr_add_time = #{crAddTime},
+            cr_update_time = #{crUpdateTime},
+            cr_number = #{crNumber}
+        where c_record_id = #{cRecordId}
     </update>
 </mapper>
