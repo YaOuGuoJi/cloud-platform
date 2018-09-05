@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CameraRecordServiceTest {
+public class CameraRecordEntityServiceTest {
 
     @Autowired
     private CameraRecordService cameraRecordService;
@@ -42,7 +42,7 @@ public class CameraRecordServiceTest {
         System.out.println("查询到的记录人数"+cameraRecordDTO.getCrNumber());
         cameraRecordDTO.setCrNumber(22);
 
-        int data = cameraRecordService.updateByPrimaryKeySelectives(cameraRecordDTO);
+        int data = cameraRecordService.updateByPrimaryKeySelective(cameraRecordDTO);
         System.out.println("修改后的data"+data);
 
         Assert.assertEquals(1, data);
