@@ -1,7 +1,6 @@
 package com.yaouguoji.platform.controller;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.constant.ShopOrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
@@ -9,6 +8,7 @@ import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.ShopInfoService;
+import com.yaouguoji.platform.vo.ShopOrderRankVO;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,12 +64,11 @@ public class ShopOrderRecordController {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
             List<ShopInfoDTO> shopInfoDTOs = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
-            List<Map<String, Object>> resultList = Lists.newArrayList();
+            List<ShopOrderRankVO> resultList = Lists.newArrayList();
             shopInfoDTOs.forEach(shopInfoDTO -> {
-                Map<String, Object> dataMap = Maps.newHashMap();
-                dataMap.put("shopInfo", shopInfoDTO);
-                dataMap.put("count", shopIds2ResultMap.get(shopInfoDTO.getShopId()));
-                resultList.add(dataMap);
+                ShopOrderRankVO shopOrderRankVO = new ShopOrderRankVO();
+                shopOrderRankVO.setShopInfoDTO(shopInfoDTO);
+                shopOrderRankVO.setData(shopIds2ResultMap.get(shopInfoDTO.getShopId()));
             });
             return CommonResult.success(resultList);
         } catch (ParseException e) {
