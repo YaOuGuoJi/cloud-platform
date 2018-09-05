@@ -4,8 +4,20 @@ import com.yaouguoji.platform.dto.OrderRecordDTO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface OrderRecordService {
+
+    /**
+     * 查询商户订单排序
+     * @see com.yaouguoji.platform.constant.ShopOrderRankType
+     * @param limit
+     * @param startTime
+     * @param endTime
+     * @param type
+     * @return
+     */
+    Map<Integer, Object> findShopIdsRankByOrders(int limit, Date startTime, Date endTime, int type);
 
     /**
      * 查询单个订单详细信息

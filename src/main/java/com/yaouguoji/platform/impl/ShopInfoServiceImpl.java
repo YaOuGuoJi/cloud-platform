@@ -4,17 +4,30 @@ import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.entity.ShopInfoEntity;
 import com.yaouguoji.platform.mapper.ShopInfoMapper;
 import com.yaouguoji.platform.service.ShopInfoService;
+import com.yaouguoji.platform.util.BeansListUtils;
 import com.yaouguoji.platform.util.UuidUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class ShopInfoServiceImpl implements ShopInfoService {
 
     @Resource
     private ShopInfoMapper shopInfoMapper;
+
+    @Override
+    public List<ShopInfoDTO> batchFindByShopIdList(List<Integer> shopIdList) {
+        List<ShopInfoEntity> entityList = shopInfoMapper.findByShopIdList(shopIdList);
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
+        return BeansListUtils.copyListProperties(entityList, ShopInfoDTO.class);
+    }
 
     @Override
     public ShopInfoDTO findShopInfoByShopId(int shopId) {

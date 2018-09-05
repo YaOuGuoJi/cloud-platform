@@ -2,10 +2,19 @@ package com.yaouguoji.platform.service;
 
 import com.yaouguoji.platform.dto.ShopInfoDTO;
 
+import java.util.List;
+
 /**
  * 商户信息服务
  */
 public interface ShopInfoService {
+
+    /**
+     * 批量查询
+     * @param shopIdList
+     * @return
+     */
+    List<ShopInfoDTO> batchFindByShopIdList(List<Integer> shopIdList);
 
     /**
      * 根据shopId查询商户详细信息

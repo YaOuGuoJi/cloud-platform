@@ -3,7 +3,16 @@ package com.yaouguoji.platform.mapper;
 import com.yaouguoji.platform.entity.ShopInfoEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface ShopInfoMapper {
+
+    /**
+     * 查询列表
+     * @param shopIdList
+     * @return
+     */
+    List<ShopInfoEntity> findByShopIdList(@Param("shopIdList") List<Integer> shopIdList);
 
     /**
      * 增
