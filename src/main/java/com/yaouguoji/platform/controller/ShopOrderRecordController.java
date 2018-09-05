@@ -10,6 +10,8 @@ import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.ShopInfoService;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,8 @@ import java.util.*;
 
 @RestController
 public class ShopOrderRecordController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShopOrderRecordController.class);
 
     @Resource
     private OrderRecordService orderRecordService;
@@ -69,6 +73,7 @@ public class ShopOrderRecordController {
             });
             return CommonResult.success(resultList);
         } catch (ParseException e) {
+            LOGGER.error("parse date error: [{}]", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
     }
