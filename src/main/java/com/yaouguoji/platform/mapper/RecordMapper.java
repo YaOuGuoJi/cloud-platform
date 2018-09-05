@@ -12,6 +12,7 @@ public interface RecordMapper {
 
     /**
      * 根据cameraId列表批量查询
+     *
      * @param cameraIdList
      * @return
      */
@@ -19,6 +20,7 @@ public interface RecordMapper {
 
     /**
      * 根据id删除摄像头记录
+     *
      * @param cRecordId
      * @return
      */
@@ -26,6 +28,7 @@ public interface RecordMapper {
 
     /**
      * 添加摄像头记录
+     *
      * @param record
      * @return
      */
@@ -33,6 +36,7 @@ public interface RecordMapper {
 
     /**
      * 根据条件添加摄像头记录
+     *
      * @param record
      * @return
      */
@@ -40,6 +44,7 @@ public interface RecordMapper {
 
     /**
      * 根据id查询摄像头记录
+     *
      * @param cRecordId
      * @return
      */
@@ -47,6 +52,7 @@ public interface RecordMapper {
 
     /**
      * 根据条件修改摄像头记录
+     *
      * @param record
      * @return
      */
@@ -54,6 +60,7 @@ public interface RecordMapper {
 
     /**
      * 根据id查询摄像头记录
+     *
      * @param record
      * @return
      */

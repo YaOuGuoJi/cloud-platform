@@ -7,6 +7,7 @@ public interface ShopMapper {
 
     /**
      * 新增商户信息
+     *
      * @param shopEntity
      * @return
      */
@@ -14,6 +15,7 @@ public interface ShopMapper {
 
     /**
      * 根据商户id查询商户信息
+     *
      * @param shopId
      * @return
      */
@@ -21,12 +23,14 @@ public interface ShopMapper {
 
     /**
      * 根据商户id删除信息
+     *
      * @param id
      */
     void deleteShopInfoById(@Param("id") int id);
 
     /**
      * 修改商户信息
+     *
      * @param shopEntity
      * @return
      */

@@ -10,19 +10,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class areaServiceTest {
+public class AreaServiceTest {
 
     @Autowired
     private AreaService areaService;
 
     @Test
-    public void selectById(){
+    public void selectById() {
         AreaDTO areaDTO = areaService.selectByPrimaryKey(1);
         Assert.assertTrue(areaDTO != null && "儿童乐园".equals(areaDTO.getAName()));
     }
 
     @Test
-    public void insertAreaInfo(){
+    public void insertAreaInfo() {
         AreaDTO areaDTO = new AreaDTO();
 
         areaDTO.setAName("罗马仕");
@@ -35,7 +35,7 @@ public class areaServiceTest {
     }
 
     @Test
-    public void updateAreaInfo(){
+    public void updateAreaInfo() {
         AreaDTO areaDTO = areaService.selectByPrimaryKey(5);
 
         areaDTO.setASort("时尚区");
@@ -46,7 +46,7 @@ public class areaServiceTest {
     }
 
     @Test
-    public void deleteAreaInfo(){
+    public void deleteAreaInfo() {
         areaService.deleteByPrimaryKey(3);
     }
 }

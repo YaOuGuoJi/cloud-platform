@@ -10,6 +10,7 @@ public interface CameraService {
 
     /**
      * 根据id删除摄像头信息
+     *
      * @param cameraId
      * @return
      */
@@ -17,20 +18,15 @@ public interface CameraService {
 
     /**
      * 添加摄像头信息
+     *
      * @param record
      * @return
      */
     int insert(CameraDTO record);
 
     /**
-     * 根据条件添加摄像头信息
-     * @param record
-     * @return
-     */
-    int insertSelective(CameraDTO record);
-
-    /**
      * 根据id查询摄像头信息
+     *
      * @param cameraId
      * @return
      */
@@ -38,15 +34,9 @@ public interface CameraService {
 
     /**
      * 选择性修改摄像头信息
+     *
      * @param record
      * @return
      */
     int updateByPrimaryKeySelective(CameraDTO record);
-
-    /**
-     * 根据id修改摄像头信息
-     * @param record
-     * @return
-     */
-    int updateByPrimaryKey(CameraDTO record);
 }

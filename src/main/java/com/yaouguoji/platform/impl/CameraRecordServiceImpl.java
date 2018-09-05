@@ -44,7 +44,7 @@ public class CameraRecordServiceImpl implements CameraRecordService {
             return;
         }
         recordMapper.deleteByPrimaryKey(cRecodeId);
-        LOGGER.info("id为"+cRecodeId+"的摄像头记录已删除");
+        LOGGER.info("id为[{}]的摄像头记录已删除", cRecodeId);
     }
 
     @Override
