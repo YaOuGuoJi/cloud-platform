@@ -74,6 +74,7 @@ public class ShopOrderRecordController {
                 ShopOrderRankVO shopOrderRankVO = new ShopOrderRankVO();
                 shopOrderRankVO.setShopInfoDTO(shopInfoDTO);
                 shopOrderRankVO.setData(shopIds2ResultMap.get(shopInfoDTO.getShopId()));
+                resultList.add(shopOrderRankVO);
             });
             return CommonResult.success(resultList);
         } catch (ParseException e) {
