@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.RecodeMapper">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.CameraRecord">
+        <id column="c_record_id" jdbcType="INTEGER" property="cRecordId" />
+        <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
+        <result column="cr_add_time" jdbcType="TIMESTAMP" property="crAddTime"/>
+        <result column="cr_update_time" jdbcType="TIMESTAMP" property="crUpdateTime"/>
+        <result column="cr_number" jdbcType="INTEGER" property="crNumber"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        c_record_id,
+        camera_id,
+        cr_add_time,
+        cr_update_time,
+        cr_number
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from camera_record
+        where c_record_id = #{cRecordId}
+    </select>
+
+    <select id="selectAll" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM camera_record
+        WHERE 1=1
+    </select>
+
+    <select id="selectAlls" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM camera_record
+        WHERE camera_id
+        IN 
+        <foreach collection="cameraIdList" item="cameraId" separator="," index="index" open="(" close=")">
+            #{cameraId}
+        </foreach>
+        GROUP BY camera_id
+        ORDER BY cr_update_time DESC
+        limit ${cameraIdList.size}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from camera_record
+        where c_record_id = #{cRecordId}
+    </delete>
+
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="recode.cRecordId">
+        insert into camera_record (camera_id,
+                                   cr_add_time,
+                                   cr_update_time,
+                                   cr_number
+          )
+        values (#{record.cameraId},
+                NOW(),
+                NOW(),
+                #{record.crNumber}
+          )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.CameraRecord">
+        insert into camera_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cRecordId != null">
+          c_record_id,
+        </if>
+          <if test="cameraId != null">
+            camera_id,
+          </if>
+          <if test="cr_add_time != null">
+            cr_add_time,
+          </if>
+          <if test="cr_update_time != null">
+            cr_update_time,
+          </if>
+          <if test="cr_number != null">
+            cr_number,
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cRecordId != null">
+              #{cRecordId},
+            </if>
+            <if test="cameraId != null">
+              #{cameraId},
+            </if>
+            <if test="crAddTime != null">
+              #{crAddTime},
+            </if>
+            <if test="crUpdateTime != null">
+              #{crUpdateTime}
+            </if>
+            <if test="crNumber != null">
+              #{crNumber}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="map">
+        update camera_record
+        <set>
+            <if test="record.cameraId != null">
+              camera_id = #{record.cameraId},
+            </if>
+            <if test="record.crUpdateTime != null">
+                cr_update_time = NOW(),
+            </if>
+            <if test="record.crNumber != null">
+                cr_number = #{record.crNumber}
+            </if>
+        </set>
+        where c_record_id = #{record.cRecordId}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="map">
+        update camera_record
+        set camera_id = #{cameraId},
+            cr_add_time = #{crAddTime},
+            cr_update_time = #{crUpdateTime},
+            cr_number = #{crNumber}
+        where c_record_id = #{cRecordId}
+    </update>
+</mapper>
