@@ -93,7 +93,8 @@ public class AreaController {
         for (CameraDTO cameraDTO : cameraDTOS){
             cameraId2AreaIdMap.put(cameraDTO.getCameraId(), cameraDTO.getAreaId());
         }
-        List<CameraRecordDTO> cameraRecordDTOS = cameraRecordService.selectAlls(new ArrayList<>(cameraId2AreaIdMap.keySet()));
+        List<CameraRecordDTO> cameraRecordDTOS =
+                cameraRecordService.batchSelectAllRecords(new ArrayList<>(cameraId2AreaIdMap.keySet()));
         if (CollectionUtils.isEmpty(cameraRecordDTOS)){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }

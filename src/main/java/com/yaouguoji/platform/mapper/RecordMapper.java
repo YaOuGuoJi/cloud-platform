@@ -1,6 +1,6 @@
 package com.yaouguoji.platform.mapper;
 
-import com.yaouguoji.platform.entity.CameraRecord;
+import com.yaouguoji.platform.entity.CameraRecordEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -8,9 +8,14 @@ import java.util.List;
 /**
  * 摄像头记录
  */
-public interface RecodeMapper {
+public interface RecordMapper {
 
-    List<CameraRecord> selectAlls(@Param("cameraIdList") List<Integer> cameraIdList);
+    /**
+     * 根据cameraId列表批量查询
+     * @param cameraIdList
+     * @return
+     */
+    List<CameraRecordEntity> batchSelectNewRecords(@Param("cameraIdList") List<Integer> cameraIdList);
 
     /**
      * 根据id删除摄像头记录
@@ -24,33 +29,33 @@ public interface RecodeMapper {
      * @param record
      * @return
      */
-    int insert(@Param("record") CameraRecord record);
+    int insert(@Param("record") CameraRecordEntity record);
 
     /**
      * 根据条件添加摄像头记录
      * @param record
      * @return
      */
-    int insertSelective(@Param("record") CameraRecord record);
+    int insertSelective(@Param("record") CameraRecordEntity record);
 
     /**
      * 根据id查询摄像头记录
      * @param cRecordId
      * @return
      */
-    CameraRecord selectByPrimaryKey(@Param("cRecordId") Integer cRecordId);
+    CameraRecordEntity selectByPrimaryKey(@Param("cRecordId") Integer cRecordId);
 
     /**
      * 根据条件修改摄像头记录
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(@Param("record") CameraRecord record);
+    int updateByPrimaryKeySelective(@Param("record") CameraRecordEntity record);
 
     /**
      * 根据id查询摄像头记录
      * @param record
      * @return
      */
-    int updateByPrimaryKey(@Param("record") CameraRecord record);
+    int updateByPrimaryKey(@Param("record") CameraRecordEntity record);
 }

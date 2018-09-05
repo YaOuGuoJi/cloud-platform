@@ -2,9 +2,11 @@ package com.yaouguoji.platform.impl;
 
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.CameraRecordDTO;
-import com.yaouguoji.platform.entity.CameraRecord;
-import com.yaouguoji.platform.mapper.RecodeMapper;
+import com.yaouguoji.platform.entity.CameraRecordEntity;
+import com.yaouguoji.platform.mapper.RecordMapper;
 import com.yaouguoji.platform.service.CameraRecordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,17 +15,17 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
-
 @Service
-public class CameraRecoedServiceImpl implements CameraRecordService {
+public class CameraRecordServiceImpl implements CameraRecordService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CameraRecordServiceImpl.class);
 
     @Resource
-    private RecodeMapper recodeMapper;
+    private RecordMapper recordMapper;
 
     @Override
-    public List<CameraRecordDTO> selectAlls(List<Integer> cameraIds) {
-        List<CameraRecord> entityList = recodeMapper.selectAlls(cameraIds);
+    public List<CameraRecordDTO> batchSelectAllRecords(List<Integer> cameraIds) {
+        List<CameraRecordEntity> entityList = recordMapper.batchSelectNewRecords(cameraIds);
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
@@ -41,9 +43,7 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
         if (cRecodeId == 0){
             return;
         }
-
-        recodeMapper.deleteByPrimaryKey(cRecodeId);
-
+        recordMapper.deleteByPrimaryKey(cRecodeId);
         LOGGER.info("id为"+cRecodeId+"的摄像头记录已删除");
     }
 
@@ -52,52 +52,33 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
         if (record == null){
             return 0;
         }
+        CameraRecordEntity recordEntity = new CameraRecordEntity();
+        recordEntity.setCameraId(recordEntity.getCameraId());
+        recordEntity.setCrNumber(recordEntity.getCrNumber());
+        recordEntity.setCrAddTime(recordEntity.getCrAddTime());
+        recordEntity.setCrUpdateTime(recordEntity.getCrUpdateTime());
 
-        CameraRecord recode = new CameraRecord();
-
-        recode.setCameraId(record.getCameraId());
-        recode.setCrNumber(record.getCrNumber());
-        recode.setCrAddTime(record.getCrAddTime());
-        recode.setCrUpdateTime(record.getCrUpdateTime());
-
-        recodeMapper.insert(recode);
-
-        return recode.getCameraId();
-    }
-
-    @Override
-    public int insertSelective(CameraRecordDTO record) {
-        return 0;
+        recordMapper.insert(recordEntity);
+        return recordEntity.getCameraId();
     }
 
     @Override
     public CameraRecordDTO selectByPrimaryKey(Integer cRecodeId) {
-
         CameraRecordDTO cameraRecordDTO = new CameraRecordDTO();
-
-        CameraRecord recode = recodeMapper.selectByPrimaryKey(cRecodeId);
-
-        if (recode != null){
-            BeanUtils.copyProperties(recode,cameraRecordDTO);
+        CameraRecordEntity cameraRecordEntity = recordMapper.selectByPrimaryKey(cRecodeId);
+        if (cameraRecordEntity != null){
+            BeanUtils.copyProperties(cameraRecordEntity,cameraRecordDTO);
         }
-
         return cameraRecordDTO;
     }
 
     @Override
-    public int updateByPrimaryKeySelectives(CameraRecordDTO record) {
+    public int updateByPrimaryKeySelective(CameraRecordDTO record) {
         if (record == null){
             return 0;
         }
-
-        CameraRecord recode = new CameraRecord();
-        BeanUtils.copyProperties(record,recode);
-
-        return recodeMapper.updateByPrimaryKeySelective(recode);
-    }
-
-    @Override
-    public int updateByPrimaryKey(CameraRecordDTO record) {
-        return 0;
+        CameraRecordEntity recordEntity = new CameraRecordEntity();
+        BeanUtils.copyProperties(record, recordEntity);
+        return recordMapper.updateByPrimaryKeySelective(recordEntity);
     }
 }
