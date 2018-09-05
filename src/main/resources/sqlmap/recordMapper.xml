@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yaouguoji.platform.mapper.RecodeMapper">
-    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.CameraRecord">
+<mapper namespace="com.yaouguoji.platform.mapper.RecordMapper">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.CameraRecordEntity">
         <id column="c_record_id" jdbcType="INTEGER" property="cRecordId" />
         <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
         <result column="cr_add_time" jdbcType="TIMESTAMP" property="crAddTime"/>
@@ -24,14 +24,7 @@
         where c_record_id = #{cRecordId}
     </select>
 
-    <select id="selectAll" parameterType="java.util.List" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM camera_record
-        WHERE 1=1
-    </select>
-
-    <select id="selectAlls" parameterType="java.util.List" resultMap="BaseResultMap">
+    <select id="batchSelectNewRecords" parameterType="java.util.List" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM camera_record
@@ -40,7 +33,6 @@
         <foreach collection="cameraIdList" item="cameraId" separator="," index="index" open="(" close=")">
             #{cameraId}
         </foreach>
-        GROUP BY camera_id
         ORDER BY cr_update_time DESC
         limit ${cameraIdList.size}
     </select>
@@ -63,7 +55,7 @@
           )
     </insert>
 
-    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.CameraRecord">
+    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.CameraRecordEntity">
         insert into camera_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="cRecordId != null">

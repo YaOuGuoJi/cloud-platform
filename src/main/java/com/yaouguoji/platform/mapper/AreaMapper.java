@@ -8,17 +8,18 @@ import java.util.List;
 /**
  * 分区
  */
-
 public interface AreaMapper {
 
     /**
      * 查询所有area
+     *
      * @return
      */
     List<AreaEntity> selectAll();
 
     /**
      * 根据分区id删除分区
+     *
      * @param areaId
      * @return
      */
@@ -26,13 +27,15 @@ public interface AreaMapper {
 
     /**
      * 添加分类信息
+     *
      * @param recode
      * @return
      */
-    int insert(@Param("recode")AreaEntity recode);
+    int insert(@Param("recode") AreaEntity recode);
 
     /**
      * 选择性添加分区信息
+     *
      * @param record
      * @return
      */
@@ -40,6 +43,7 @@ public interface AreaMapper {
 
     /**
      * 根据主键id查询分区信息
+     *
      * @param areaId
      * @return
      */
@@ -47,6 +51,7 @@ public interface AreaMapper {
 
     /**
      * 修改分区信息
+     *
      * @param record
      * @return
      */
@@ -54,6 +59,7 @@ public interface AreaMapper {
 
     /**
      * 根据主键id修改分区信息
+     *
      * @param record
      * @return
      */

@@ -12,12 +12,14 @@ public interface CameraMapper {
 
     /**
      * 查询所有camera
+     *
      * @return
      */
     List<CameraEntity> selectAll();
 
     /**
      * 根据id删除摄像头信息
+     *
      * @param cameraId
      * @return
      */
@@ -25,6 +27,7 @@ public interface CameraMapper {
 
     /**
      * 添加摄像头信息
+     *
      * @param record
      * @return
      */
@@ -32,6 +35,7 @@ public interface CameraMapper {
 
     /**
      * 根据条件添加摄像头信息
+     *
      * @param record
      * @return
      */
@@ -39,6 +43,7 @@ public interface CameraMapper {
 
     /**
      * 根据id查询摄像头信息
+     *
      * @param cameraId
      * @return
      */
@@ -46,6 +51,7 @@ public interface CameraMapper {
 
     /**
      * 选择性修改摄像头信息
+     *
      * @param record
      * @return
      */
@@ -53,6 +59,7 @@ public interface CameraMapper {
 
     /**
      * 根据id修改摄像头信息
+     *
      * @param record
      * @return
      */
