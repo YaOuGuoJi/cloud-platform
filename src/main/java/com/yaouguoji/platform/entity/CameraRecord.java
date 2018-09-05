@@ -2,7 +2,7 @@ package com.yaouguoji.platform.entity;
 
 import java.util.Date;
 
-public class recode {
+public class CameraRecord {
     private Integer cRecordId;
 
     private Integer cameraId;

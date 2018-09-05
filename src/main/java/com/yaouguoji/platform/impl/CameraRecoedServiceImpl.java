@@ -2,11 +2,10 @@ package com.yaouguoji.platform.impl;
 
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.CameraRecordDTO;
-import com.yaouguoji.platform.entity.recode;
+import com.yaouguoji.platform.entity.CameraRecord;
 import com.yaouguoji.platform.mapper.RecodeMapper;
 import com.yaouguoji.platform.service.CameraRecordService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,7 +23,7 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
 
     @Override
     public List<CameraRecordDTO> selectAlls(List<Integer> cameraIds) {
-        List<recode> entityList = recodeMapper.selectAlls(cameraIds);
+        List<CameraRecord> entityList = recodeMapper.selectAlls(cameraIds);
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
@@ -54,7 +53,7 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
             return 0;
         }
 
-        recode recode = new recode();
+        CameraRecord recode = new CameraRecord();
 
         recode.setCameraId(record.getCameraId());
         recode.setCrNumber(record.getCrNumber());
@@ -76,7 +75,7 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
 
         CameraRecordDTO cameraRecordDTO = new CameraRecordDTO();
 
-        recode recode = recodeMapper.selectByPrimaryKey(cRecodeId);
+        CameraRecord recode = recodeMapper.selectByPrimaryKey(cRecodeId);
 
         if (recode != null){
             BeanUtils.copyProperties(recode,cameraRecordDTO);
@@ -91,7 +90,7 @@ public class CameraRecoedServiceImpl implements CameraRecordService {
             return 0;
         }
 
-        recode recode = new recode();
+        CameraRecord recode = new CameraRecord();
         BeanUtils.copyProperties(record,recode);
 
         return recodeMapper.updateByPrimaryKeySelective(recode);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yaouguoji.platform.mapper.RecodeMapper">
-    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.recode">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.CameraRecord">
         <id column="c_record_id" jdbcType="INTEGER" property="cRecordId" />
         <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
         <result column="cr_add_time" jdbcType="TIMESTAMP" property="crAddTime"/>
@@ -63,7 +63,7 @@
           )
     </insert>
 
-    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.recode">
+    <insert id="insertSelective" parameterType="com.yaouguoji.platform.entity.CameraRecord">
         insert into camera_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="cRecordId != null">
