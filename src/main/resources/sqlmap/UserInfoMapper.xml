@@ -40,6 +40,13 @@
         WHERE UserId=#{userId}
     </select>
 
+    <select id="selectIsVip" resultType="com.yaouguoji.platform.entity.UserInfoEntity">
+        SELECT
+        <include refid="allFields" />
+        FROM user_info
+        WHERE UserId=#{userId}
+    </select>
+
     <update id="updateById">
         UPDATE user_info SET
         <if test="userInfoEntity.userName != null">

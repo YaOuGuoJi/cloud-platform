@@ -24,4 +24,12 @@ public interface UserInfoService {
      * @return
      */
     int updateUserInfo(UserInfoDTO userInfoDTO);
+
+    /**
+     * 查询是否是VIP
+     * @param userId
+     * @return
+     */
+    boolean selectIsVip(int userId);
+
 }
