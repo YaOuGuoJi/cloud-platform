@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaouguoji.platform.mapper.OrderRecordMapper">
+    <resultMap id="orderRecordEntity" type="com.yaouguoji.platform.entity.OrderRecordEntity">
+        <result column="OrderId" property="orderId" />
+        <result column="UserId" property="userId" />
+        <result column="ShopId" property="shopId" />
+        <result column="OrderChannel" property="orderChannel" />
+        <result column="OrderStatus" property="orderStatus" />
+        <result column="ProductType" property="productType" />
+        <result column="ProductList" property="productList" />
+        <result column="PayType" property="payType" />
+        <result column="Price" property="price" />
+        <result column="AddTime" property="addTime" />
+        <result column="UpdateTime" property="updateTime" />
+    </resultMap>
+
+    <resultMap id="shopOrderNumberEntity" type="com.yaouguoji.platform.entity.ShopOrderNumberEntity">
+        <result column="ShopId" property="shopId"/>
+        <result column="Result" property="result"/>
+    </resultMap>
+
+    <sql id="allFields">
+        OrderId,
+        UserId,
+        ShopId,
+        OrderChannel,
+        OrderStatus,
+        ProductType,
+        ProductList,
+        PayType,
+        Price,
+        AddTime,
+        UpdateTime
+    </sql>
+
+    <select id="findOrderNumTop" resultMap="shopOrderNumberEntity">
+        <![CDATA[
+            SELECT ShopId, COUNT(1) as Result
+            FROM order_record
+            WHERE AddTime > #{startTime} AND AddTime < #{endTime}
+            GROUP BY ShopId
+            ORDER BY COUNT(1) DESC
+            LIMIT #{limit}
+        ]]>
+    </select>
+
+    <select id="findOrderPriceTop" resultMap="shopOrderNumberEntity">
+        <![CDATA[
+            SELECT ShopId, SUM(Price) as Result
+            FROM order_record
+            WHERE AddTime > #{startTime} AND AddTime < #{endTime}
+            GROUP BY ShopId
+            ORDER BY SUM(Price) DESC
+            LIMIT #{limit}
+        ]]>
+    </select>
+
+    <select id="selectById" parameterType="map" resultMap="orderRecordEntity">
+        SELECT
+        <include refid="allFields"/>
+        FROM order_record
+        WHERE OrderId=#{orderId}
+    </select>
+
+    <insert id="addOrderInfo" parameterType="map" useGeneratedKeys="true" keyProperty="orderRecordEntity.orderId">
+        INSERT INTO order_record
+        (
+            UserId,
+            ShopId,
+            OrderChannel,
+            OrderStatus,
+            ProductType,
+            ProductList,
+            PayType,
+            Price,
+            AddTime,
+            UpdateTime
+        )
+        VALUES
+        (
+            #{orderRecordEntity.userId},
+            #{orderRecordEntity.shopId},
+            #{orderRecordEntity.orderChannel},
+            #{orderRecordEntity.orderStatus},
+            #{orderRecordEntity.productType},
+            #{orderRecordEntity.productList},
+            #{orderRecordEntity.payType},
+            #{orderRecordEntity.price},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <update id="updateOrderInfo" parameterType="map">
+        UPDATE order_record SET
+            UserId=#{orderRecordEntity.userId},
+            ShopId=#{orderRecordEntity.shopId},
+            OrderChannel=#{orderRecordEntity.orderChannel},
+            OrderStatus=#{orderRecordEntity.orderStatus},
+            ProductType=#{orderRecordEntity.productType},
+            ProductList=#{orderRecordEntity.productList},
+            PayType=#{orderRecordEntity.payType},
+            Price=#{orderRecordEntity.price},
+            UpdateTime=NOW()
+        WHERE OrderId=#{orderRecordEntity.orderId}
+    </update>
+
+    <select id="selectOrderRecordsByUserId" parameterType="map" resultMap="orderRecordEntity">
+        SELECT
+        <include refid="allFields"/>
+        FROM order_record
+        WHERE UserId=#{userId} and AddTime BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="selectOrderRecordsByShopId" parameterType="map" resultMap="orderRecordEntity">
+        SELECT
+        <include refid="allFields"/>
+        FROM order_record
+        WHERE ShopId=#{shopId} and AddTime BETWEEN #{start} AND #{end}
+    </select>
+
+
+</mapper>
