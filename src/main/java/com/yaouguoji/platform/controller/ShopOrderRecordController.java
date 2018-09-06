@@ -1,8 +1,8 @@
 package com.yaouguoji.platform.controller;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
-import com.yaouguoji.platform.constant.ShopOrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
@@ -19,8 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * @author liuwen
+ * @date 2018/9/4
+ */
 @RestController
 public class ShopOrderRecordController {
 
@@ -45,7 +52,7 @@ public class ShopOrderRecordController {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
             List<OrderRecordDTO> ordersByShopId = orderRecordService.findOrdersByShopId(shopId, startTime, endTime);
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = Maps.newHashMap();
             data.put("shopInfo", shopInfoDTO);
             data.put("orderList", ordersByShopId);
             return CommonResult.success(data);
@@ -60,8 +67,7 @@ public class ShopOrderRecordController {
         try {
             Date startTime = SIMPLE_DATE_FORMAT.parse(start);
             Date endTime = SIMPLE_DATE_FORMAT.parse(end);
-            if (limit <= 0 || startTime.after(endTime)
-                    || (type != ShopOrderRankType.ORDER_NUM_COUNT && type != ShopOrderRankType.ORDER_PRICE_COUNT)) {
+            if (limit <= 0 || startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
             Map<Integer, Object> shopIds2ResultMap = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, type);
