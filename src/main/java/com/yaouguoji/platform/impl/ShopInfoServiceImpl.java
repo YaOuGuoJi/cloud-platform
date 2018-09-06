@@ -1,67 +1,73 @@
 package com.yaouguoji.platform.impl;
 
-import com.yaouguoji.platform.dto.ShopDTO;
-import com.yaouguoji.platform.entity.ShopEntity;
-import com.yaouguoji.platform.mapper.ShopMapper;
+import com.yaouguoji.platform.dto.ShopInfoDTO;
+import com.yaouguoji.platform.entity.ShopInfoEntity;
+import com.yaouguoji.platform.mapper.ShopInfoMapper;
 import com.yaouguoji.platform.service.ShopInfoService;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.yaouguoji.platform.util.BeansListUtils;
+import com.yaouguoji.platform.util.UuidUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class ShopInfoServiceImpl implements ShopInfoService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShopInfoServiceImpl.class);
-
     @Resource
-    private ShopMapper shopMapper;
+    private ShopInfoMapper shopInfoMapper;
 
     @Override
-    public ShopDTO getShopInfoByShopId(int shopId) {
-        ShopDTO shopDTO = new ShopDTO();
-        ShopEntity shopEntity = shopMapper.findShopByShopId(shopId);
-        if (shopEntity != null) {
-            BeanUtils.copyProperties(shopEntity, shopDTO);
+    public List<ShopInfoDTO> batchFindByShopIdList(List<Integer> shopIdList) {
+        List<ShopInfoEntity> entityList = shopInfoMapper.findByShopIdList(shopIdList);
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
         }
-        return shopDTO;
+        return BeansListUtils.copyListProperties(entityList, ShopInfoDTO.class);
     }
 
     @Override
-    public int insertShopInfo(ShopDTO shopDTO) {
-        if (shopDTO == null) {
+    public ShopInfoDTO findShopInfoByShopId(int shopId) {
+        ShopInfoEntity entity = shopInfoMapper.findShopInfoById(shopId);
+        if (entity == null) {
+            return null;
+        }
+        ShopInfoDTO shopInfoDTO = new ShopInfoDTO();
+        BeanUtils.copyProperties(entity, shopInfoDTO);
+        return shopInfoDTO;
+    }
+
+    @Override
+    public int insertShopInfo(ShopInfoDTO shopInfoDTO) {
+        if (shopInfoDTO == null) {
             return 0;
         }
-        ShopEntity shopEntity = new ShopEntity();
-        shopEntity.setShopName(shopDTO.getShopName());
-        shopEntity.setBrandId(shopDTO.getBrandId());
-        shopEntity.setRegionId(shopDTO.getRegionId());
-        shopMapper.insert(shopEntity);
-        return shopEntity.getId();
+        shopInfoDTO.setShopId(0);
+        shopInfoDTO.setShopUuid(UuidUtil.buildUuid());
+        ShopInfoEntity shopInfoEntity = new ShopInfoEntity();
+        BeanUtils.copyProperties(shopInfoDTO, shopInfoEntity);
+        shopInfoMapper.addShopInfo(shopInfoEntity);
+        return shopInfoEntity.getShopId();
     }
 
     @Override
-    public void deleteShopInfo(int shopId) {
+    public int updateShopInfoById(ShopInfoDTO shopInfoDTO) {
+        if (shopInfoDTO == null || shopInfoDTO.getShopId() <= 0) {
+            return 0;
+        }
+        ShopInfoEntity shopInfoEntity = new ShopInfoEntity();
+        BeanUtils.copyProperties(shopInfoDTO, shopInfoEntity);
+        return shopInfoMapper.updateShopInfo(shopInfoEntity);
+    }
+
+    @Override
+    public int deleteShopInfoByShopId(int shopId) {
         if (shopId <= 0) {
-            return;
-        }
-        shopMapper.deleteShopInfoById(shopId);
-        LOGGER.info("shop: [{}] has been deleted.", shopId);
-    }
-
-    @Override
-    public int updateShopInfo(ShopDTO shopDTO) {
-        if (shopDTO == null || shopDTO.getId() <= 0
-                || StringUtils.isBlank(shopDTO.getShopName())) {
             return 0;
         }
-        ShopEntity shopEntity = new ShopEntity();
-        BeanUtils.copyProperties(shopDTO, shopEntity);
-        return shopMapper.updateShopInfo(shopEntity);
+        return shopInfoMapper.deleteShopInfo(shopId);
     }
-
-
 }

@@ -5,27 +5,27 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class ShopEntity {
+public class BrandInfoEntity {
 
     /**
-     * 商户id
-     */
-    private int id;
-
-    /**
-     * 商户名
-     */
-    private String shopName;
-
-    /**
-     * 商户品牌
+     * 品牌id
      */
     private int brandId;
 
     /**
-     * 分区id
+     * 品牌名称
      */
-    private int regionId;
+    private String brandName;
+
+    /**
+     * 品牌logo
+     */
+    private String brandLogo;
+
+    /**
+     * 删除标记 1-已删除 0-正常
+     */
+    private int deleted;
 
     /**
      * 添加时间
