@@ -10,7 +10,7 @@
         <result column="Email" property="email" />
         <result column="Address" property="address" />
         <result column="Job" property="job" />
-        <result column="carId" property="carId"/>
+        <result column="CarId" property="carId"/>
         <result column="Vip" property="vip"/>
         <result column="IdentityId" property="identityId" />
         <result column="AddTime" property="addTime"/>
@@ -26,7 +26,7 @@
         Email,
         Address,
         Job,
-        carId,
+        CarId,
         Vip,
         IdentityId,
         AddTime,
@@ -68,7 +68,7 @@
             Email,
             Address,
             Job,
-            carId,
+            CarId,
             Vip,
             IdentityId,
             AddTime,

@@ -23,7 +23,7 @@
         SELECT
         <include refid="allFields"/>
         FROM brand_info
-        WHERE BrandId=#{brandId}
+        WHERE BrandId=#{brandId} AND Deleted=0
     </select>
 
     <insert id="addBrandInfo">
@@ -39,7 +39,7 @@
         (
             #{brandInfoEntity.brandName},
             #{brandInfoEntity.brandLogo},
-            #{brandInfoEntity.deleted},
+            0,
             NOW(),
             NOW()
         )
@@ -51,6 +51,12 @@
             BrandLogo=#{brandInfoEntity.brandLogo},
             UpdateTime=NOW()
         WHERE BrandId=#{brandInfoEntity.brandId}
+    </update>
+
+    <update id="deleteBrandInfoById" parameterType="map">
+        UPDATE brand_info SET
+            Deleted=1
+        WHERE BrandId=#{brandId}
     </update>
 
 </mapper>
