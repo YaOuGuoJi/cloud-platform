@@ -47,6 +47,7 @@
         <foreach collection="shopIdList" index="index" separator="," open="(" close=")" item="shopId">
             #{shopId}
         </foreach>
+        AND Deleted=0
     </select>
 
     <insert id="addShopInfo" parameterType="map" useGeneratedKeys="true" keyProperty="shopInfoEntity.shopId">
@@ -64,6 +65,7 @@
             PhoneNo,
             PhoneNo2,
             AvgPrice,
+            Deleted,
             AddTime,
             UpdateTime
         )
@@ -81,6 +83,7 @@
             #{shopInfoEntity.phoneNo},
             #{shopInfoEntity.phoneNo2},
             #{shopInfoEntity.avgPrice},
+            0,
             NOW(),
             NOW()
         )
