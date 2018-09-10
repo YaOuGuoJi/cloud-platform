@@ -7,10 +7,14 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author liuwen
+ */
 public interface OrderRecordMapper {
 
     /**
      * 查询时间段内订单量最多的商户
+     *
      * @param limit
      * @param startTime
      * @param endTime
@@ -22,6 +26,7 @@ public interface OrderRecordMapper {
 
     /**
      * 查询时间段内订单总额最大的商户
+     *
      * @param limit
      * @param startTime
      * @param endTime
@@ -33,6 +38,7 @@ public interface OrderRecordMapper {
 
     /**
      * 根据orderId查询订单
+     *
      * @param orderId
      * @return
      */
@@ -40,6 +46,7 @@ public interface OrderRecordMapper {
 
     /**
      * 新增订单信息
+     *
      * @param orderRecordEntity
      * @return
      */
@@ -47,6 +54,7 @@ public interface OrderRecordMapper {
 
     /**
      * 更新订单信息
+     *
      * @param orderRecordEntity
      * @return
      */
@@ -54,7 +62,10 @@ public interface OrderRecordMapper {
 
     /**
      * 根据userId查询订单记录
+     *
      * @param userId
+     * @param startTime
+     * @param endTime
      * @return
      */
     List<OrderRecordEntity> selectOrderRecordsByUserId(@Param("userId") int userId,
@@ -63,6 +74,7 @@ public interface OrderRecordMapper {
 
     /**
      * 查询shopId一段时间内的订单记录
+     *
      * @param shopId
      * @param startTime
      * @param endTime

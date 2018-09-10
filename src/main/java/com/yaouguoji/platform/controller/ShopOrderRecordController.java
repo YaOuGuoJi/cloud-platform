@@ -57,7 +57,7 @@ public class ShopOrderRecordController {
             data.put("orderList", ordersByShopId);
             return CommonResult.success(data);
         } catch (Exception e) {
-            LOGGER.error("解析时间异常：[{}]", e);
+            LOGGER.error("解析时间异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
     }
@@ -84,7 +84,7 @@ public class ShopOrderRecordController {
             });
             return CommonResult.success(resultList);
         } catch (ParseException e) {
-            LOGGER.error("解析时间异常: [{}]", e);
+            LOGGER.error("解析时间异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
     }

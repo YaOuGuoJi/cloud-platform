@@ -1,5 +1,7 @@
 package com.yaouguoji.platform.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.constant.ShopOrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
@@ -18,11 +20,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author liuwen
+ */
 @Service
 public class OrderRecordServiceImpl implements OrderRecordService {
 
     @Resource
     private OrderRecordMapper orderRecordMapper;
+
+    @Override
+    public PageInfo<OrderRecordDTO> pageFindOrderRecordByUserId(int userId, int pageNum, int pageSize,
+                                                                Date startTime, Date endTime) {
+        PageHelper.startPage(pageNum, pageSize, true);
+        List<OrderRecordEntity> entityList = orderRecordMapper.selectOrderRecordsByUserId(userId, startTime, endTime);
+        return BeansListUtils.copyListPageInfo(entityList, OrderRecordDTO.class);
+    }
 
     @Override
     public Map<Integer, Object> findShopIdsRankByOrders(int limit, Date startTime, Date endTime, int type) {

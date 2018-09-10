@@ -1,5 +1,6 @@
 package com.yaouguoji.platform.service;
 
+import com.github.pagehelper.PageInfo;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -43,5 +44,13 @@ public class OrderInfoServiceTest {
         Assert.assertTrue(byUser.size() == 1);
         List<OrderRecordDTO> byShop = orderRecordService.findOrdersByShopId(100003, new DateTime().minusDays(3).toDate(), new Date());
         Assert.assertTrue(byShop.size() == 2);
+    }
+
+    @Test
+    public void testPageFind() {
+        PageInfo<OrderRecordDTO> pageInfo =
+                orderRecordService.pageFindOrderRecordByUserId(100000000, 2, 1,
+                        new DateTime(2000, 1, 1, 0, 0, 0).toDate(), new Date());
+        Assert.assertNotNull(pageInfo);
     }
 }
