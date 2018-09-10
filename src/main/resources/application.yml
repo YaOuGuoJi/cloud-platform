@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://39.107.73.6:3306/yaouguoji
-    username: yaouguoji
-    password: liuwen
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
 
 mybatis:
