@@ -39,7 +39,7 @@ public interface ParkRecordService {
      * @param license
      * @return
      */
-    List<ParkRecordDTO>selectParkRecordDTOC(String license);
+    List<ParkRecordDTO>selectParkRecordDTOL(String license);
 
     /**
      * 查询所有停车记录(后期改为分页的)

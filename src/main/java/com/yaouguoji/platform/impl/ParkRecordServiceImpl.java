@@ -24,10 +24,12 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     public int addParkRecordDTO(ParkRecordDTO parkRecordDTO) {
         CarEntity carEntity = carMapper.selectCarL(parkRecordDTO.getLicense());
         Integer id=0;
-        if(carEntity!=null){
+        if(carEntity==null){
+            carEntity=new CarEntity();
             carEntity.setLicense(parkRecordDTO.getLicense());
             carEntity.setOwnerId(0);
-            id=carMapper.addCar(carEntity);
+            carMapper.addCar(carEntity);
+            id=carEntity.getId();
         }
         else id=carEntity.getId();
         ParkRecordEntity parkRecordEntity=new ParkRecordEntity();
@@ -39,9 +41,18 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     @Override
     public int updateParkRecordDTO(ParkRecordDTO parkRecordDTO) {
         CarEntity carEntity = carMapper.selectCarL(parkRecordDTO.getLicense());
+        Integer id=0;
+        if(carEntity==null){
+            carEntity=new CarEntity();
+            carEntity.setLicense(parkRecordDTO.getLicense());
+            carEntity.setOwnerId(0);
+            carMapper.addCar(carEntity);
+            id=carEntity.getId();
+        }
+        else id=carEntity.getId();
         ParkRecordEntity parkRecordEntity=new ParkRecordEntity();
         BeanUtils.copyProperties(parkRecordDTO,parkRecordEntity);
-        parkRecordEntity.setCarId(carEntity.getId());
+        parkRecordEntity.setCarId(id);
         return parkRecordMapper.updateParkRecord(parkRecordEntity);
     }
 
@@ -61,36 +72,37 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     }
 
     @Override
-    public List<ParkRecordDTO> selectParkRecordDTOC(String license) {
-        CarEntity carEntitie = carMapper.selectCarL(license);
-        List<ParkRecordEntity> parkRecordEntitieslist=parkRecordMapper.selectParkRecordC(carEntitie.getId());
-        List<ParkRecordDTO> parkRecordDTOSlist=new ArrayList<ParkRecordDTO>();
+    public List<ParkRecordDTO> selectParkRecordDTOL(String license) {
+        CarEntity carEntitiy = carMapper.selectCarL(license);
+        List<ParkRecordEntity> parkRecordEntitieslist=parkRecordMapper.selectParkRecordC(carEntitiy.getId());
+        List<ParkRecordDTO> parkRecordDTOS=new ArrayList<ParkRecordDTO>();
         if(parkRecordEntitieslist!=null){
             for(Iterator<ParkRecordEntity> iterator=parkRecordEntitieslist.iterator();iterator.hasNext();){
                 ParkRecordEntity parkRecordEntity = (ParkRecordEntity) iterator.next();
                 ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
                 BeanUtils.copyProperties(parkRecordEntity,parkRecordDTO);
-                parkRecordDTOSlist.add(parkRecordDTO);
+                parkRecordDTO.setLicense(carEntitiy.getLicense());
+                parkRecordDTOS.add(parkRecordDTO);
             }
-            return parkRecordDTOSlist;
+            return parkRecordDTOS;
         }
         return null;
     }
 
     @Override
     public List<ParkRecordDTO> selectParkRecordDTOA() {
-        List<ParkRecordEntity> parkRecordEntitieslist = parkRecordMapper.selectParkRecordA();
-        List<ParkRecordDTO> parkRecordDTOSlist=new ArrayList<ParkRecordDTO>();
-        if(parkRecordEntitieslist!=null){
-            for(Iterator<ParkRecordEntity> iterator=parkRecordEntitieslist.iterator();iterator.hasNext();){
+        List<ParkRecordEntity> parkRecordEntities = parkRecordMapper.selectParkRecordA();
+        List<ParkRecordDTO> parkRecordDTOS=new ArrayList<ParkRecordDTO>();
+        if(parkRecordEntities!=null){
+            for(Iterator<ParkRecordEntity> iterator=parkRecordEntities.iterator();iterator.hasNext();){
                 ParkRecordEntity parkRecordEntity = (ParkRecordEntity) iterator.next();
                 CarEntity carEntity = carMapper.selectCarI(parkRecordEntity.getCarId());
                 ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
                 BeanUtils.copyProperties(parkRecordEntity,parkRecordDTO);
                 parkRecordDTO.setLicense(carEntity.getLicense());
-                parkRecordDTOSlist.add(parkRecordDTO);
+                parkRecordDTOS.add(parkRecordDTO);
             }
-            return  parkRecordDTOSlist;
+            return  parkRecordDTOS;
         }
         return null;
     }

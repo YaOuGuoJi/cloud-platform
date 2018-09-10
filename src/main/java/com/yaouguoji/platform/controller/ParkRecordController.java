@@ -30,7 +30,7 @@ public class ParkRecordController {
      */
     @GetMapping(value = "/selectParkRecordByLiense/{license}")
     public CommonResult selectParkRecordByLiense(@PathVariable("license") String license){
-        List<ParkRecordDTO> parkRecordDTOS =parkRecordService.selectParkRecordDTOC(license);
+        List<ParkRecordDTO> parkRecordDTOS =parkRecordService.selectParkRecordDTOL(license);
         if (parkRecordDTOS == null){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }

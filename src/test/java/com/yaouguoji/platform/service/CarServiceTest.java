@@ -21,17 +21,17 @@ public class CarServiceTest {
     @Test
     public void testAddCar(){
         CarDTO carDTO=new CarDTO();
-        carDTO.setLicense("晋E2010");
-        carDTO.setOwnerId(1);
+        carDTO.setLicense("晋E2056");
+        carDTO.setOwnerId(0);
         carService.addCarDTO(carDTO);
 
     }
     @Test
     public void testupdateCar(){
         CarDTO carDTO=new CarDTO();
-        carDTO.setId(19);
-        carDTO.setOwnerId(1);
-        carDTO.setLicense("晋E2019");
+        carDTO.setId(32);
+        carDTO.setOwnerId(0);
+        carDTO.setLicense("晋E2056");
         carService.updateCarDTO(carDTO);
     }
 
@@ -56,39 +56,5 @@ public class CarServiceTest {
             System.out.println(carDTO);
         }
 
-    }
-    @Test
-    public void testselectcount(){
-        int i = parkRecordService.selectParkRecordDTOCout();
-        System.out.println(i);
-    }
-    @Test
-    public void addP(){
-        ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
-        parkRecordDTO.setActiveType(0);
-        parkRecordDTO.setLicense("晋E2018");
-       parkRecordService.addParkRecordDTO(parkRecordDTO);
-    }
-    @Test
-    public  void updateP(){
-        ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
-        parkRecordDTO.setId(5);
-        parkRecordDTO.setActiveType(0);
-        parkRecordDTO.setLicense("晋E2019");
-        parkRecordService.updateParkRecordDTO(parkRecordDTO);
-    }
-    @Test
-    public void deleteP(){
-        parkRecordService.deleteParkRecordDTO(6);
-    }
-    @Test
-    public void selectPI(){
-        System.out.println(parkRecordService.selectParkRecordDROI(1));
-    }
-
-    @Test
-    public void selectPA(){
-        List<ParkRecordDTO> parkRecordDTOS = parkRecordService.selectParkRecordDTOA();
-        System.out.println(parkRecordDTOS);
     }
 }
