@@ -5,6 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author liuwen
+ */
 @Data
 public class UserInfoDTO implements Serializable {
 
@@ -13,7 +16,7 @@ public class UserInfoDTO implements Serializable {
     /**
      * 用户id
      */
-    private int userId;
+    private Integer userId;
 
     /**
      * 用户姓名
@@ -23,7 +26,7 @@ public class UserInfoDTO implements Serializable {
     /**
      * 性别 1-男 2-女 其他-未知
      */
-    private int sex;
+    private Integer sex;
 
     /**
      * 生日
@@ -53,12 +56,12 @@ public class UserInfoDTO implements Serializable {
     /**
      * 汽车id
      */
-    private int carId;
+    private Integer carId;
 
     /**
      * 是否VIP用户 1-是 0-不是
      */
-    private int vip;
+    private Integer vip;
 
     /**
      * 身份证号码

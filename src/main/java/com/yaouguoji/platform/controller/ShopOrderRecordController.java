@@ -1,8 +1,8 @@
 package com.yaouguoji.platform.controller;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
@@ -52,11 +52,13 @@ public class ShopOrderRecordController {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
             List<OrderRecordDTO> ordersByShopId = orderRecordService.findOrdersByShopId(shopId, startTime, endTime);
-            Map<String, Object> data = Maps.newHashMap();
-            data.put("shopInfo", shopInfoDTO);
-            data.put("orderList", ordersByShopId);
-            return CommonResult.success(data);
-        } catch (Exception e) {
+            return new CommonResultBuilder()
+                    .code(200)
+                    .message("查询成功！")
+                    .data("shopInfo", shopInfoDTO)
+                    .data("orderList", ordersByShopId)
+                    .build();
+        } catch (ParseException e) {
             LOGGER.error("解析时间异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
@@ -70,11 +72,13 @@ public class ShopOrderRecordController {
             if (limit <= 0 || startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
-            Map<Integer, Object> shopIds2ResultMap = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, type);
+            Map<Integer, Object> shopIds2ResultMap
+                    = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, type);
             if (CollectionUtils.isEmpty(shopIds2ResultMap)) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
-            List<ShopInfoDTO> shopInfoDTOs = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
+            List<ShopInfoDTO> shopInfoDTOs
+                    = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
             List<ShopOrderRankVO> resultList = Lists.newArrayList();
             shopInfoDTOs.forEach(shopInfoDTO -> {
                 ShopOrderRankVO shopOrderRankVO = new ShopOrderRankVO();

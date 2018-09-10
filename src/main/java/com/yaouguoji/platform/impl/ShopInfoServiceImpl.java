@@ -14,6 +14,9 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author liuwen
+ */
 @Service
 public class ShopInfoServiceImpl implements ShopInfoService {
 

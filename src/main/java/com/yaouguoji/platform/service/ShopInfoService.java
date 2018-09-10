@@ -6,11 +6,14 @@ import java.util.List;
 
 /**
  * 商户信息服务
+ *
+ * @author liuwen
  */
 public interface ShopInfoService {
 
     /**
      * 批量查询
+     *
      * @param shopIdList
      * @return
      */
@@ -18,6 +21,7 @@ public interface ShopInfoService {
 
     /**
      * 根据shopId查询商户详细信息
+     *
      * @param shopId
      * @return
      */
@@ -25,6 +29,7 @@ public interface ShopInfoService {
 
     /**
      * 插入商户详细信息
+     *
      * @param shopInfoDTO
      * @return
      */
@@ -32,6 +37,7 @@ public interface ShopInfoService {
 
     /**
      * 更新商户信息
+     *
      * @param shopInfoDTO
      * @return
      */
@@ -39,6 +45,7 @@ public interface ShopInfoService {
 
     /**
      * 根据商户id删除商户信息
+     *
      * @param shopId
      * @return
      */

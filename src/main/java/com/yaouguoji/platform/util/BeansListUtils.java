@@ -2,7 +2,6 @@ package com.yaouguoji.platform.util;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-import com.yaouguoji.platform.dto.OrderRecordDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +17,7 @@ public class BeansListUtils {
 
     /**
      * 将sourceList 拷贝为T类型的List
+     *
      * @param sourceList
      * @param tClass
      * @param <T>

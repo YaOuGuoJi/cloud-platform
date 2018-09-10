@@ -51,9 +51,8 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             return Collections.emptyMap();
         }
         Map<Integer, Object> resultMap = Maps.newHashMap();
-        orderNumberEntities.forEach(shopOrderNumberEntity -> {
-            resultMap.put(shopOrderNumberEntity.getShopId(), shopOrderNumberEntity.getResult());
-        });
+        orderNumberEntities.forEach(shopOrderNumberEntity ->
+                resultMap.put(shopOrderNumberEntity.getShopId(), shopOrderNumberEntity.getResult()));
         return resultMap;
     }
 
