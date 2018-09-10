@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class CameraEntity {
 
-    private int cameraId;
+    private Integer cameraId;
 
     private String cName;
 
-    private int areaId;
+    private Integer areaId;
 
     private Date cAddTime;
 

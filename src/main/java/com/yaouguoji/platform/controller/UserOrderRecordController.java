@@ -1,8 +1,8 @@
 package com.yaouguoji.platform.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author liuwen
@@ -34,7 +33,7 @@ public class UserOrderRecordController {
     @Resource
     private UserInfoService userInfoService;
 
-    @GetMapping("/user/order/page")
+    @GetMapping("/order/user/page")
     public CommonResult userOrderRecordPage(int userId, int pageNum, int pageSize, String start, String end) {
         if (userId <= 0 || pageNum <= 0 || pageSize <= 0) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
@@ -48,10 +47,12 @@ public class UserOrderRecordController {
             Date endTime = SIMPLE_DATE_FORMAT.parse(end);
             PageInfo<OrderRecordDTO> orderPageInfo =
                     orderRecordService.pageFindOrderRecordByUserId(userId, pageNum, pageSize, startTime, endTime);
-            Map<String, Object> result = Maps.newHashMap();
-            result.put("userInfo", userInfoDTO);
-            result.put("orderPageInfo", orderPageInfo);
-            return CommonResult.success(result);
+            return new CommonResultBuilder()
+                    .code(200)
+                    .message("查询成功！")
+                    .data("userInfo", userInfoDTO)
+                    .data("orderPageInfo", orderPageInfo)
+                    .build();
         } catch (ParseException e) {
             LOGGER.error("解析时间异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);

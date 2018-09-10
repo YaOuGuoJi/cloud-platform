@@ -1,10 +1,10 @@
 package com.yaouguoji.platform.impl;
 
-import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.AreaDTO;
 import com.yaouguoji.platform.entity.AreaEntity;
 import com.yaouguoji.platform.mapper.AreaMapper;
 import com.yaouguoji.platform.service.AreaService;
+import com.yaouguoji.platform.util.BeansListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -29,13 +29,7 @@ public class AreaServiceImpl implements AreaService {
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
-        List<AreaDTO> areaDTOList = Lists.newArrayList();
-        entityList.forEach(entity -> {
-            AreaDTO areaDTO = new AreaDTO();
-            BeanUtils.copyProperties(entity, areaDTO);
-            areaDTOList.add(areaDTO);
-        });
-        return areaDTOList;
+        return BeansListUtils.copyListProperties(entityList, AreaDTO.class);
     }
 
     @Override

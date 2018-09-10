@@ -5,23 +5,26 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * @author liuwen
+ */
 @Data
 public class OrderRecordEntity {
 
     /**
      * 订单id
      */
-    private int orderId;
+    private Integer orderId;
 
     /**
      * 用户id
      */
-    private int userId;
+    private Integer userId;
 
     /**
      * 商户id
      */
-    private int shopId;
+    private Integer shopId;
 
     /**
      * 下单途径

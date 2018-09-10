@@ -13,17 +13,17 @@ public class OrderRecordDTO implements Serializable {
     /**
      * 订单id
      */
-    private int orderId;
+    private Integer orderId;
 
     /**
      * 用户id
      */
-    private int userId;
+    private Integer userId;
 
     /**
      * 商户id
      */
-    private int shopId;
+    private Integer shopId;
 
     /**
      * 下单途径

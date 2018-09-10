@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author liuwen
+ */
 @Data
 public class ShopOrderRankVO implements Serializable {
 

@@ -1,5 +1,8 @@
 package com.yaouguoji.platform.enums;
 
+/**
+ * @author liuwen
+ */
 public enum HttpStatus {
 
     OK(200, "成功"),

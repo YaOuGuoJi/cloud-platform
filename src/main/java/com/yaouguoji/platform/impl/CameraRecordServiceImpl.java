@@ -1,10 +1,10 @@
 package com.yaouguoji.platform.impl;
 
-import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.CameraRecordDTO;
 import com.yaouguoji.platform.entity.CameraRecordEntity;
 import com.yaouguoji.platform.mapper.RecordMapper;
 import com.yaouguoji.platform.service.CameraRecordService;
+import com.yaouguoji.platform.util.BeansListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -29,18 +29,12 @@ public class CameraRecordServiceImpl implements CameraRecordService {
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
-        List<CameraRecordDTO> cameraRecordDTOList = Lists.newArrayList();
-        entityList.forEach(entity ->{
-            CameraRecordDTO cameraRecordDTO = new CameraRecordDTO();
-            BeanUtils.copyProperties(entity, cameraRecordDTO);
-            cameraRecordDTOList.add(cameraRecordDTO);
-        });
-        return cameraRecordDTOList;
+        return BeansListUtils.copyListProperties(entityList, CameraRecordDTO.class);
     }
 
     @Override
     public void deleteByPrimaryKey(Integer cRecodeId) {
-        if (cRecodeId == 0){
+        if (cRecodeId == 0) {
             return;
         }
         recordMapper.deleteByPrimaryKey(cRecodeId);
@@ -49,7 +43,7 @@ public class CameraRecordServiceImpl implements CameraRecordService {
 
     @Override
     public int insert(CameraRecordDTO record) {
-        if (record == null){
+        if (record == null) {
             return 0;
         }
         CameraRecordEntity recordEntity = new CameraRecordEntity();
@@ -66,15 +60,15 @@ public class CameraRecordServiceImpl implements CameraRecordService {
     public CameraRecordDTO selectByPrimaryKey(Integer cRecodeId) {
         CameraRecordDTO cameraRecordDTO = new CameraRecordDTO();
         CameraRecordEntity cameraRecordEntity = recordMapper.selectByPrimaryKey(cRecodeId);
-        if (cameraRecordEntity != null){
-            BeanUtils.copyProperties(cameraRecordEntity,cameraRecordDTO);
+        if (cameraRecordEntity != null) {
+            BeanUtils.copyProperties(cameraRecordEntity, cameraRecordDTO);
         }
         return cameraRecordDTO;
     }
 
     @Override
     public int updateByPrimaryKeySelective(CameraRecordDTO record) {
-        if (record == null){
+        if (record == null) {
             return 0;
         }
         CameraRecordEntity recordEntity = new CameraRecordEntity();

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+/**
+ * @author liuwen
+ */
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 

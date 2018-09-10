@@ -2,6 +2,8 @@ package com.yaouguoji.platform.constant;
 
 /**
  * 商户订单排序类型
+ *
+ * @author liuwen
  */
 public class ShopOrderRankType {
 

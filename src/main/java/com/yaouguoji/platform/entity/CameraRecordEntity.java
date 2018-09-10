@@ -11,7 +11,7 @@ public class CameraRecordEntity {
 
     private Date crUpdateTime;
 
-    private int crNumber;
+    private Integer crNumber;
 
     public Integer getcRecordId() {
         return cRecordId;

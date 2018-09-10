@@ -4,8 +4,8 @@ import com.yaouguoji.platform.enums.HttpStatus;
 import lombok.Getter;
 
 /**
- * @author Morse1113
  * @param <Content>
+ * @author Morse1113
  */
 public class CommonResult<Content> {
 
@@ -19,7 +19,7 @@ public class CommonResult<Content> {
      * 是否成功
      */
     @Getter
-    private boolean success;
+    private boolean success = false;
 
     /**
      * 提示信息
