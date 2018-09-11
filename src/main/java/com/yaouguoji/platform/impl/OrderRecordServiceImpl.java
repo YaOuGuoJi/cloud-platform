@@ -30,6 +30,14 @@ public class OrderRecordServiceImpl implements OrderRecordService {
     private OrderRecordMapper orderRecordMapper;
 
     @Override
+    public PageInfo<OrderRecordDTO> pageFindOrderRecordByShopId(int shopId, int pageNum, int pageSize,
+                                                                Date startTime, Date endTime) {
+        PageHelper.startPage(pageNum, pageSize, true);
+        List<OrderRecordEntity> entityList = orderRecordMapper.selectOrderRecordsByShopId(shopId, startTime, endTime);
+        return BeansListUtils.copyListPageInfo(entityList, OrderRecordDTO.class);
+    }
+
+    @Override
     public PageInfo<OrderRecordDTO> pageFindOrderRecordByUserId(int userId, int pageNum, int pageSize,
                                                                 Date startTime, Date endTime) {
         PageHelper.startPage(pageNum, pageSize, true);

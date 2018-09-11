@@ -13,7 +13,20 @@ import java.util.Map;
 public interface OrderRecordService {
 
     /**
-     * 分页查询用户订单
+     * 分页查询商户订单记录
+     *
+     * @param shopId
+     * @param pageNum
+     * @param pageSize
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    PageInfo<OrderRecordDTO> pageFindOrderRecordByShopId(int shopId, int pageNum, int pageSize,
+                                                         Date startTime, Date endTime);
+
+    /**
+     * 分页查询用户订单记录
      *
      * @param userId
      * @param pageNum
