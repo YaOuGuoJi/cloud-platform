@@ -1,5 +1,6 @@
 package com.yaouguoji.platform.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
@@ -13,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -39,8 +39,8 @@ public class ShopOrderRecordController {
     @Resource
     private ShopInfoService shopInfoService;
 
-    @GetMapping("/order/shop/{shopId}")
-    public CommonResult shopOrder(@PathVariable("shopId") int shopId, String start, String end) {
+    @GetMapping("/order/shop/page")
+    public CommonResult shopOrder(int shopId, int pageNum, int pageSize, String start, String end) {
         try {
             Date startTime = SIMPLE_DATE_FORMAT.parse(start);
             Date endTime = SIMPLE_DATE_FORMAT.parse(end);
@@ -51,12 +51,13 @@ public class ShopOrderRecordController {
             if (shopInfoDTO == null) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
-            List<OrderRecordDTO> ordersByShopId = orderRecordService.findOrdersByShopId(shopId, startTime, endTime);
+            PageInfo<OrderRecordDTO> pageInfo =
+                    orderRecordService.pageFindOrderRecordByShopId(shopId, pageNum, pageSize, startTime, endTime);
             return new CommonResultBuilder()
                     .code(200)
                     .message("查询成功！")
                     .data("shopInfo", shopInfoDTO)
-                    .data("orderList", ordersByShopId)
+                    .data("pageInfo", pageInfo)
                     .build();
         } catch (ParseException e) {
             LOGGER.error("解析时间异常!", e);
