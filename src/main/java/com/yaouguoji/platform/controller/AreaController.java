@@ -9,6 +9,7 @@ import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.AreaService;
 import com.yaouguoji.platform.service.CameraRecordService;
 import com.yaouguoji.platform.service.CameraService;
+import com.yaouguoji.platform.vo.ObjectMapVO;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,13 +87,16 @@ public class AreaController {
         if (CollectionUtils.isEmpty(cameraRecordDTOS)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-        Map<Integer, Integer> areaId2PeopleNumMap = Maps.newHashMap();
+        Map<Integer, ObjectMapVO> resultMap = Maps.newHashMap();
         cameraRecordDTOS.forEach(cameraRecordDTO -> {
             int areaId = cameraId2AreaIdMap.get(cameraRecordDTO.getCameraId());
-            areaId2PeopleNumMap.put(areaId,
-                    areaId2PeopleNumMap.getOrDefault(areaId, 0) + cameraRecordDTO.getCrNumber());
+            ObjectMapVO objectMapVO = resultMap.get(areaId);
+            if (objectMapVO == null) {
+                resultMap.put(areaId, new ObjectMapVO(areaDTOS, cameraRecordDTO.getCrNumber()));
+            } else {
+                objectMapVO.setNumber((Integer) objectMapVO.getNumber() + cameraRecordDTO.getCrNumber());
+            }
         });
-        areaDTOS.forEach(areaDTO -> areaDTO.setNumber(areaId2PeopleNumMap.get(areaDTO.getAreaId())));
-        return CommonResult.success(areaDTOS);
+        return CommonResult.success(resultMap.values());
     }
 }
