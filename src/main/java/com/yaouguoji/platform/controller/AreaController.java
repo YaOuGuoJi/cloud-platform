@@ -87,14 +87,15 @@ public class AreaController {
         if (CollectionUtils.isEmpty(cameraRecordDTOS)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-        Map<Integer, ObjectMapVO> resultMap = Maps.newHashMap();
+        Map<Integer, AreaDTO> areaMap = areaDTOS.stream().collect(Collectors.toMap(AreaDTO::getAreaId, area -> area));
+        Map<Integer, ObjectMapVO<AreaDTO, Integer>> resultMap = Maps.newHashMap();
         cameraRecordDTOS.forEach(cameraRecordDTO -> {
             int areaId = cameraId2AreaIdMap.get(cameraRecordDTO.getCameraId());
-            ObjectMapVO objectMapVO = resultMap.get(areaId);
+            ObjectMapVO<AreaDTO, Integer> objectMapVO = resultMap.get(areaId);
             if (objectMapVO == null) {
-                resultMap.put(areaId, new ObjectMapVO(areaDTOS, cameraRecordDTO.getCrNumber()));
+                resultMap.put(areaId, new ObjectMapVO<>(areaMap.get(areaId), cameraRecordDTO.getCrNumber()));
             } else {
-                objectMapVO.setNumber((Integer) objectMapVO.getNumber() + cameraRecordDTO.getCrNumber());
+                objectMapVO.setNumber(objectMapVO.getNumber() + cameraRecordDTO.getCrNumber());
             }
         });
         return CommonResult.success(resultMap.values());

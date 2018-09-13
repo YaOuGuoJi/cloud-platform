@@ -86,7 +86,7 @@ public class ShopOrderRecordController {
                     = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
             List<ObjectMapVO> resultList = Lists.newArrayList();
             shopInfoDTOs.forEach(shopInfoDTO ->
-                resultList.add(new ObjectMapVO(shopInfoDTO, shopIds2ResultMap.get(shopInfoDTO.getShopId())))
+                resultList.add(new ObjectMapVO<>(shopInfoDTO, shopIds2ResultMap.get(shopInfoDTO.getShopId())))
             );
             return CommonResult.success(resultList);
         } catch (ParseException e) {
@@ -108,7 +108,7 @@ public class ShopOrderRecordController {
             List<ObjectMapVO> resultList = Lists.newArrayList();
             areaDTOS.forEach(areaDTO -> {
                 ObjectMapVO objectMapVO =
-                        new ObjectMapVO(areaDTO, areaId2NumberMap.getOrDefault(areaDTO.getAreaId(), 0));
+                        new ObjectMapVO<>(areaDTO, areaId2NumberMap.getOrDefault(areaDTO.getAreaId(), 0));
                 resultList.add(objectMapVO);
             });
             return CommonResult.success(resultList);

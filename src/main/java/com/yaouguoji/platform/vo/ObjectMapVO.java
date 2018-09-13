@@ -8,11 +8,11 @@ import java.io.Serializable;
  * @author liuwen
  */
 @Data
-public class ObjectMapVO implements Serializable {
+public class ObjectMapVO<O, N> implements Serializable {
 
     private static final long serialVersionUID = 1514838332075044027L;
 
-    public ObjectMapVO(Object dtoObject, Object number) {
+    public ObjectMapVO(O dtoObject, N number) {
         this.dtoObject = dtoObject;
         this.number = number;
     }
@@ -20,10 +20,10 @@ public class ObjectMapVO implements Serializable {
     /**
      * dto对象
      */
-    private Object dtoObject;
+    private O dtoObject;
 
     /**
      * 数据
      */
-    private Object number;
+    private N number;
 }
