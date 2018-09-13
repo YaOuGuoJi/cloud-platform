@@ -22,21 +22,20 @@ public interface ParkRecordMapper {
         /**
          * 根据停车记录id查询停车记录
          */
-        ParkRecordEntity selectParkRecordI(@Param("id")int id);
+        ParkRecordEntity selectParkRecordById(@Param("id")int id);
         /**
          * 根据车id查询停车记录
          */
-        List<ParkRecordEntity> selectParkRecordC(@Param("cid")int carId);
+        List<ParkRecordEntity> selectParkRecordByCarId(@Param("cid")int carId);
         /**
         * 查出所有停车记录（需要改成分页形式的）
         */
-        List<ParkRecordEntity> selectParkRecordA();
+        List<ParkRecordEntity> selectParkRecordAll();
         /**
         * 查出停车场现在停车数量
         */
         int selectCount();
 
-        ParkRecordEntity select();
 
 
 }

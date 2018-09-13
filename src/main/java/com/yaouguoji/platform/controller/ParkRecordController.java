@@ -19,7 +19,7 @@ public class ParkRecordController {
      */
     @GetMapping(value = "/selectParkRecordById/{id}")
     public CommonResult selectParkRecordById(@PathVariable("id") Integer id){
-        ParkRecordDTO parkRecordDTO = parkRecordService.selectParkRecordDROI(id);
+        ParkRecordDTO parkRecordDTO = parkRecordService.selectParkRecordDROById(id);
         if (parkRecordDTO == null){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
@@ -30,7 +30,7 @@ public class ParkRecordController {
      */
     @GetMapping(value = "/selectParkRecordByLiense/{license}")
     public CommonResult selectParkRecordByLiense(@PathVariable("license") String license){
-        List<ParkRecordDTO> parkRecordDTOS =parkRecordService.selectParkRecordDTOL(license);
+        List<ParkRecordDTO> parkRecordDTOS =parkRecordService.selectParkRecordDTOByL(license);
         if (parkRecordDTOS == null){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }

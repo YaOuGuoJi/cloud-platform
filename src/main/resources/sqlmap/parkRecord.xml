@@ -35,7 +35,7 @@
     </delete>
 
     <!--根据记录id查停车记录-->
-    <select id="selectParkRecordI" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
+    <select id="selectParkRecordById" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
         select
         /*用到上面的sql标签，方便*/
         <include refid="allFields"/>
@@ -43,12 +43,12 @@
     </select>
 
     <!--根据汽车id查询停车记录-->
-    <select id="selectParkRecordC" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
+    <select id="selectParkRecordByCarId" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
          select id,car_id ,active_type,add_time,update_time from park_record where car_id=#{cid}
     </select>
 
     <!--查出所有停车记录-->
-    <select id="selectParkRecordA" resultMap="parkRecordEntity">
+    <select id="selectParkRecordAll" resultMap="parkRecordEntity">
           select
           <include refid="allFields"/>
           from park_record

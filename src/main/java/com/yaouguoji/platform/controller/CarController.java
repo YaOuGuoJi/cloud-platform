@@ -19,7 +19,7 @@ public class CarController {
      */
     @GetMapping(value = "/selectCarById/{id}")
    public CommonResult selectCarById(@PathVariable("id") Integer id){
-        CarDTO carDTO = carService.selectCarDTOI(id);
+        CarDTO carDTO = carService.selectCarDTOById(id);
         if (carDTO == null){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
@@ -33,7 +33,7 @@ public class CarController {
      */
     @GetMapping(value = "/selectCarByLicense")
     public CommonResult selectCarByLicense(@PathVariable("license") String license){
-        CarDTO carDTO=carService.selectCarDTOL(license);
+        CarDTO carDTO=carService.selectCarDTOByL(license);
         if (carDTO == null){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }

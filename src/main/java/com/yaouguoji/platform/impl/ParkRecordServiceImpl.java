@@ -22,37 +22,17 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     private CarMapper carMapper;
     @Override
     public int addParkRecordDTO(ParkRecordDTO parkRecordDTO) {
-        CarEntity carEntity = carMapper.selectCarL(parkRecordDTO.getLicense());
-        Integer id=0;
-        if(carEntity==null){
-            carEntity=new CarEntity();
-            carEntity.setLicense(parkRecordDTO.getLicense());
-            carEntity.setOwnerId(0);
-            carMapper.addCar(carEntity);
-            id=carEntity.getId();
-        }
-        else id=carEntity.getId();
         ParkRecordEntity parkRecordEntity=new ParkRecordEntity();
         BeanUtils.copyProperties(parkRecordDTO,parkRecordEntity);
-        parkRecordEntity.setCarId(id);
+        parkRecordEntity.setCarId(carFactoryByL(parkRecordDTO.getLicense()));
         return parkRecordMapper.addParkRecord(parkRecordEntity);
     }
 
     @Override
     public int updateParkRecordDTO(ParkRecordDTO parkRecordDTO) {
-        CarEntity carEntity = carMapper.selectCarL(parkRecordDTO.getLicense());
-        Integer id=0;
-        if(carEntity==null){
-            carEntity=new CarEntity();
-            carEntity.setLicense(parkRecordDTO.getLicense());
-            carEntity.setOwnerId(0);
-            carMapper.addCar(carEntity);
-            id=carEntity.getId();
-        }
-        else id=carEntity.getId();
         ParkRecordEntity parkRecordEntity=new ParkRecordEntity();
         BeanUtils.copyProperties(parkRecordDTO,parkRecordEntity);
-        parkRecordEntity.setCarId(id);
+        parkRecordEntity.setCarId(carFactoryByL(parkRecordDTO.getLicense()));
         return parkRecordMapper.updateParkRecord(parkRecordEntity);
     }
 
@@ -62,26 +42,26 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     }
 
     @Override
-    public ParkRecordDTO selectParkRecordDROI(int id) {
-        ParkRecordEntity parkRecordEntity=parkRecordMapper.selectParkRecordI(id);
-        CarEntity carEntity = carMapper.selectCarI(parkRecordEntity.getCarId());
+    public ParkRecordDTO selectParkRecordDROById(int id) {
+        ParkRecordEntity parkRecordEntity=parkRecordMapper.selectParkRecordById(id);
+        String license=selectCarL(parkRecordEntity.getCarId());
         ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
         BeanUtils.copyProperties(parkRecordEntity,parkRecordDTO);
-        parkRecordDTO.setLicense(carEntity.getLicense());
+        parkRecordDTO.setLicense(license);
         return parkRecordDTO;
     }
 
     @Override
-    public List<ParkRecordDTO> selectParkRecordDTOL(String license) {
-        CarEntity carEntitiy = carMapper.selectCarL(license);
-        List<ParkRecordEntity> parkRecordEntitieslist=parkRecordMapper.selectParkRecordC(carEntitiy.getId());
+    public List<ParkRecordDTO> selectParkRecordDTOByL(String license) {
+        CarEntity carEntitiy = carMapper.selectCarByL(license);
+        List<ParkRecordEntity> parkRecordEntities=parkRecordMapper.selectParkRecordByCarId(carEntitiy.getId());
         List<ParkRecordDTO> parkRecordDTOS=new ArrayList<ParkRecordDTO>();
-        if(parkRecordEntitieslist!=null){
-            for(Iterator<ParkRecordEntity> iterator=parkRecordEntitieslist.iterator();iterator.hasNext();){
+        if(parkRecordEntities!=null){
+            for(Iterator<ParkRecordEntity> iterator=parkRecordEntities.iterator();iterator.hasNext();){
                 ParkRecordEntity parkRecordEntity = (ParkRecordEntity) iterator.next();
                 ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
                 BeanUtils.copyProperties(parkRecordEntity,parkRecordDTO);
-                parkRecordDTO.setLicense(carEntitiy.getLicense());
+                parkRecordDTO.setLicense(license);
                 parkRecordDTOS.add(parkRecordDTO);
             }
             return parkRecordDTOS;
@@ -91,15 +71,14 @@ public class ParkRecordServiceImpl implements ParkRecordService {
 
     @Override
     public List<ParkRecordDTO> selectParkRecordDTOA() {
-        List<ParkRecordEntity> parkRecordEntities = parkRecordMapper.selectParkRecordA();
+        List<ParkRecordEntity> parkRecordEntities = parkRecordMapper.selectParkRecordAll();
         List<ParkRecordDTO> parkRecordDTOS=new ArrayList<ParkRecordDTO>();
         if(parkRecordEntities!=null){
             for(Iterator<ParkRecordEntity> iterator=parkRecordEntities.iterator();iterator.hasNext();){
                 ParkRecordEntity parkRecordEntity = (ParkRecordEntity) iterator.next();
-                CarEntity carEntity = carMapper.selectCarI(parkRecordEntity.getCarId());
                 ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
                 BeanUtils.copyProperties(parkRecordEntity,parkRecordDTO);
-                parkRecordDTO.setLicense(carEntity.getLicense());
+                parkRecordDTO.setLicense(selectCarL(parkRecordEntity.getCarId()));
                 parkRecordDTOS.add(parkRecordDTO);
             }
             return  parkRecordDTOS;
@@ -110,5 +89,36 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     @Override
     public int selectParkRecordDTOCout() {
         return parkRecordMapper.selectCount();
+    }
+
+    /**
+     * 新增停车记录时车，根据车牌查车
+     * @param license
+     * @return
+     */
+    public int carFactoryByL(String license){
+        CarEntity carEntity = carMapper.selectCarByL(license);
+        if (carEntity!=null) {
+            return carEntity.getId();}
+        else{ carEntity=new CarEntity();
+        carEntity.setOwnerId(0);
+        carEntity.setLicense(license);
+        carMapper.addCar(carEntity);
+        return carEntity.getId();}
+    }
+
+    /**
+     * 查询停车记录根据车的id查车牌信息，找到返回，找不到返回“未登记”
+     * @param id
+     * @return
+     */
+    public String selectCarL(int id){
+        CarEntity carEntity = carMapper.selectCarById(id);
+        if(carEntity!=null){
+            return carEntity.getLicense();
+        }else{
+            carEntity=new CarEntity();
+            return "未登记";
+        }
     }
 }

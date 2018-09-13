@@ -37,17 +37,17 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDTO selectCarDTOI(int id) {
-        CarEntity carEntity = carMapper.selectCarI(id);
+    public CarDTO selectCarDTOById(int id) {
+        CarEntity carEntity = carMapper.selectCarById(id);
         CarDTO carDTO=new CarDTO();
         BeanUtils.copyProperties(carEntity,carDTO);
         return carDTO;
     }
 
     @Override
-    public CarDTO selectCarDTOL(String license) {
+    public CarDTO selectCarDTOByL(String license) {
         CarDTO carDTO=new CarDTO();
-        CarEntity carEntitie=carMapper.selectCarL(license);
+        CarEntity carEntitie=carMapper.selectCarByL(license);
         BeanUtils.copyProperties(carEntitie,carDTO);
             return carDTO;
     }

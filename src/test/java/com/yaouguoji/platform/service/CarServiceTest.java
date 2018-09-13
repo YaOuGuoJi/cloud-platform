@@ -16,18 +16,16 @@ import java.util.List;
 public class CarServiceTest {
     @Resource
     CarService carService;
-    @Resource
-    ParkRecordService parkRecordService;
     @Test
     public void testAddCar(){
         CarDTO carDTO=new CarDTO();
-        carDTO.setLicense("晋E2056");
+        carDTO.setLicense("晋E2032");
         carDTO.setOwnerId(0);
         carService.addCarDTO(carDTO);
 
     }
     @Test
-    public void testupdateCar(){
+    public void testUpdateCar(){
         CarDTO carDTO=new CarDTO();
         carDTO.setId(32);
         carDTO.setOwnerId(0);
@@ -36,20 +34,20 @@ public class CarServiceTest {
     }
 
     @Test
-    public void testdeleteCar(){
-        carService.deleteCarDTO(14);
+    public void teStdeleteCar(){
+        carService.deleteCarDTO(32);
     }
     @Test
-    public void testselectcarI(){
-        System.out.print(carService.selectCarDTOI(17));
+    public void testSelectCarById(){
+        System.out.print(carService.selectCarDTOById(33));
     }
     @Test
-    public void testselectcarl() {
-        CarDTO carDTO = carService.selectCarDTOL("晋E1997");
+    public void tetSelectCarByL() {
+        CarDTO carDTO = carService.selectCarDTOByL("晋E2098");
             System.out.println(carDTO);
     }
     @Test
-    public void testselectcarall(){
+    public void testSelectCarAll(){
         List<CarDTO> carDTOS = carService.selectAll();
         for(Iterator<CarDTO> iterator = carDTOS.iterator();iterator.hasNext();){
             CarDTO carDTO = (CarDTO) iterator.next();

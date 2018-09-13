@@ -34,14 +34,14 @@ public interface CarMapper {
      * @param id
      * @return
      */
-    CarEntity selectCarI(@Param("id")int id);
+    CarEntity selectCarById(@Param("id")int id);
 
     /**
      * 根据车牌查车
      * @param license
      * @return
      */
-    CarEntity selectCarL(@Param("license")String license);
+    CarEntity selectCarByL(@Param("license")String license);
     /**
      * 查出所有的车（需要改成分页形式的）
      * @return

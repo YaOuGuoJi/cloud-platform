@@ -37,12 +37,12 @@
         delete  from  car where id=#{id}
     </delete>
 
-    <select id="selectCarI" parameterType="java.lang.Integer"
+    <select id="selectCarById" parameterType="java.lang.Integer"
             resultMap="Car">
       select id,owner_id,license,add_time,update_time from car where id=#{id}
     </select>
 
-    <select id="selectCarL"  parameterType="java.lang.String"
+    <select id="selectCarByL"  parameterType="java.lang.String"
     resultMap="Car">
      select id,owner_id,license,add_time,update_time from car where license=#{license}
     </select>

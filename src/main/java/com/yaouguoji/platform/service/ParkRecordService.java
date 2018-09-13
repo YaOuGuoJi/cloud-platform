@@ -32,14 +32,14 @@ public interface ParkRecordService {
      * @param id
      * @return
      */
-    ParkRecordDTO selectParkRecordDROI(int id);
+    ParkRecordDTO selectParkRecordDROById(int id);
 
     /**
      * 根据车辆的车牌查询停车记录
      * @param license
      * @return
      */
-    List<ParkRecordDTO>selectParkRecordDTOL(String license);
+    List<ParkRecordDTO>selectParkRecordDTOByL(String license);
 
     /**
      * 查询所有停车记录(后期改为分页的)
