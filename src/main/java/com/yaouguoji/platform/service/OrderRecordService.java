@@ -13,6 +13,17 @@ import java.util.Map;
 public interface OrderRecordService {
 
     /**
+     * 查询时间段内各个区域订单量
+     *
+     * @param startTime
+     * @param endTime
+     * @param type
+     * @return
+     * @see com.yaouguoji.platform.constant.OrderRankType
+     */
+    Map<Integer, Object> findAreaOrderNumber(Date startTime, Date endTime, int type);
+
+    /**
      * 分页查询商户订单记录
      *
      * @param shopId
@@ -46,7 +57,7 @@ public interface OrderRecordService {
      * @param endTime
      * @param type
      * @return
-     * @see com.yaouguoji.platform.constant.ShopOrderRankType
+     * @see com.yaouguoji.platform.constant.OrderRankType
      */
     Map<Integer, Object> findShopIdsRankByOrders(int limit, Date startTime, Date endTime, int type);
 

@@ -1,7 +1,7 @@
 package com.yaouguoji.platform.mapper;
 
 import com.yaouguoji.platform.entity.OrderRecordEntity;
-import com.yaouguoji.platform.entity.ShopOrderNumberEntity;
+import com.yaouguoji.platform.entity.OrderNumberEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -13,6 +13,26 @@ import java.util.List;
 public interface OrderRecordMapper {
 
     /**
+     * 查询时间段内各个区域的订单量
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderNumberEntity> findAreaOrderNum(@Param("startTime") Date startTime,
+                                                @Param("endTime") Date endTime);
+
+    /**
+     * 查询时间段内各个区域的订单总额
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderNumberEntity> findAreaOrderPrice(@Param("startTime") Date startTime,
+                                               @Param("endTime") Date endTime);
+
+    /**
      * 查询时间段内订单量最多的商户
      *
      * @param limit
@@ -20,9 +40,9 @@ public interface OrderRecordMapper {
      * @param endTime
      * @return
      */
-    List<ShopOrderNumberEntity> findOrderNumTop(@Param("limit") int limit,
-                                                @Param("startTime") Date startTime,
-                                                @Param("endTime") Date endTime);
+    List<OrderNumberEntity> findOrderNumTop(@Param("limit") int limit,
+                                            @Param("startTime") Date startTime,
+                                            @Param("endTime") Date endTime);
 
     /**
      * 查询时间段内订单总额最大的商户
@@ -32,9 +52,9 @@ public interface OrderRecordMapper {
      * @param endTime
      * @return
      */
-    List<ShopOrderNumberEntity> findOrderPriceTop(@Param("limit") int limit,
-                                                  @Param("startTime") Date startTime,
-                                                  @Param("endTime") Date endTime);
+    List<OrderNumberEntity> findOrderPriceTop(@Param("limit") int limit,
+                                              @Param("startTime") Date startTime,
+                                              @Param("endTime") Date endTime);
 
     /**
      * 根据orderId查询订单
