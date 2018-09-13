@@ -44,11 +44,15 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     @Override
     public ParkRecordDTO selectParkRecordDROById(int id) {
         ParkRecordEntity parkRecordEntity=parkRecordMapper.selectParkRecordById(id);
+        if(parkRecordEntity!=null){
         String license=selectCarL(parkRecordEntity.getCarId());
         ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
         BeanUtils.copyProperties(parkRecordEntity,parkRecordDTO);
         parkRecordDTO.setLicense(license);
-        return parkRecordDTO;
+        return parkRecordDTO;}
+        else{
+            return null;
+        }
     }
 
     @Override

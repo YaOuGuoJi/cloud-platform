@@ -23,8 +23,8 @@ public class ParkRecordServiceTest {
     @Test
     public void addParkRecord(){
         ParkRecordDTO parkRecordDTO=new ParkRecordDTO();
-        parkRecordDTO.setActiveType(0);
-        parkRecordDTO.setLicense("晋E2093");
+        parkRecordDTO.setActiveType(1);
+        parkRecordDTO.setLicense("晋E2015");
         parkRecordService.addParkRecordDTO(parkRecordDTO);
     }
     @Test
@@ -41,12 +41,12 @@ public class ParkRecordServiceTest {
     }
     @Test
     public void testSelectParkRecordByI(){
-        System.out.println(parkRecordService.selectParkRecordDROById(1));
+        System.out.println(parkRecordService.selectParkRecordDROById(2));
     }
 
     @Test
     public void TestSelectParkRecordByL(){
-        List<ParkRecordDTO> parkRecordDTOS = parkRecordService.selectParkRecordDTOByL("晋E2098");
+        List<ParkRecordDTO> parkRecordDTOS = parkRecordService.selectParkRecordDTOByL("晋E2093");
         System.out.println(parkRecordDTOS);
 
     }
