@@ -5,10 +5,14 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author liuwen
+ */
 public interface ShopInfoMapper {
 
     /**
      * 查询列表
+     *
      * @param shopIdList
      * @return
      */
@@ -16,6 +20,7 @@ public interface ShopInfoMapper {
 
     /**
      * 增
+     *
      * @param shopInfoEntity
      * @return
      */
@@ -23,6 +28,7 @@ public interface ShopInfoMapper {
 
     /**
      * 软删除
+     *
      * @param shopId
      * @return
      */
@@ -30,6 +36,7 @@ public interface ShopInfoMapper {
 
     /**
      * 改
+     *
      * @param shopInfoEntity
      * @return
      */
@@ -37,6 +44,7 @@ public interface ShopInfoMapper {
 
     /**
      * 查询
+     *
      * @param shopId
      * @return
      */

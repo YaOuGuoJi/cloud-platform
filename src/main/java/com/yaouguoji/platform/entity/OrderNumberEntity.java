@@ -2,13 +2,16 @@ package com.yaouguoji.platform.entity;
 
 import lombok.Data;
 
+/**
+ * @author liuwen
+ */
 @Data
-public class ShopOrderNumberEntity {
+public class OrderNumberEntity {
 
     /**
-     * 商户id
+     * id
      */
-    private int shopId;
+    private Integer id;
 
     /**
      * 结果值

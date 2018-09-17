@@ -1,5 +1,7 @@
 package com.yaouguoji.platform.util;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.CollectionUtils;
@@ -8,10 +10,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author liuwen
+ */
 public class BeansListUtils {
 
     /**
      * 将sourceList 拷贝为T类型的List
+     *
      * @param sourceList
      * @param tClass
      * @param <T>
@@ -32,5 +38,15 @@ public class BeansListUtils {
             }
         });
         return targets;
+    }
+
+    public static <T> PageInfo<T> copyListPageInfo(List<?> sourceList, Class<T> tClass) {
+        if (CollectionUtils.isEmpty(sourceList) || !(sourceList instanceof Page)) {
+            return null;
+        }
+        PageInfo<T> pageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(new PageInfo<>(sourceList), pageInfo);
+        pageInfo.setList(copyListProperties(sourceList, tClass));
+        return pageInfo;
     }
 }

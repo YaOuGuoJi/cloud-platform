@@ -4,13 +4,16 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * @author liuwen
+ */
 @Data
 public class BrandInfoEntity {
 
     /**
      * 品牌id
      */
-    private int brandId;
+    private Integer brandId;
 
     /**
      * 品牌名称
@@ -25,7 +28,7 @@ public class BrandInfoEntity {
     /**
      * 删除标记 1-已删除 0-正常
      */
-    private int deleted;
+    private Integer deleted;
 
     /**
      * 添加时间

@@ -4,10 +4,14 @@ import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.entity.UserInfoEntity;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * @author liuwen
+ */
 public interface UserInfoMapper {
 
     /**
      * 查询
+     *
      * @param userId
      * @return
      */
@@ -15,6 +19,7 @@ public interface UserInfoMapper {
 
     /**
      * 更新
+     *
      * @param userInfoEntity
      * @return
      */
@@ -22,6 +27,7 @@ public interface UserInfoMapper {
 
     /**
      * 新增
+     *
      * @param userInfoEntity
      * @return
      */

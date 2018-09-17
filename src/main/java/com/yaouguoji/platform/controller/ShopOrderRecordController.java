@@ -1,26 +1,35 @@
 package com.yaouguoji.platform.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.common.CommonResult;
-import com.yaouguoji.platform.constant.ShopOrderRankType;
+import com.yaouguoji.platform.common.CommonResultBuilder;
+import com.yaouguoji.platform.dto.AreaDTO;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
+import com.yaouguoji.platform.service.AreaService;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.ShopInfoService;
-import com.yaouguoji.platform.vo.ShopOrderRankVO;
+import com.yaouguoji.platform.vo.ObjectMapVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * @author liuwen
+ * @date 2018/9/4
+ */
 @RestController
 public class ShopOrderRecordController {
 
@@ -31,9 +40,11 @@ public class ShopOrderRecordController {
     private OrderRecordService orderRecordService;
     @Resource
     private ShopInfoService shopInfoService;
+    @Resource
+    private AreaService areaService;
 
-    @GetMapping("/order/shop/{shopId}")
-    public CommonResult shopOrder(@PathVariable("shopId") int shopId, String start, String end) {
+    @GetMapping("/order/shop/page")
+    public CommonResult shopOrder(int shopId, int pageNum, int pageSize, String start, String end) {
         try {
             Date startTime = SIMPLE_DATE_FORMAT.parse(start);
             Date endTime = SIMPLE_DATE_FORMAT.parse(end);
@@ -44,13 +55,16 @@ public class ShopOrderRecordController {
             if (shopInfoDTO == null) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
-            List<OrderRecordDTO> ordersByShopId = orderRecordService.findOrdersByShopId(shopId, startTime, endTime);
-            Map<String, Object> data = new HashMap<>();
-            data.put("shopInfo", shopInfoDTO);
-            data.put("orderList", ordersByShopId);
-            return CommonResult.success(data);
-        } catch (Exception e) {
-            LOGGER.error("解析时间异常：[{}]", e);
+            PageInfo<OrderRecordDTO> pageInfo =
+                    orderRecordService.pageFindOrderRecordByShopId(shopId, pageNum, pageSize, startTime, endTime);
+            return new CommonResultBuilder()
+                    .code(200)
+                    .message("查询成功！")
+                    .data("shopInfo", shopInfoDTO)
+                    .data("pageInfo", pageInfo)
+                    .build();
+        } catch (ParseException e) {
+            LOGGER.error("解析时间异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
     }
@@ -60,25 +74,46 @@ public class ShopOrderRecordController {
         try {
             Date startTime = SIMPLE_DATE_FORMAT.parse(start);
             Date endTime = SIMPLE_DATE_FORMAT.parse(end);
-            if (limit <= 0 || startTime.after(endTime)
-                    || (type != ShopOrderRankType.ORDER_NUM_COUNT && type != ShopOrderRankType.ORDER_PRICE_COUNT)) {
+            if (limit <= 0 || startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
-            Map<Integer, Object> shopIds2ResultMap = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, type);
+            Map<Integer, Object> shopIds2ResultMap
+                    = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, type);
             if (CollectionUtils.isEmpty(shopIds2ResultMap)) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
-            List<ShopInfoDTO> shopInfoDTOs = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
-            List<ShopOrderRankVO> resultList = Lists.newArrayList();
-            shopInfoDTOs.forEach(shopInfoDTO -> {
-                ShopOrderRankVO shopOrderRankVO = new ShopOrderRankVO();
-                shopOrderRankVO.setShopInfoDTO(shopInfoDTO);
-                shopOrderRankVO.setData(shopIds2ResultMap.get(shopInfoDTO.getShopId()));
-                resultList.add(shopOrderRankVO);
+            List<ShopInfoDTO> shopInfoDTOs
+                    = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
+            List<ObjectMapVO> resultList = Lists.newArrayList();
+            shopInfoDTOs.forEach(shopInfoDTO ->
+                resultList.add(new ObjectMapVO<>(shopInfoDTO, shopIds2ResultMap.get(shopInfoDTO.getShopId())))
+            );
+            return CommonResult.success(resultList);
+        } catch (ParseException e) {
+            LOGGER.error("解析时间异常!", e);
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+    }
+
+    @GetMapping("/order/shop/area")
+    public CommonResult areaShopOrder(String start, String end, int type) {
+        try {
+            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
+            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            if (startTime.after(endTime)) {
+                return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+            }
+            List<AreaDTO> areaDTOS = areaService.selectAll();
+            Map<Integer, Object> areaId2NumberMap = orderRecordService.findAreaOrderNumber(startTime, endTime, type);
+            List<ObjectMapVO> resultList = Lists.newArrayList();
+            areaDTOS.forEach(areaDTO -> {
+                ObjectMapVO objectMapVO =
+                        new ObjectMapVO<>(areaDTO, areaId2NumberMap.getOrDefault(areaDTO.getAreaId(), 0));
+                resultList.add(objectMapVO);
             });
             return CommonResult.success(resultList);
         } catch (ParseException e) {
-            LOGGER.error("解析时间异常: [{}]", e);
+            LOGGER.error("解析时间异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
     }

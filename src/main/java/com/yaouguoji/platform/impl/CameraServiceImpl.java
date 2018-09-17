@@ -1,10 +1,10 @@
 package com.yaouguoji.platform.impl;
 
-import com.google.common.collect.Lists;
 import com.yaouguoji.platform.dto.CameraDTO;
 import com.yaouguoji.platform.entity.CameraEntity;
 import com.yaouguoji.platform.mapper.CameraMapper;
 import com.yaouguoji.platform.service.CameraService;
+import com.yaouguoji.platform.util.BeansListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +30,7 @@ public class CameraServiceImpl implements CameraService {
         if (CollectionUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }
-        List<CameraDTO> cameraDTOSList = Lists.newArrayList();
-        entityList.forEach(entity -> {
-            CameraDTO cameraDTO = new CameraDTO();
-            BeanUtils.copyProperties(entity, cameraDTO);
-            cameraDTOSList.add(cameraDTO);
-        });
-        return cameraDTOSList;
+        return BeansListUtils.copyListProperties(entityList, CameraDTO.class);
     }
 
     @Override

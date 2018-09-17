@@ -15,8 +15,8 @@
         <result column="UpdateTime" property="updateTime" />
     </resultMap>
 
-    <resultMap id="shopOrderNumberEntity" type="com.yaouguoji.platform.entity.ShopOrderNumberEntity">
-        <result column="ShopId" property="shopId"/>
+    <resultMap id="orderNumberEntity" type="com.yaouguoji.platform.entity.OrderNumberEntity">
+        <result column="Id" property="id"/>
         <result column="Result" property="result"/>
     </resultMap>
 
@@ -34,9 +34,29 @@
         UpdateTime
     </sql>
 
-    <select id="findOrderNumTop" resultMap="shopOrderNumberEntity">
+    <select id="findAreaOrderNum" resultMap="orderNumberEntity">
         <![CDATA[
-            SELECT ShopId, COUNT(1) as Result
+            SELECT shop_info.RegionId as Id, COUNT(order_record.OrderId) as Result
+            FROM order_record INNER JOIN shop_info ON shop_info.ShopId = order_record.ShopId
+            AND order_record.AddTime between #{startTime} AND #{endTime}
+            GROUP BY shop_info.RegionId
+            ORDER BY COUNT(order_record.OrderId) DESC
+        ]]>
+    </select>
+
+    <select id="findAreaOrderPrice" resultMap="orderNumberEntity">
+        <![CDATA[
+            SELECT shop_info.RegionId as Id, SUM(order_record.Price) as Result
+            FROM order_record INNER JOIN shop_info ON shop_info.ShopId = order_record.ShopId
+            AND order_record.AddTime between #{startTime} AND #{endTime}
+            GROUP BY shop_info.RegionId
+            ORDER BY SUM(order_record.Price) DESC
+        ]]>
+    </select>
+
+    <select id="findOrderNumTop" resultMap="orderNumberEntity">
+        <![CDATA[
+            SELECT ShopId as Id, COUNT(1) as Result
             FROM order_record
             WHERE AddTime > #{startTime} AND AddTime < #{endTime}
             GROUP BY ShopId
@@ -45,9 +65,9 @@
         ]]>
     </select>
 
-    <select id="findOrderPriceTop" resultMap="shopOrderNumberEntity">
+    <select id="findOrderPriceTop" resultMap="orderNumberEntity">
         <![CDATA[
-            SELECT ShopId, SUM(Price) as Result
+            SELECT ShopId as Id, SUM(Price) as Result
             FROM order_record
             WHERE AddTime > #{startTime} AND AddTime < #{endTime}
             GROUP BY ShopId

@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * @author liuwen
+ */
 @Data
 public class ShopInfoDTO implements Serializable {
 
@@ -14,7 +17,7 @@ public class ShopInfoDTO implements Serializable {
     /**
      * 商户id
      */
-    private int shopId;
+    private Integer shopId;
 
     /**
      * 商户唯一标识
@@ -34,12 +37,12 @@ public class ShopInfoDTO implements Serializable {
     /**
      * 区域id
      */
-    private int regionId;
+    private Integer regionId;
 
     /**
      * 品牌id
      */
-    private int brandId;
+    private Integer brandId;
 
     /**
      * 商户类型
@@ -79,7 +82,7 @@ public class ShopInfoDTO implements Serializable {
     /**
      * 删除标记
      */
-    private int deleted;
+    private Integer deleted;
 
     /**
      * 添加时间
