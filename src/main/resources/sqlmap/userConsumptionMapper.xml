@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaouguoji.platform.mapper.UserConsumptionMapper">
+    <resultMap id="User" type="com.yaouguoji.platform.entity.UserConsumptionEntity">
+        <result column="OnlineCSP" property="onlineCSP"/>
+    </resultMap>
+
+    <select id="queryOnlineCSP" resultMap="User">
+        SELECT SUM(Price) OnlineCSP FROM
+                order_record WHERE UserId =#{userId} AND OrderChannel LIKE '%上%'
+    </select>
+
+    <select id="queryShopCSP" resultMap="User">
+        SELECT SUM(Price) OnlineCSP FROM
+        order_record WHERE UserId =#{userId} AND OrderChannel NOT IN( '%上%')
+    </select>
+
+    <select id="recentYearCSP" resultMap="">
+        SELECT SUM(Price) OnlineCSP FROM
+        order_record WHERE UserId =#{userId} AND OrderChannel NOT IN( '%上%')
+    </select>
+
+    <select id="getUserConsumptionOrders" resultMap="">
+        SELECT SUM(Price) OnlineCSP FROM
+        order_record WHERE UserId =#{userId} AND OrderChannel NOT IN( '%上%')
+    </select>
+</mapper>

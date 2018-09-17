@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.UserConsumptionOrderMapper">
+    <resultMap id="BaseResultMap" type="com.yaouguoji.platform.entity.OrderRecordEntity">
+        <id column="OrderId" jdbcType="INTEGER" property="orderId" />
+        <result column="UserId" jdbcType="INTEGER" property="userId" />
+        <result column="ShopId" jdbcType="INTEGER" property="shopId" />
+        <result column="OrderChannel" jdbcType="VARCHAR" property="orderChannel" />
+        <result column="OrderStatus" jdbcType="VARCHAR" property="orderStatus" />
+        <result column="ProductType" jdbcType="VARCHAR" property="productType" />
+        <result column="ProductList" jdbcType="VARCHAR" property="productList" />
+        <result column="PayType" jdbcType="VARCHAR" property="payType" />
+        <result column="Price" jdbcType="DECIMAL" property="price" />
+        <result column="AddTime" jdbcType="TIMESTAMP" property="addTime" />
+        <result column="UpdateTime" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        OrderId, UserId, ShopId, OrderChannel, OrderStatus, ProductType, ProductList, PayType,
+        Price, AddTime, UpdateTime
+    </sql>
+
+    <select id="getUserConsumptionOrders" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from order_record
+        where UserId = #{userId} AND AddTime BETWEEN #{startDate} AND #{endDate} limit 1
+    </select>
+
+
+
+</mapper>
