@@ -38,13 +38,6 @@ public interface ParkRecordService {
     List<ParkRecordDTO> selectParkRecordDTOByLicense(String license);
 
     /**
-     * 查询所有停车记录(后期改为分页的)
-     *
-     * @return
-     */
-    List<ParkRecordDTO> selectParkRecordDTOAll();
-
-    /**
      * 查询停车场现在的车数
      *
      * @return

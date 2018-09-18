@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/car")
@@ -69,7 +68,7 @@ public class CarController {
      */
     @PostMapping("/addCar")
     public CommonResult addCar(Integer ownerId, String license) {
-        if (license.matches(Pattern.compile(".{7,8}+").pattern()) && ownerId >= 0 && ownerId < 99999999999L) {
+        if ((license.length() == 7 || license.length() == 8) && ownerId >= 0 && ownerId < 99999999999L) {
             CarDTO carDTO = new CarDTO();
             carDTO.setOwnerId(ownerId);
             carDTO.setLicense(license);
@@ -81,6 +80,7 @@ public class CarController {
 
     /**
      * 修改车信息
+     *
      * @param id
      * @param ownerId
      * @param license
@@ -88,7 +88,7 @@ public class CarController {
      */
     @PostMapping("/updateCar")
     public CommonResult updateCar(Integer id, Integer ownerId, String license) {
-        if (license.matches(Pattern.compile(".{7,8}+").pattern()) && ownerId >= 0 && ownerId < 99999999999L) {
+        if ((license.length() == 7 || license.length() == 8) && ownerId >= 0 && ownerId < 99999999999L) {
             CarDTO carDTO = new CarDTO();
             carDTO.setId(id);
             carDTO.setLicense(license);

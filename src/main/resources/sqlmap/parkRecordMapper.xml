@@ -34,7 +34,8 @@
     </select>
 
     <select id="selectParkRecordByCarId" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
-         select id,car_id ,active_type,add_time,update_time from park_record where car_id=#{cid}
+         select <include refid="allFields"/>
+         from park_record where car_id=#{cid}
     </select>
 
     <select id="selectParkRecordAll" resultMap="parkRecordEntity">
@@ -44,7 +45,7 @@
     </select>
 
     <select id="selectNowCarNum" resultType="java.lang.Integer">
-        select count(id) from park_record where active_type in(0,1) group by active_type
+        select count(id) from park_record where active_type in (0,1)group by active_type
     </select>
 
 </mapper>

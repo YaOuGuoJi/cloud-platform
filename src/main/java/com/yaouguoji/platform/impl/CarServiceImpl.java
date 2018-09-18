@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public int addCarDTO(CarDTO carDTO) {
-        if (carMapper.selectCarByLicense(carDTO.getLicense()) != null)
+        if (carDTO.getLicense() != null && carMapper.selectCarByLicense(carDTO.getLicense()) != null)
             return 0;
         CarEntity carEntity = new CarEntity();
         BeanUtils.copyProperties(carDTO, carEntity);
@@ -29,7 +29,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public int updateCarDTO(CarDTO carDTO) {
-        if (carMapper.selectCarByLicense(carDTO.getLicense()) != null)
+        if (carDTO.getLicense() != null && carMapper.selectCarByLicense(carDTO.getLicense()) != null)
             return 0;
         CarEntity carEntity = new CarEntity();
         BeanUtils.copyProperties(carDTO, carEntity);
@@ -65,10 +65,9 @@ public class CarServiceImpl implements CarService {
     public List<CarDTO> selectAll() {
         List carEntities = carMapper.selectAll();
         if (carEntities != null) {
-            List<CarDTO> carDTOs = new ArrayList<>();
-            carDTOs = BeansListUtils.copyListProperties(carEntities, CarDTO.class);
+            List<CarDTO> carDTOs =BeansListUtils.copyListProperties(carEntities, CarDTO.class);
             return carDTOs;
         }
-        return null;
+        return new ArrayList<CarDTO>();
     }
 }

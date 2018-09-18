@@ -48,20 +48,6 @@ public class ParkRecordController {
     }
 
     /**
-     * 查出所有的停车记录
-     *
-     * @return
-     */
-    @GetMapping(value = "/selectParkRecordAll")
-    public CommonResult selectParkRecordAll() {
-        List<ParkRecordDTO> parkRecordDTOS = parkRecordService.selectParkRecordDTOAll();
-        if (parkRecordDTOS == null) {
-            return CommonResult.fail(HttpStatus.NOT_FOUND);
-        }
-        return CommonResult.success(parkRecordDTOS);
-    }
-
-    /**
      * 查出停车现在停车总数
      *
      * @return
@@ -81,7 +67,7 @@ public class ParkRecordController {
      */
     @PostMapping("/addParkRecord")
     public CommonResult addParkRecord(String license, Integer activeType) {
-        if (license.matches(Pattern.compile(".{7,8}+").pattern()) && (activeType == 0 || activeType == 1)) {
+        if ((license.length()==7||license.length()==8) && (activeType == 0 || activeType == 1)) {
             ParkRecordDTO parkRecordDTO = new ParkRecordDTO();
             parkRecordDTO.setLicense(license);
             parkRecordDTO.setActiveType(activeType);

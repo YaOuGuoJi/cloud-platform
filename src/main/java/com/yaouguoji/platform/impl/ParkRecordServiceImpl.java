@@ -7,6 +7,8 @@ import com.yaouguoji.platform.mapper.CarMapper;
 import com.yaouguoji.platform.mapper.ParkRecordMapper;
 import com.yaouguoji.platform.service.ParkRecordService;
 import com.yaouguoji.platform.util.BeansListUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,11 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 @Service
 public class ParkRecordServiceImpl implements ParkRecordService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParkRecordService.class);
     @Resource
     private ParkRecordMapper parkRecordMapper;
     @Resource
@@ -56,35 +61,13 @@ public class ParkRecordServiceImpl implements ParkRecordService {
             parkRecordDTOs.forEach(parkRecordDTO -> parkRecordDTO.setLicense(license));
             return parkRecordDTOs;
         }
-        return null;
-    }
-
-    @Override
-    public List<ParkRecordDTO> selectParkRecordDTOAll() {
-        List<ParkRecordEntity> parkRecordEntities = parkRecordMapper.selectParkRecordAll();
-        List<ParkRecordDTO> parkRecordDTOs = new ArrayList<>();
-        if (parkRecordEntities != null) {
-            for (ParkRecordEntity parkRecordEntity : parkRecordEntities) {
-                ParkRecordDTO parkRecordDTO = new ParkRecordDTO();
-                BeanUtils.copyProperties(parkRecordEntity, parkRecordDTO);
-                parkRecordDTO.setLicense(carMapper.selectCarById(parkRecordEntity.getCarId()).getLicense());
-                parkRecordDTOs.add(parkRecordDTO);
-            }
-            return parkRecordDTOs;
-        }
-        return null;
+        return new ArrayList<ParkRecordDTO>();
     }
 
     @Override
     public int selectNowCarNum() {
         List<Integer> integers = parkRecordMapper.selectNowCarNum();
-        int count[] = new int[2];
-        int i = 0;
-        for (Integer integer : integers) {
-            count[i] = integer;
-            i++;
-        }
-        return count[0] > count[1] ? count[0] - count[1] : count[1] - count[0];
+        return abs(integers.get(0) - integers.get(1));
     }
 
     /**

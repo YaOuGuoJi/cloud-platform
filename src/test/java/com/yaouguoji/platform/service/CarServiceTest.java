@@ -1,6 +1,7 @@
 package com.yaouguoji.platform.service;
 
 import com.yaouguoji.platform.dto.CarDTO;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,48 +15,44 @@ import java.util.List;
 @SpringBootTest
 public class CarServiceTest {
     @Resource
-    CarService carService;
+    private CarService carService;
 
     @Test
     public void testAddCar() {
         CarDTO carDTO = new CarDTO();
-        carDTO.setLicense("晋E2032");
+        carDTO.setLicense("晋E2035A");
         carDTO.setOwnerId(0);
-        carService.addCarDTO(carDTO);
+        Assert.assertEquals(1,carService.addCarDTO(carDTO));
 
     }
 
     @Test
     public void testUpdateCar() {
         CarDTO carDTO = new CarDTO();
-        carDTO.setId(32);
+        carDTO.setId(19);
         carDTO.setOwnerId(0);
-        carDTO.setLicense("晋E2056");
-        carService.updateCarDTO(carDTO);
+        carDTO.setLicense("晋E2036A");
+        Assert.assertEquals(1,carService.updateCarDTO(carDTO));
+
     }
 
     @Test
     public void testDeleteCar() {
-        carService.deleteCarDTO(32);
+        Assert.assertEquals(1,carService.deleteCarDTO(32));
     }
 
     @Test
     public void testSelectCarById() {
-        System.out.print(carService.selectCarDTOById(33));
+        Assert.assertNotNull(carService.selectCarDTOById(19));
     }
 
     @Test
     public void tetSelectCarByLicense() {
-        CarDTO carDTO = carService.selectCarDTOByLicense("晋E2098");
-        System.out.println(carDTO);
+        Assert.assertNotNull(carService.selectCarDTOByLicense("晋E2032A"));
     }
 
     @Test
     public void testSelectCarAll() {
-        List<CarDTO> carDTOs = carService.selectAll();
-        for (CarDTO carDTO : carDTOs) {
-            System.out.println(carDTO);
-        }
-
+        Assert.assertNotNull(carService.selectAll());
     }
 }
