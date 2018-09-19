@@ -34,14 +34,9 @@
     </select>
 
     <select id="selectParkRecordByCarId" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
-         select <include refid="allFields"/>
-         from park_record where car_id=#{cid}
-    </select>
-
-    <select id="selectParkRecordAll" resultMap="parkRecordEntity">
         select
         <include refid="allFields"/>
-        from park_record
+        from park_record where car_id=#{cid}
     </select>
 
     <select id="selectNowCarNum" resultType="java.lang.Integer">

@@ -86,6 +86,5 @@ public class ParkRecordServiceImpl implements ParkRecordService {
         carEntity.setLicense(license);
         carMapper.addCar(carEntity);
         return carEntity.getId();
-
     }
 }

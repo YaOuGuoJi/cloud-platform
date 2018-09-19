@@ -39,13 +39,6 @@ public interface ParkRecordMapper {
     List<ParkRecordEntity> selectParkRecordByCarId(@Param("cid") int carId);
 
     /**
-     * 查出所有停车记录（需要改成分页形式的）
-     *
-     * @return
-     */
-    List<ParkRecordEntity> selectParkRecordAll();
-
-    /**
      * 查出停车场现在停车数量
      *
      * @return
