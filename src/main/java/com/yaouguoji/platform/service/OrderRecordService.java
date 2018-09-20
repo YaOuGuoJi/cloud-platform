@@ -2,7 +2,8 @@ package com.yaouguoji.platform.service;
 
 import com.github.pagehelper.PageInfo;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
-
+import com.yaouguoji.platform.dto.OrderRecordJsonDTO;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -96,4 +97,28 @@ public interface OrderRecordService {
      * @return
      */
     int addOrderInfo(OrderRecordDTO orderRecordDTO);
+
+    /**
+     * 查询用户全年订单
+     * @param userId 用户ID
+     * @param year 年份
+     * @return
+     */
+    List<OrderRecordJsonDTO> findOrderRecordByUserId (String userId, String year);
+
+    /**
+     * 查询用户订单总金额
+     * @param userId 用户ID
+     * @return
+     */
+    BigDecimal findOrderTotalPriceByUserId (String userId, String year);
+
+    /**
+     * 查询用户最高金额的订单
+     * @param userId 用户ID
+     * @param year 年份
+     * @return
+     */
+    OrderRecordJsonDTO findMaxOrderPriceByUserId (String userId, String year);
+
 }

@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yaouguoji.platform.constant.OrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
+import com.yaouguoji.platform.dto.OrderRecordJsonDTO;
 import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
+import com.yaouguoji.platform.entity.OrderRecordJsonEntity;
 import com.yaouguoji.platform.mapper.OrderRecordMapper;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.util.BeansListUtils;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -116,4 +119,47 @@ public class OrderRecordServiceImpl implements OrderRecordService {
         orderRecordMapper.addOrderInfo(entity);
         return entity.getOrderId();
     }
+
+    /**
+     * 查询该用户所有的订单
+     * @param userId 用户ID
+     * @return
+     */
+    @Override
+    public List<OrderRecordJsonDTO> findOrderRecordByUserId(String userId, String year) {
+        List<OrderRecordJsonEntity> list = orderRecordMapper.findOrderRecordByUserId(userId, year);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return BeansListUtils.copyListProperties(list, OrderRecordJsonDTO.class);
+    }
+
+    /**
+     * 查找用户订单总金额
+     * @param userId 用户ID
+     * @return
+     */
+    @Override
+    public BigDecimal findOrderTotalPriceByUserId(String userId, String year) {
+        return orderRecordMapper.findOrderTotalPriceByUserId(userId, year);
+    }
+
+    /**
+     * 查询用户最高金额的订单
+     * @param userId 用户ID
+     * @param year 年份
+     * @return
+     */
+    @Override
+    public OrderRecordJsonDTO findMaxOrderPriceByUserId(String userId, String year) {
+        OrderRecordJsonEntity orderRecordJsonEntity = orderRecordMapper.findMaxOrderPriceByUserId(userId, year);
+        if (orderRecordJsonEntity == null) {
+            return null;
+        }
+        OrderRecordJsonDTO orderRecordJsonDTO = new OrderRecordJsonDTO();
+        BeanUtils.copyProperties(orderRecordJsonEntity, orderRecordJsonDTO);
+        return orderRecordJsonDTO;
+    }
+
+
 }

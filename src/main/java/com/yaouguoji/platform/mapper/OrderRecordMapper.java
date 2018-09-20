@@ -2,8 +2,10 @@ package com.yaouguoji.platform.mapper;
 
 import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
+import com.yaouguoji.platform.entity.OrderRecordJsonEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -103,4 +105,30 @@ public interface OrderRecordMapper {
     List<OrderRecordEntity> selectOrderRecordsByShopId(@Param("shopId") int shopId,
                                                        @Param("start") Date startTime,
                                                        @Param("end") Date endTime);
+
+    /**
+     * 根据用户ID查询该用户所有订单
+     * @param userId 用户ID
+     * @return
+     */
+    List<OrderRecordJsonEntity> findOrderRecordByUserId (@Param("userId") String userId,
+                                                         @Param("year") String year);
+
+    /**
+     * 查找用户订单总金额
+     * @param userId 用户ID
+     * @return
+     */
+    BigDecimal findOrderTotalPriceByUserId (@Param("userId") String userId,
+                                            @Param("year") String year);
+
+    /**
+     * 查询用户最高金额的订单
+     * @param userId 用户ID
+     * @param year 年份
+     * @return
+     */
+    OrderRecordJsonEntity findMaxOrderPriceByUserId (@Param("userId") String userId,
+                                                     @Param("year") String year);
+
 }
