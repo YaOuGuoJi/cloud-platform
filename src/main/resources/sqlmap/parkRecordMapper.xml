@@ -40,7 +40,7 @@
     </select>
 
     <select id="selectNowCarNum" resultType="java.lang.Integer">
-        select count(id) from park_record where active_type in (0,1)group by active_type
+        select count(id) from park_record where active_type in (0,1) group by active_type
     </select>
 
 </mapper>

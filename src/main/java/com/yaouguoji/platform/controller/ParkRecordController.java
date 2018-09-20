@@ -4,15 +4,19 @@ import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.dto.ParkRecordDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.ParkRecordService;
-import org.springframework.web.bind.annotation.*;
+import com.yaouguoji.platform.util.CarUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @RestController
-@RequestMapping("/parkRecord")
 public class ParkRecordController {
+
     @Resource
     private ParkRecordService parkRecordService;
 
@@ -22,8 +26,11 @@ public class ParkRecordController {
      * @param id
      * @return
      */
-    @GetMapping(value = "/selectParkRecordById/{id}")
+    @GetMapping("/park/record/{id}")
     public CommonResult selectParkRecordById(@PathVariable("id") Integer id) {
+        if (id <= 0) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         ParkRecordDTO parkRecordDTO = parkRecordService.selectParkRecordDROById(id);
         if (parkRecordDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
@@ -37,11 +44,13 @@ public class ParkRecordController {
      * @param license
      * @return
      */
-    @GetMapping(value = "/selectParkRecordByLicense/{license}")
-    public CommonResult selectParkRecordByLicense(@PathVariable("license") String license) {
-
+    @GetMapping("/park/record/license")
+    public CommonResult selectParkRecordByLicense(String license) {
+        if (!CarUtils.checkLicense(license)) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         List<ParkRecordDTO> parkRecordDTOS = parkRecordService.selectParkRecordDTOByLicense(license);
-        if (parkRecordDTOS != null) {
+        if (!CollectionUtils.isEmpty(parkRecordDTOS)) {
             return CommonResult.success(parkRecordDTOS);
         }
         return CommonResult.fail(HttpStatus.NOT_FOUND);
@@ -52,22 +61,22 @@ public class ParkRecordController {
      *
      * @return
      */
-    @GetMapping(value = "/selectNowCarNum")
+    @GetMapping("/park/record/number")
     public CommonResult selectNowCarNum() {
-        Integer count = parkRecordService.selectNowCarNum();
+        int count = parkRecordService.selectNowCarNum();
         return CommonResult.success(count);
     }
 
     /**
-     * 增加停车记录
+     * 增加/更新停车记录
      *
      * @param license
      * @param activeType
      * @return
      */
-    @PostMapping("/addParkRecord")
+    @PostMapping("/park/record")
     public CommonResult addParkRecord(String license, Integer activeType) {
-        if ((license.length()==7||license.length()==8) && (activeType == 0 || activeType == 1)) {
+        if (CarUtils.checkLicense(license) && (activeType == 0 || activeType == 1)) {
             ParkRecordDTO parkRecordDTO = new ParkRecordDTO();
             parkRecordDTO.setLicense(license);
             parkRecordDTO.setActiveType(activeType);

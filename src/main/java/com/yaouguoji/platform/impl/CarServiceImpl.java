@@ -7,6 +7,8 @@ import com.yaouguoji.platform.service.CarService;
 import com.yaouguoji.platform.util.BeansListUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -20,8 +22,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public int addCarDTO(CarDTO carDTO) {
-        if (carDTO.getLicense() != null && carMapper.selectCarByLicense(carDTO.getLicense()) != null)
+        if (existLicense(carDTO.getLicense())) {
             return 0;
+        }
         CarEntity carEntity = new CarEntity();
         BeanUtils.copyProperties(carDTO, carEntity);
         return carMapper.addCar(carEntity);
@@ -29,8 +32,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public int updateCarDTO(CarDTO carDTO) {
-        if (carDTO.getLicense() != null && carMapper.selectCarByLicense(carDTO.getLicense()) != null)
+        if (existLicense(carDTO.getLicense())) {
             return 0;
+        }
         CarEntity carEntity = new CarEntity();
         BeanUtils.copyProperties(carDTO, carEntity);
         return carMapper.updateCar(carEntity);
@@ -44,8 +48,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarDTO selectCarDTOById(int id) {
         CarEntity carEntity = carMapper.selectCarById(id);
-        if (carEntity == null)
+        if (carEntity == null) {
             return null;
+        }
         CarDTO carDTO = new CarDTO();
         BeanUtils.copyProperties(carEntity, carDTO);
         return carDTO;
@@ -54,8 +59,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarDTO selectCarDTOByLicense(String license) {
         CarEntity carEntity = carMapper.selectCarByLicense(license);
-        if (carEntity == null)
+        if (carEntity == null) {
             return null;
+        }
         CarDTO carDTO = new CarDTO();
         BeanUtils.copyProperties(carEntity, carDTO);
         return carDTO;
@@ -63,11 +69,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<CarDTO> selectAll() {
-        List carEntities = carMapper.selectAll();
-        if (carEntities != null) {
-            List<CarDTO> carDTOs =BeansListUtils.copyListProperties(carEntities, CarDTO.class);
-            return carDTOs;
+        List<CarEntity> carEntities = carMapper.selectAll();
+        if (CollectionUtils.isEmpty(carEntities)) {
+            return BeansListUtils.copyListProperties(carEntities, CarDTO.class);
         }
-        return new ArrayList<CarDTO>();
+        return new ArrayList<>();
+    }
+
+    private boolean existLicense(String license) {
+        return StringUtils.isEmpty(license) || carMapper.selectCarByLicense(license) != null;
     }
 }

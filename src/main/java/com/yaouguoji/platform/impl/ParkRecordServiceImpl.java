@@ -11,15 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static java.lang.Math.abs;
 
 @Service
 public class ParkRecordServiceImpl implements ParkRecordService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ParkRecordService.class);
     @Resource
     private ParkRecordMapper parkRecordMapper;
@@ -42,32 +43,39 @@ public class ParkRecordServiceImpl implements ParkRecordService {
     @Override
     public ParkRecordDTO selectParkRecordDROById(int id) {
         ParkRecordEntity parkRecordEntity = parkRecordMapper.selectParkRecordById(id);
-        if (parkRecordEntity != null) {
-            ParkRecordDTO parkRecordDTO = new ParkRecordDTO();
-            BeanUtils.copyProperties(parkRecordEntity, parkRecordDTO);
-            parkRecordDTO.setLicense(carMapper.selectCarById(parkRecordEntity.getCarId()).getLicense());
-            return parkRecordDTO;
-        } else {
+        if (parkRecordEntity == null) {
             return null;
         }
+        CarEntity carEntity = carMapper.selectCarById(parkRecordEntity.getCarId());
+        if (carEntity == null || StringUtils.isEmpty(carEntity.getLicense())) {
+            LOGGER.error("找不到对应的车牌号！recordId:[{}]", id);
+            return null;
+        }
+        ParkRecordDTO parkRecordDTO = new ParkRecordDTO();
+        BeanUtils.copyProperties(parkRecordEntity, parkRecordDTO);
+        parkRecordDTO.setLicense(carEntity.getLicense());
+        return parkRecordDTO;
     }
 
     @Override
     public List<ParkRecordDTO> selectParkRecordDTOByLicense(String license) {
         CarEntity carEntity = carMapper.selectCarByLicense(license);
-        if (carEntity != null) {
-            List<ParkRecordEntity> parkRecordEntities = parkRecordMapper.selectParkRecordByCarId(carEntity.getId());
-            List<ParkRecordDTO> parkRecordDTOs = BeansListUtils.copyListProperties(parkRecordEntities, ParkRecordDTO.class);
-            parkRecordDTOs.forEach(parkRecordDTO -> parkRecordDTO.setLicense(license));
-            return parkRecordDTOs;
+        if (carEntity == null) {
+            return Collections.emptyList();
         }
-        return new ArrayList<ParkRecordDTO>();
+        List<ParkRecordEntity> parkRecordEntities = parkRecordMapper.selectParkRecordByCarId(carEntity.getId());
+        if (CollectionUtils.isEmpty(parkRecordEntities)) {
+            return Collections.emptyList();
+        }
+        List<ParkRecordDTO> parkRecordDTOs = BeansListUtils.copyListProperties(parkRecordEntities, ParkRecordDTO.class);
+        parkRecordDTOs.forEach(parkRecordDTO -> parkRecordDTO.setLicense(license));
+        return parkRecordDTOs;
     }
 
     @Override
     public int selectNowCarNum() {
         List<Integer> integers = parkRecordMapper.selectNowCarNum();
-        return abs(integers.get(0) - integers.get(1));
+        return Math.abs(integers.get(0) - integers.get(1));
     }
 
     /**
