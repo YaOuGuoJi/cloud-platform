@@ -3,6 +3,7 @@ package com.yaouguoji.platform.mapper;
 import com.yaouguoji.platform.entity.UserConsumptionEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 
 
 public interface UserConsumptionMapper {
@@ -20,7 +21,7 @@ public interface UserConsumptionMapper {
     /**
      * 用户年消费
      */
-    int recentYearCSP(@Param("userId") int userId);
+    BigDecimal recentYearCSP(@Param("userId") int userId);
     /**
      * 用户消费清单
      */

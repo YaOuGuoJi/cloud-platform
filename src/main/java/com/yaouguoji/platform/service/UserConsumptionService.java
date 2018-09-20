@@ -3,8 +3,8 @@ package com.yaouguoji.platform.service;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.UserConsumptionDTO;
 
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 public interface UserConsumptionService {
     /**
@@ -20,9 +20,9 @@ public interface UserConsumptionService {
     /**
      * 年度消费账单
      */
-    int recentYearConsumption(int userId);
+    BigDecimal recentYearConsumption(Integer userId);
     /**
-     * 用户消费记录
+     * 用户消费类别记录
      */
     OrderRecordDTO getUserConsumptionOrders(int userId, Date startDate, Date endDate);
 
