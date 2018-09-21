@@ -134,32 +134,4 @@ public class OrderRecordServiceImpl implements OrderRecordService {
         return BeansListUtils.copyListProperties(list, OrderRecordJsonDTO.class);
     }
 
-    /**
-     * 查找用户订单总金额
-     * @param userId 用户ID
-     * @return
-     */
-    @Override
-    public BigDecimal findOrderTotalPriceByUserId(String userId, String year) {
-        return orderRecordMapper.findOrderTotalPriceByUserId(userId, year);
-    }
-
-    /**
-     * 查询用户最高金额的订单
-     * @param userId 用户ID
-     * @param year 年份
-     * @return
-     */
-    @Override
-    public OrderRecordJsonDTO findMaxOrderPriceByUserId(String userId, String year) {
-        OrderRecordJsonEntity orderRecordJsonEntity = orderRecordMapper.findMaxOrderPriceByUserId(userId, year);
-        if (orderRecordJsonEntity == null) {
-            return null;
-        }
-        OrderRecordJsonDTO orderRecordJsonDTO = new OrderRecordJsonDTO();
-        BeanUtils.copyProperties(orderRecordJsonEntity, orderRecordJsonDTO);
-        return orderRecordJsonDTO;
-    }
-
-
 }

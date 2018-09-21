@@ -114,21 +114,5 @@ public interface OrderRecordMapper {
     List<OrderRecordJsonEntity> findOrderRecordByUserId (@Param("userId") String userId,
                                                          @Param("year") String year);
 
-    /**
-     * 查找用户订单总金额
-     * @param userId 用户ID
-     * @return
-     */
-    BigDecimal findOrderTotalPriceByUserId (@Param("userId") String userId,
-                                            @Param("year") String year);
-
-    /**
-     * 查询用户最高金额的订单
-     * @param userId 用户ID
-     * @param year 年份
-     * @return
-     */
-    OrderRecordJsonEntity findMaxOrderPriceByUserId (@Param("userId") String userId,
-                                                     @Param("year") String year);
 
 }

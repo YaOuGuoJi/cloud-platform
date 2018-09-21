@@ -173,22 +173,4 @@
         ORDER BY a.AddTime
     </select>
 
-    <!--查询用户订单总金额-->
-    <select id="findOrderTotalPriceByUserId" resultType="java.math.BigDecimal">
-        SELECT SUM(a.Price)
-        FROM order_record a
-        WHERE a.UserId = #{userId} AND YEAR(a.AddTime) = #{year}
-    </select>
-
-    <!--查询用户最高金额的订单-->
-    <select id="findMaxOrderPriceByUserId" resultMap="orderRecordJsonEntity">
-        SELECT
-        <include refid="OrderRecordJson"/>
-        FROM order_record a
-        LEFT JOIN shop_info b ON a.ShopId = b.ShopId
-        WHERE a.UserId = #{userId} AND YEAR(a.AddTime) = #{year}
-        ORDER BY a.Price DESC
-        LIMIT 1
-    </select>
-
 </mapper>

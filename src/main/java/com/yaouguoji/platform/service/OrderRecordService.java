@@ -106,19 +106,4 @@ public interface OrderRecordService {
      */
     List<OrderRecordJsonDTO> findOrderRecordByUserId (String userId, String year);
 
-    /**
-     * 查询用户订单总金额
-     * @param userId 用户ID
-     * @return
-     */
-    BigDecimal findOrderTotalPriceByUserId (String userId, String year);
-
-    /**
-     * 查询用户最高金额的订单
-     * @param userId 用户ID
-     * @param year 年份
-     * @return
-     */
-    OrderRecordJsonDTO findMaxOrderPriceByUserId (String userId, String year);
-
 }

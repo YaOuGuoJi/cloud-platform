@@ -11,6 +11,7 @@ import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.UserInfoService;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author liuwen
@@ -75,7 +77,7 @@ public class UserOrderRecordController {
      * @param year 年份
      * @return
      */
-    @GetMapping("/userReport")
+    @GetMapping("/order/user/report")
     public CommonResult userReport (String userId, String year) {
 
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
@@ -88,94 +90,95 @@ public class UserOrderRecordController {
         }
         OrderRecordJsonDTO orderRecordJsonDTO = list.get(0);
         Integer orderNumber = list.size();
-        BigDecimal totalPrice = orderRecordService.findOrderTotalPriceByUserId(userId, year);
-        String  firstDay = new SimpleDateFormat("yyyy年MM月dd日").format(orderRecordJsonDTO.getAddTime());
-        Map<String ,Object> firstOrderMap = Maps.newHashMap();
-        firstOrderMap.put("firstTIme", firstDay);
-        firstOrderMap.put("firstShop", orderRecordJsonDTO.getShopName());
-        firstOrderMap.put("firstProductList", orderRecordJsonDTO.getProductList());
-        firstOrderMap.put("firstPrice", orderRecordJsonDTO.getPrice());
-        OrderRecordJsonDTO maxPriceOrder = orderRecordService.findMaxOrderPriceByUserId(userId, year);
-        Map<String , Object> maxPriceOrderMap = Maps.newHashMap();
-        String maxDay = new SimpleDateFormat("yyyy年MM月dd日").format(maxPriceOrder.getAddTime());
-        maxPriceOrderMap.put("maxPriceDay", maxDay);
-        maxPriceOrderMap.put("maxShop", maxPriceOrder.getShopName());
-        maxPriceOrderMap.put("maxProductList", maxPriceOrder.getProductList());
-        maxPriceOrderMap.put("maxPrice", maxPriceOrder.getPrice());
-        Map<String , Object> monthReportMap = Maps.newHashMap();
+        BigDecimal totalPrice = null;
+        SpecialOrder firstOrder = new SpecialOrder(orderRecordJsonDTO);
+        OrderRecordJsonDTO maxPriceOrder = null;
+        Map<String , CountPay> monthReportMap = Maps.newHashMap();
         BigDecimal[] monthPrice = new BigDecimal[12];
-        int aliPayTimes = 0 , weChatPayTimes = 0, cashTimes = 0;
-        BigDecimal aliPayPrice = null, weChatPayPrice = null, cashPrice = null;
-        Map<String , Object> aliPayMap = Maps.newHashMap();
-        Map<String , Object> weChatPayMap = Maps.newHashMap();
-        Map<String , Object> cashMap = Maps.newHashMap();
-        Map<String , Object> payTypeMap = Maps.newHashMap();
+        int[] monthTimes = new int[12];
+        BigDecimal maxPrice = null;
+        Map<String , CountPay> payTypeMap = Maps.newHashMap();
         for (OrderRecordJsonDTO o : list) {
+            maxPriceOrder = o;
+            if (totalPrice == null) {
+                totalPrice = o.getPrice();
+            }
+            totalPrice = totalPrice.add(o.getPrice());
+            if (maxPrice == null) {
+                maxPrice = o.getPrice();
+            }
+            if (o.getPrice().compareTo(maxPrice) > 0) {
+                maxPriceOrder = o;
+            }
             int month = new DateTime(o.getAddTime()).getMonthOfYear();
             BigDecimal bigDecimal = monthPrice[month - 1];
             if (bigDecimal == null) {
                 bigDecimal = o.getPrice();
             }
             bigDecimal = bigDecimal.add(bigDecimal);
-            monthReportMap.put(month + "",bigDecimal);
-            if (o.getPayType().equals(PayTypeConstant.ALI_PAY)) {
-                CountPayType countPayType = new CountPayType(aliPayTimes, aliPayPrice, o).invoke();
-                aliPayMap.put("times", countPayType.getPayTimes());
-                aliPayMap.put("price", countPayType.getPayPrice());
+            monthPrice[month - 1] = bigDecimal;
+            monthTimes[month - 1]++;
+        }
+        for (int i = 0; i < monthPrice.length; i++) {
+            CountPay monthCountPay = new CountPay(monthTimes[i], monthPrice[i] == null ? new BigDecimal("0.00") : monthPrice[i]);
+            monthReportMap.put(i + 1 + "", monthCountPay);
+        }
+        SpecialOrder maxPriceOrderFinal = new SpecialOrder(maxPriceOrder);
+        Map<String, List<OrderRecordJsonDTO>> payTypeGroupingMap = list.stream().collect(Collectors.groupingBy(OrderRecordJsonDTO :: getPayType));
+        for (String key : payTypeGroupingMap.keySet()) {
+            BigDecimal price = null;
+            String payType = null;
+            for (OrderRecordJsonDTO o : payTypeGroupingMap.get(key)) {
+                if (price == null) {
+                    price = o.getPrice();
+                }
+                price = price.add(o.getPrice());
+                if (payType == null) {
+                    payType = o.getPayType();
+                }
             }
-            if (o.getPayType().equals(PayTypeConstant.WECHAT_PAY)) {
-                CountPayType countPayType = new CountPayType(weChatPayTimes, weChatPayPrice, o).invoke();
-                weChatPayMap.put("times", countPayType.getPayTimes());
-                weChatPayMap.put("price", countPayType.getPayPrice());
-            }
-            if (o.getPayType().equals(PayTypeConstant.CASH)) {
-                CountPayType countPayType = new CountPayType(cashTimes, cashPrice, o).invoke();
-                cashMap.put("times", countPayType.getPayTimes());
-                cashMap.put("price", countPayType.getPayPrice());
-            }
+            CountPay countPay = new CountPay(payTypeGroupingMap.get(key).size(), price == null ? new BigDecimal("0.00") : price);
+            payTypeMap.put(payType, countPay);
         }
         userReportMap.put("orderNumber", orderNumber);
         userReportMap.put("totalPrice", totalPrice);
-        userReportMap.put("firstOrder", firstOrderMap);
-        userReportMap.put("maxPriceOrder", maxPriceOrderMap);
+        userReportMap.put("firstOrder", firstOrder);
+        userReportMap.put("maxPriceOrder", maxPriceOrderFinal);
         userReportMap.put("monthReport", monthReportMap);
-        payTypeMap.put("aliPay", aliPayMap);
-        payTypeMap.put("weChatPay", weChatPayMap);
-        payTypeMap.put("cashPayment", cashMap);
         userReportMap.put("payType", payTypeMap);
         return CommonResult.success(userReportMap);
     }
 
     /**
-     * 统计支付类型的次数和合计金额
+     * 统计支付的次数和合计金额
      */
-    private class CountPayType {
+    @Data
+    private class CountPay {
         private int payTimes;
         private BigDecimal payPrice;
-        private OrderRecordJsonDTO o;
 
-        public CountPayType(int payTimes, BigDecimal payPrice, OrderRecordJsonDTO o) {
+        public CountPay(int payTimes, BigDecimal payPrice) {
             this.payTimes = payTimes;
             this.payPrice = payPrice;
-            this.o = o;
-        }
-
-        public int getPayTimes() {
-            return payTimes;
-        }
-
-        public BigDecimal getPayPrice() {
-            return payPrice;
-        }
-
-        public CountPayType invoke() {
-            payTimes++;
-            BigDecimal price = o.getPrice();
-            if (payPrice == null) {
-                payPrice = price;
-            }
-            payPrice = price.add(price);
-            return this;
         }
     }
+
+    /**
+     * 特殊订单（例如第一次下单或者全年最高订单)
+     */
+    @Data
+    private class SpecialOrder {
+        private String day;
+        private String shopName;
+        private String productList;
+        private BigDecimal orderPrice;
+
+        public SpecialOrder (OrderRecordJsonDTO o) {
+            this.day = new SimpleDateFormat("yyyy年MM月dd日").format(o.getAddTime());
+            this.shopName = o.getShopName();
+            this.orderPrice = o.getPrice();
+            this.productList = o.getProductList();
+        }
+    }
+
 }
