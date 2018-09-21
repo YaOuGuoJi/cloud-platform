@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
-import com.yaouguoji.platform.constant.PayTypeConstant;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.OrderRecordJsonDTO;
 import com.yaouguoji.platform.dto.UserInfoDTO;
@@ -84,61 +83,46 @@ public class UserOrderRecordController {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
-        Map<String , Object> userReportMap = Maps.newHashMap();
+        Map<String, Object> userReportMap = Maps.newHashMap();
         if (list == null || list.size() == 0) {
             return CommonResult.fail("未发现订单记录");
         }
         OrderRecordJsonDTO orderRecordJsonDTO = list.get(0);
         Integer orderNumber = list.size();
-        BigDecimal totalPrice = null;
+        BigDecimal totalPrice = new BigDecimal("0.00");
         SpecialOrder firstOrder = new SpecialOrder(orderRecordJsonDTO);
-        OrderRecordJsonDTO maxPriceOrder = null;
+        OrderRecordJsonDTO maxPriceOrder = list.get(0);
         Map<String , CountPay> monthReportMap = Maps.newHashMap();
-        BigDecimal[] monthPrice = new BigDecimal[12];
-        int[] monthTimes = new int[12];
-        BigDecimal maxPrice = null;
-        Map<String , CountPay> payTypeMap = Maps.newHashMap();
+        BigDecimal maxPrice = new BigDecimal("0.00");
+        Map<String, CountPay> payTypeMap = Maps.newHashMap();
         for (OrderRecordJsonDTO o : list) {
-            maxPriceOrder = o;
-            if (totalPrice == null) {
-                totalPrice = o.getPrice();
-            }
             totalPrice = totalPrice.add(o.getPrice());
-            if (maxPrice == null) {
-                maxPrice = o.getPrice();
-            }
             if (o.getPrice().compareTo(maxPrice) > 0) {
+                maxPrice = o.getPrice();
                 maxPriceOrder = o;
             }
             int month = new DateTime(o.getAddTime()).getMonthOfYear();
-            BigDecimal bigDecimal = monthPrice[month - 1];
-            if (bigDecimal == null) {
-                bigDecimal = o.getPrice();
+            if (monthReportMap.containsKey(month + "")) {
+                CountPay countPay = monthReportMap.get(month + "");
+                int payTimes = countPay.getPayTimes();
+                countPay.setPayTimes(++payTimes);
+                countPay.setPayPrice(countPay.getPayPrice().add(o.getPrice()));
+                monthReportMap.put(month + "", countPay);
+            } else {
+                CountPay countPay = new CountPay(1, o.getPrice() == null ? new BigDecimal("0.00") : o.getPrice());
+                monthReportMap.put(month + "", countPay);
             }
-            bigDecimal = bigDecimal.add(bigDecimal);
-            monthPrice[month - 1] = bigDecimal;
-            monthTimes[month - 1]++;
-        }
-        for (int i = 0; i < monthPrice.length; i++) {
-            CountPay monthCountPay = new CountPay(monthTimes[i], monthPrice[i] == null ? new BigDecimal("0.00") : monthPrice[i]);
-            monthReportMap.put(i + 1 + "", monthCountPay);
         }
         SpecialOrder maxPriceOrderFinal = new SpecialOrder(maxPriceOrder);
         Map<String, List<OrderRecordJsonDTO>> payTypeGroupingMap = list.stream().collect(Collectors.groupingBy(OrderRecordJsonDTO :: getPayType));
-        for (String key : payTypeGroupingMap.keySet()) {
-            BigDecimal price = null;
-            String payType = null;
-            for (OrderRecordJsonDTO o : payTypeGroupingMap.get(key)) {
-                if (price == null) {
-                    price = o.getPrice();
-                }
+        for (Map.Entry<String, List<OrderRecordJsonDTO>> entry : payTypeGroupingMap.entrySet()) {
+            BigDecimal price = new BigDecimal("0.00");
+            List<OrderRecordJsonDTO> value = entry.getValue();
+            for (OrderRecordJsonDTO o : value) {
                 price = price.add(o.getPrice());
-                if (payType == null) {
-                    payType = o.getPayType();
-                }
             }
-            CountPay countPay = new CountPay(payTypeGroupingMap.get(key).size(), price == null ? new BigDecimal("0.00") : price);
-            payTypeMap.put(payType, countPay);
+            CountPay countPay = new CountPay(value.size(), price);
+            payTypeMap.put(entry.getKey(), countPay);
         }
         userReportMap.put("orderNumber", orderNumber);
         userReportMap.put("totalPrice", totalPrice);
