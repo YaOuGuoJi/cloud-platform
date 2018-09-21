@@ -3,7 +3,7 @@ package com.yaouguoji.platform.constant;
 /**
  * 日期常量类
  */
-public class DateConstant {
+public class MonthConstant {
 
     /**
      * 一月
