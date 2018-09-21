@@ -72,49 +72,43 @@ public class UserOrderRecordController {
 
     /**
      * 生成用户年度报告
+     *
      * @param userId 用户ID
-     * @param year 年份
+     * @param year   年份
      * @return
      */
     @GetMapping("/order/user/report")
-    public CommonResult userReport (String userId, String year) {
-
+    public CommonResult userReport(String userId, String year) {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
-        Map<String, Object> userReportMap = Maps.newHashMap();
         if (list == null || list.size() == 0) {
             return CommonResult.fail("未发现订单记录");
         }
-        OrderRecordJsonDTO orderRecordJsonDTO = list.get(0);
         Integer orderNumber = list.size();
         BigDecimal totalPrice = new BigDecimal("0.00");
-        SpecialOrder firstOrder = new SpecialOrder(orderRecordJsonDTO);
+        SpecialOrder firstOrder = new SpecialOrder(list.get(0));
         OrderRecordJsonDTO maxPriceOrder = list.get(0);
-        Map<String , CountPay> monthReportMap = Maps.newHashMap();
-        BigDecimal maxPrice = new BigDecimal("0.00");
-        Map<String, CountPay> payTypeMap = Maps.newHashMap();
+        Map<String, CountPay> monthReportMap = Maps.newHashMap();
         for (OrderRecordJsonDTO o : list) {
             totalPrice = totalPrice.add(o.getPrice());
-            if (o.getPrice().compareTo(maxPrice) > 0) {
-                maxPrice = o.getPrice();
+            if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
                 maxPriceOrder = o;
             }
             int month = new DateTime(o.getAddTime()).getMonthOfYear();
             if (monthReportMap.containsKey(month + "")) {
                 CountPay countPay = monthReportMap.get(month + "");
-                int payTimes = countPay.getPayTimes();
-                countPay.setPayTimes(++payTimes);
+                countPay.plusPayTime();
                 countPay.setPayPrice(countPay.getPayPrice().add(o.getPrice()));
-                monthReportMap.put(month + "", countPay);
             } else {
                 CountPay countPay = new CountPay(1, o.getPrice() == null ? new BigDecimal("0.00") : o.getPrice());
                 monthReportMap.put(month + "", countPay);
             }
         }
+        Map<String, CountPay> payTypeMap = Maps.newHashMap();
         SpecialOrder maxPriceOrderFinal = new SpecialOrder(maxPriceOrder);
-        Map<String, List<OrderRecordJsonDTO>> payTypeGroupingMap = list.stream().collect(Collectors.groupingBy(OrderRecordJsonDTO :: getPayType));
+        Map<String, List<OrderRecordJsonDTO>> payTypeGroupingMap = list.stream().collect(Collectors.groupingBy(OrderRecordJsonDTO::getPayType));
         for (Map.Entry<String, List<OrderRecordJsonDTO>> entry : payTypeGroupingMap.entrySet()) {
             BigDecimal price = new BigDecimal("0.00");
             List<OrderRecordJsonDTO> value = entry.getValue();
@@ -124,6 +118,7 @@ public class UserOrderRecordController {
             CountPay countPay = new CountPay(value.size(), price);
             payTypeMap.put(entry.getKey(), countPay);
         }
+        Map<String, Object> userReportMap = Maps.newHashMap();
         userReportMap.put("orderNumber", orderNumber);
         userReportMap.put("totalPrice", totalPrice);
         userReportMap.put("firstOrder", firstOrder);
@@ -141,9 +136,13 @@ public class UserOrderRecordController {
         private int payTimes;
         private BigDecimal payPrice;
 
-        public CountPay(int payTimes, BigDecimal payPrice) {
+        CountPay(int payTimes, BigDecimal payPrice) {
             this.payTimes = payTimes;
             this.payPrice = payPrice;
+        }
+
+        void plusPayTime() {
+            payTimes++;
         }
     }
 
@@ -157,7 +156,7 @@ public class UserOrderRecordController {
         private String productList;
         private BigDecimal orderPrice;
 
-        public SpecialOrder (OrderRecordJsonDTO o) {
+        SpecialOrder(OrderRecordJsonDTO o) {
             this.day = new SimpleDateFormat("yyyy年MM月dd日").format(o.getAddTime());
             this.shopName = o.getShopName();
             this.orderPrice = o.getPrice();

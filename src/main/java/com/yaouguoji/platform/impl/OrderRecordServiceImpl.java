@@ -5,8 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.yaouguoji.platform.constant.OrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.OrderRecordJsonDTO;
-import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
+import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderRecordJsonEntity;
 import com.yaouguoji.platform.mapper.OrderRecordMapper;
 import com.yaouguoji.platform.service.OrderRecordService;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -122,6 +121,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 
     /**
      * 查询该用户所有的订单
+     *
      * @param userId 用户ID
      * @return
      */

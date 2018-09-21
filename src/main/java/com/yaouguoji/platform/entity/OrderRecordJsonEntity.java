@@ -1,11 +1,11 @@
 package com.yaouguoji.platform.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class OrderRecordJsonEntity extends OrderRecordEntity{
+public class OrderRecordJsonEntity extends OrderRecordEntity {
 
     /**
      * 商户类型

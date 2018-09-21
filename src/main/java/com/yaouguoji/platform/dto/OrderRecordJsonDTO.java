@@ -1,10 +1,15 @@
 package com.yaouguoji.platform.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class OrderRecordJsonDTO extends OrderRecordDTO {
+public class OrderRecordJsonDTO extends OrderRecordDTO implements Serializable {
 
+    private static final long serialVersionUID = 3665115151076098408L;
     /**
      * 商户类型
      */
