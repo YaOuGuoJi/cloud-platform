@@ -34,7 +34,6 @@ import java.util.Map;
 public class ShopOrderRecordController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopOrderRecordController.class);
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Resource
     private OrderRecordService orderRecordService;
@@ -45,9 +44,10 @@ public class ShopOrderRecordController {
 
     @GetMapping("/order/shop/page")
     public CommonResult shopOrder(int shopId, int pageNum, int pageSize, String start, String end) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
-            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            Date startTime = sdf.parse(start);
+            Date endTime = sdf.parse(end);
             if (shopId <= 0 || startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
@@ -71,9 +71,10 @@ public class ShopOrderRecordController {
 
     @GetMapping("/order/shop/rank")
     public CommonResult shopOrderRankTop(int limit, String start, String end, int type) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
-            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            Date startTime = sdf.parse(start);
+            Date endTime = sdf.parse(end);
             if (limit <= 0 || startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
@@ -97,9 +98,10 @@ public class ShopOrderRecordController {
 
     @GetMapping("/order/shop/area")
     public CommonResult areaShopOrder(String start, String end, int type) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
-            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            Date startTime = sdf.parse(start);
+            Date endTime = sdf.parse(end);
             if (startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
