@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.UserFrequencyCountAndPriceCountMapper">
+    <resultMap id="userFrequencyCountAndPriceCount"
+               type="com.yaouguoji.platform.entity.UserFrequencyCountAndPriceCountEntity">
+        <result column="UserId" property="userId"/>
+        <result column="frequency" property="frequencyCount"/>
+        <result column="priceCount" property="priceCount"/>
+    </resultMap>
+
+    <select id="selectUserFrequencyCountAndPriceCount" resultMap="userFrequencyCountAndPriceCount">
+        select UserId,count(UserId) frequency,sum(Price) priceCount
+        from order_record where ShopId=#{shopId} and AddTime between #{startTime} and #{endTime} group by UserId
+    </select>
+</mapper>
