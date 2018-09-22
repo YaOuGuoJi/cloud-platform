@@ -50,6 +50,13 @@
         AND Deleted=0
     </select>
 
+    <select id="findAll" parameterType="map" resultMap="shopInfoEntity">
+        SELECT
+        <include refid="allFields"/>
+        FROM shop_info
+        WHERE 1=1
+    </select>
+
     <insert id="addShopInfo" parameterType="map" useGeneratedKeys="true" keyProperty="shopInfoEntity.shopId">
         INSERT INTO shop_info
         (

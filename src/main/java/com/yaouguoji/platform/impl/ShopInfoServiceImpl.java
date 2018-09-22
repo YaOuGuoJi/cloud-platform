@@ -23,6 +23,16 @@ public class ShopInfoServiceImpl implements ShopInfoService {
     @Resource
     private ShopInfoMapper shopInfoMapper;
 
+
+    @Override
+    public List<ShopInfoDTO> findAll() {
+        List<ShopInfoEntity> shopInfoEntities = shopInfoMapper.findAll();
+        if (CollectionUtils.isEmpty(shopInfoEntities)){
+            return Collections.emptyList();
+        }
+        return BeansListUtils.copyListProperties(shopInfoEntities,ShopInfoDTO.class);
+    }
+
     @Override
     public List<ShopInfoDTO> batchFindByShopIdList(List<Integer> shopIdList) {
         List<ShopInfoEntity> entityList = shopInfoMapper.findByShopIdList(shopIdList);
