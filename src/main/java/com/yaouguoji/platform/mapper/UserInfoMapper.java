@@ -1,7 +1,11 @@
 package com.yaouguoji.platform.mapper;
 
 import com.yaouguoji.platform.entity.UserInfoEntity;
+import com.yaouguoji.platform.vo.ObjectMapDTO;
 import org.apache.ibatis.annotations.Param;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author liuwen
@@ -31,4 +35,12 @@ public interface UserInfoMapper {
      * @return
      */
     int insertUserInfo(@Param("userInfoEntity") UserInfoEntity userInfoEntity);
+
+    /**
+     * 查询所有用户的全年消费金额并降序
+     * @param year 年份
+     * @return
+     */
+    List<ObjectMapDTO<Integer, BigDecimal>> findAllUserTotalConsumption(@Param("year") String year);
+
 }

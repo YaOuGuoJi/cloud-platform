@@ -10,6 +10,7 @@ import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.UserInfoService;
+import com.yaouguoji.platform.vo.ObjectMapDTO;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -84,7 +85,11 @@ public class UserOrderRecordController {
         }
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
         if (list == null || list.size() == 0) {
-            return CommonResult.fail("未发现订单记录");
+            Map<String, Object> noRecordUserReportMap = Maps.newHashMap();
+            RankUserAndCountPercent rankUserAndCountPercent = new RankUserAndCountPercent(userId, year).invoke();
+            noRecordUserReportMap.put("rank", rankUserAndCountPercent.getAllUserTotalConsumptionMap().get(Integer.parseInt(userId)));
+            noRecordUserReportMap.put("beyondPercent", rankUserAndCountPercent.getResult());
+            return CommonResult.success(noRecordUserReportMap);
         }
         Integer orderNumber = list.size();
         BigDecimal totalPrice = new BigDecimal("0.00");
@@ -118,7 +123,12 @@ public class UserOrderRecordController {
             CountPay countPay = new CountPay(value.size(), price);
             payTypeMap.put(entry.getKey(), countPay);
         }
+        RankUserAndCountPercent rankUserAndCountPercent = new RankUserAndCountPercent(userId, year).invoke();
+        Map<Integer, Integer> allUserTotalConsumptionMap = rankUserAndCountPercent.getAllUserTotalConsumptionMap();
+        BigDecimal result = rankUserAndCountPercent.getResult();
         Map<String, Object> userReportMap = Maps.newHashMap();
+        userReportMap.put("beyondPercent", result);
+        userReportMap.put("rank", allUserTotalConsumptionMap.get(Integer.parseInt(userId)));
         userReportMap.put("orderNumber", orderNumber);
         userReportMap.put("totalPrice", totalPrice);
         userReportMap.put("firstOrder", firstOrder);
@@ -164,4 +174,36 @@ public class UserOrderRecordController {
         }
     }
 
+    /**
+     * 统计用户的消费排名并计算超过人数的百分比
+     */
+    @Data
+    private class RankUserAndCountPercent {
+        private String userId;
+        private String year;
+        private Map<Integer, Integer> allUserTotalConsumptionMap;
+        private BigDecimal result;
+
+        public RankUserAndCountPercent(String userId, String year) {
+            this.userId = userId;
+            this.year = year;
+        }
+
+        public RankUserAndCountPercent invoke() {
+            List<ObjectMapDTO<Integer, BigDecimal>> allUserTotalConsumptionList = userInfoService.findAllUserTotalConsumption(year);
+            allUserTotalConsumptionMap = Maps.newHashMap();
+            for (int i = 0; i < allUserTotalConsumptionList.size(); i++) {
+                allUserTotalConsumptionMap.put(allUserTotalConsumptionList.get(i).getObjectKey(), i + 1);
+            }
+            BigDecimal ranking = new BigDecimal(allUserTotalConsumptionMap.get(Integer.parseInt(userId)));
+            BigDecimal userSum = new BigDecimal(allUserTotalConsumptionList.size());
+            result = new BigDecimal("0.00");
+            ObjectMapDTO<Integer, BigDecimal> objectMapDTO = allUserTotalConsumptionList.get(allUserTotalConsumptionMap.get(Integer.parseInt(userId)) - 1);
+            if (objectMapDTO.getObjectValue() != null) {
+                BigDecimal userSumSubtractRanking = userSum.subtract(ranking);
+                result = (userSumSubtractRanking.divide(userSum, 2, BigDecimal.ROUND_HALF_EVEN)).multiply(new BigDecimal("100.00"));
+            }
+            return this;
+        }
+    }
 }

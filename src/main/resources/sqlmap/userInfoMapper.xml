@@ -91,4 +91,18 @@
         )
     </insert>
 
+    <!--查询所有用户的全年消费金额并降序-->
+    <select id="findAllUserTotalConsumption" resultType="com.yaouguoji.platform.vo.ObjectMapDTO">
+        SELECT
+        ui.UserId AS objectKey,
+        a.totalPrice AS objectValue
+        FROM user_info ui
+        LEFT JOIN  (SELECT ore.UserId, SUM(ore.Price) AS totalPrice
+                    FROM order_record ore
+                    GROUP BY ore.UserId) a  ON ui.UserId = a.UserId
+        WHERE YEAR(ui.AddTime) = #{year}
+        ORDER BY a.totalPrice DESC
+    </select>
+    
+    
 </mapper>
