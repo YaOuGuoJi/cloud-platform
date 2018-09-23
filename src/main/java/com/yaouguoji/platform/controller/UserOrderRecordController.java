@@ -184,12 +184,12 @@ public class UserOrderRecordController {
         private Map<Integer, Integer> allUserTotalConsumptionMap;
         private BigDecimal result;
 
-        public RankUserAndCountPercent(String userId, String year) {
+        RankUserAndCountPercent(String userId, String year) {
             this.userId = userId;
             this.year = year;
         }
 
-        public RankUserAndCountPercent invoke() {
+        RankUserAndCountPercent invoke() {
             List<ObjectMapDTO<Integer, BigDecimal>> allUserTotalConsumptionList = userInfoService.findAllUserTotalConsumption(year);
             allUserTotalConsumptionMap = Maps.newHashMap();
             for (int i = 0; i < allUserTotalConsumptionList.size(); i++) {
