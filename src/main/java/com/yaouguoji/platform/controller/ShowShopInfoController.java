@@ -25,7 +25,7 @@ public class ShowShopInfoController {
     private UserFrequencyCountAndPriceCountService userFrequencyCountAndPriceCountService;
     @Resource
     private UserAgeAndSexSplitService userAgeAndSexSplitService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShopOrderRecordController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowShopInfoController.class);
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     @GetMapping(value = "shopManagementInfo")
