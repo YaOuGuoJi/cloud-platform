@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.UserAgeAndSexSplitMapper">
+  <resultMap id="ageAndSexSplit" type="com.yaouguoji.platform.entity.UserAgeAndSexSplitEntity">
+      <result column="Sex" property="sex"/>
+      <result column="0_13" property="count0_13"/>
+      <result column="14_18" property="count13_18"/>
+      <result column="19_25" property="count18_25"/>
+      <result column="26_35" property="count25_35"/>
+      <result column="36_50" property="count35_50"/>
+      <result column="51_65" property="count50_65"/>
+      <result column="over65" property="countOver65"/>
+  </resultMap>
+    <select id="selectAgeAndSexSplitEntityMapper" resultMap="ageAndSexSplit">
+        select Sex,
+        sum(case when age &lt; 13 then 1 else 0 end) 0_13,
+        sum(case when age &gt; 13 and age &lt;=18 then 1 else 0 end) 14_18,
+        sum(case when age &gt; 18 and age &lt;=25 then 1 else 0 end) 19_25,
+        sum(case when age &gt; 25 and age &lt;=35 then 1 else 0 end) 26_35,
+        sum(case when age &gt; 35 and age &lt;=50 then 1 else 0 end) 36_50,
+        sum(case when age &gt; 50 and age &lt;=65 then 1 else 0 end) 51_65,
+        sum(case when age &gt; 65 then 1 else 0 end) over65
+        from (select distinct user_info.UserId,datediff(now(),Birthday)/365 age,Sex
+              from order_record,user_info
+              where user_info.UserId=order_record.UserId and order_record.AddTime between #{startTime}and #{endTime} and ShopId=#{shopId}) w
+        group by  Sex
+    </select>
+</mapper>
