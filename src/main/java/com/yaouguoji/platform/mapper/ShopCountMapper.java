@@ -63,10 +63,11 @@ public interface ShopCountMapper {
     List<ShopCountEntity> everydayVolumeCount(@Param("shopId") int shopId,
                                               @Param("startTime") Date startTime,
                                               @Param("endTime") Date endTime);
-
     /**
-     * 时间段内内商品销售类别统计
+     * 时间段内商品销售类别统计
      * @param shopId
+     * @param startTime
+     * @param endTime
      * @return
      */
     List<ShopCountEntity> shopGoodsSellTypeCount(@Param("shopId") int shopId,

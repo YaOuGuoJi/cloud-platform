@@ -1,6 +1,5 @@
 package com.yaouguoji.platform.service;
 
-import com.yaouguoji.platform.common.CommonResult;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;

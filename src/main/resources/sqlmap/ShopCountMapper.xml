@@ -7,7 +7,6 @@
         <result column="Amount" property="amount"/>
         <result column="OrderNumb" property="orderNumb"/>
         <result column="Times" property="times"/>
-        <result column="Ranking" property="ranking"/>
     </resultMap>
 
 
