@@ -2,6 +2,7 @@ package com.yaouguoji.platform.service;
 
 import com.github.pagehelper.PageInfo;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
+import com.yaouguoji.platform.dto.OrderRecordRequest;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,14 @@ import java.util.Map;
  * @author liuwen
  */
 public interface OrderRecordService {
+
+    /**
+     * 查询区域订单排名
+     *
+     * @param request
+     * @return
+     */
+    Map<Integer, Map<Integer, Object>> findAreaOrderRankByType(OrderRecordRequest request);
 
     /**
      * 查询时间段内各个区域订单量

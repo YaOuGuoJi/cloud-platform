@@ -2,8 +2,10 @@ package com.yaouguoji.platform.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.yaouguoji.platform.constant.OrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
+import com.yaouguoji.platform.dto.OrderRecordRequest;
 import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
 import com.yaouguoji.platform.mapper.OrderRecordMapper;
@@ -28,6 +30,11 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 
     @Resource
     private OrderRecordMapper orderRecordMapper;
+
+    @Override
+    public Map<Integer, Map<Integer, Object>> findAreaOrderRankByType(OrderRecordRequest request) {
+        return Maps.newHashMap();
+    }
 
     @Override
     public Map<Integer, Object> findAreaOrderNumber(Date startTime, Date endTime, int type) {
