@@ -19,7 +19,7 @@ public interface OrderRecordService {
      * @param request
      * @return
      */
-    Map<Integer, Map<Integer, Object>> findAreaOrderRankByType(OrderRecordRequest request);
+    List<Map<Integer, Object>> findAreaShopRankByType(OrderRecordRequest request);
 
     /**
      * 查询时间段内各个区域订单量

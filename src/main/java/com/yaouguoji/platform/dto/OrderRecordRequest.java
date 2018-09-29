@@ -1,5 +1,7 @@
 package com.yaouguoji.platform.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ import java.util.Date;
  * @author liuwen
  * @date 2018/9/29
  */
+@Data
 public class OrderRecordRequest implements Serializable {
 
     private static final long serialVersionUID = -908472319393867891L;

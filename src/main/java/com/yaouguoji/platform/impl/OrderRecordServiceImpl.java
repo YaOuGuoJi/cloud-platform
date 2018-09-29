@@ -2,17 +2,18 @@ package com.yaouguoji.platform.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import com.yaouguoji.platform.constant.OrderRankType;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.OrderRecordRequest;
-import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
+import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.mapper.OrderRecordMapper;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.util.BeansListUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -32,8 +33,13 @@ public class OrderRecordServiceImpl implements OrderRecordService {
     private OrderRecordMapper orderRecordMapper;
 
     @Override
-    public Map<Integer, Map<Integer, Object>> findAreaOrderRankByType(OrderRecordRequest request) {
-        return Maps.newHashMap();
+    public List<Map<Integer, Object>> findAreaShopRankByType(OrderRecordRequest request) {
+        Assert.notNull(request, "请求不能为空！");
+        Assert.isTrue(request.getLimit() > 0 && request.getId() > 0, "返回记录数和areaId必须大于0！");
+        Assert.isTrue(request.getStartTime().before(request.getEndTime()), "结束时间不得早于开始时间！");
+
+
+        return Lists.newArrayList();
     }
 
     @Override
