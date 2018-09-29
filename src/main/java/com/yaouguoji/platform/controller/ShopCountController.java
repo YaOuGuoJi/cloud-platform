@@ -53,7 +53,10 @@ public class ShopCountController {
      * @return
      */
     @GetMapping("/shop/count/goodsPlayOrders")
-    public CommonResult goodsPlayOrdersCount(int shopId, String startTime, String endTime) {
+    public CommonResult goodsPlayOrdersCount(Integer shopId, String startTime, String endTime) {
+        if(shopId==null && startTime==null && endTime==null){
+            CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         try{
             Date start = smp.parse(startTime);
             Date end = smp.parse(endTime);
@@ -73,8 +76,12 @@ public class ShopCountController {
      * @return
      */
     @GetMapping("/shop/count/goodsStrike")
-    public CommonResult goodsStrikeCount(int shopId, String startTime, String endTime) {
-        try{
+    public CommonResult goodsStrikeCount(Integer shopId, String startTime, String endTime) {
+
+        if(shopId==null && startTime==null && endTime==null){
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+            try{
             Date start = smp.parse(startTime);
             Date end = smp.parse(endTime);
 
@@ -93,7 +100,10 @@ public class ShopCountController {
      * @return
      */
     @GetMapping("/shop/count/timeSectionSalesAndVolume")
-    public CommonResult timeSectionSalesAndVolumeCount(int shopId, String startTime, String endTime){
+    public CommonResult timeSectionSalesAndVolumeCount(Integer shopId, String startTime, String endTime){
+        if(shopId==null && startTime==null && endTime ==null){
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         try{
             Date start = smp.parse(startTime);
             Date end = smp.parse(endTime);
@@ -114,7 +124,10 @@ public class ShopCountController {
      * @return
      */
     @GetMapping("/shop/count/everydayVolume")
-    public CommonResult everydayVolumeCount(int shopId, String startTime, String endTime){
+    public CommonResult everydayVolumeCount(Integer shopId, String startTime, String endTime){
+        if(shopId == null && startTime == null && endTime == null){
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         try{
             Date start = smp.parse(startTime);
             Date end = smp.parse(endTime);
@@ -134,7 +147,10 @@ public class ShopCountController {
      * @return
      */
     @GetMapping("/shop/count/shopGoodsSellType")
-    public CommonResult shopGoodsSellTypeCount(int shopId,String startTime,String endTime){
+    public CommonResult shopGoodsSellTypeCount(Integer shopId,String startTime,String endTime){
+        if(shopId ==null && startTime==null &&endTime ==null){
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         try{
             Date start = smp.parse(startTime);
             Date end = smp.parse(endTime);
