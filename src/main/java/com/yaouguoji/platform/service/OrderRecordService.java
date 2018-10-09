@@ -1,6 +1,7 @@
 package com.yaouguoji.platform.service;
 
 import com.github.pagehelper.PageInfo;
+import com.yaouguoji.platform.dto.ObjectMapDTO;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.OrderRecordRequest;
 
@@ -19,7 +20,7 @@ public interface OrderRecordService {
      * @param request
      * @return
      */
-    List<Map<Integer, Object>> findAreaShopRankByType(OrderRecordRequest request);
+    List<ObjectMapDTO<Integer, Object>> findAreaShopRankByType(OrderRecordRequest request);
 
     /**
      * 查询时间段内各个区域订单量

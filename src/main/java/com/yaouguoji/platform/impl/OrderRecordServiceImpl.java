@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.yaouguoji.platform.constant.OrderRankType;
+import com.yaouguoji.platform.dto.ObjectMapDTO;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.OrderRecordRequest;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
@@ -33,13 +34,16 @@ public class OrderRecordServiceImpl implements OrderRecordService {
     private OrderRecordMapper orderRecordMapper;
 
     @Override
-    public List<Map<Integer, Object>> findAreaShopRankByType(OrderRecordRequest request) {
+    public List<ObjectMapDTO<Integer, Object>> findAreaShopRankByType(OrderRecordRequest request) {
         Assert.notNull(request, "请求不能为空！");
         Assert.isTrue(request.getLimit() > 0 && request.getId() > 0, "返回记录数和areaId必须大于0！");
         Assert.isTrue(request.getStartTime().before(request.getEndTime()), "结束时间不得早于开始时间！");
 
-
-        return Lists.newArrayList();
+        List<ObjectMapDTO<Integer, Object>> result = Lists.newArrayList();
+        for (int i = 0; i < request.getLimit(); i++) {
+            result.add(new ObjectMapDTO<>(10000 + i, i * 1000));
+        }
+        return result;
     }
 
     @Override

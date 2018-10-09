@@ -5,7 +5,7 @@ import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.dto.*;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.*;
-import com.yaouguoji.platform.vo.ObjectMapVO;
+import com.yaouguoji.platform.dto.ObjectMapDTO;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -91,14 +91,14 @@ public class AreaController {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
         Map<Integer, AreaDTO> areaMap = areaDTOS.stream().collect(Collectors.toMap(AreaDTO::getAreaId, area -> area));
-        Map<Integer, ObjectMapVO<AreaDTO, Integer>> resultMap = Maps.newHashMap();
+        Map<Integer, ObjectMapDTO<AreaDTO, Integer>> resultMap = Maps.newHashMap();
         cameraRecordDTOS.forEach(cameraRecordDTO -> {
             int areaId = cameraId2AreaIdMap.get(cameraRecordDTO.getCameraId());
-            ObjectMapVO<AreaDTO, Integer> objectMapVO = resultMap.get(areaId);
-            if (objectMapVO == null) {
-                resultMap.put(areaId, new ObjectMapVO<>(areaMap.get(areaId), cameraRecordDTO.getCrNumber()));
+            ObjectMapDTO<AreaDTO, Integer> objectMapDTO = resultMap.get(areaId);
+            if (objectMapDTO == null) {
+                resultMap.put(areaId, new ObjectMapDTO<>(areaMap.get(areaId), cameraRecordDTO.getCrNumber()));
             } else {
-                objectMapVO.setNumber(objectMapVO.getNumber() + cameraRecordDTO.getCrNumber());
+                objectMapDTO.setNumber(objectMapDTO.getNumber() + cameraRecordDTO.getCrNumber());
             }
         });
         return CommonResult.success(resultMap.values());
@@ -131,21 +131,21 @@ public class AreaController {
 //            Map<Integer,Integer> shopId2AreaIdMap = shopInfoDTOS
 //                    .stream()
 //                    .collect(Collectors.toMap(ShopInfoDTO::getShopId,ShopInfoDTO::getRegionId));
-//            Map<Integer,ObjectMapVO<AreaDTO,Object>> areaShopMap = Maps.newHashMap();
+//            Map<Integer,ObjectMapDTO<AreaDTO,Object>> areaShopMap = Maps.newHashMap();
 //            Map<Integer,Object> orderRecords = orderRecordService.findShopIdsRankByOrders(limit,startTime,endTime,type);
 //            if (CollectionUtils.isEmpty(orderRecords)){
 //                return CommonResult.fail(HttpStatus.NOT_FOUND);
 //            }
-//            Map<Object,ObjectMapVO<Object,Object>> resultMap = Maps.newHashMap();
+//            Map<Object,ObjectMapDTO<Object,Object>> resultMap = Maps.newHashMap();
 //            shopInfoDTOS.forEach(shopInfoDTO -> {
 //                Integer areaId = shopId2AreaIdMap.get(shopInfoDTO.getShopId());
-//                ObjectMapVO<AreaDTO,Object> objectMapVO = areaShopMap.get(areaId);
+//                ObjectMapDTO<AreaDTO,Object> objectMapVO = areaShopMap.get(areaId);
 //                if (objectMapVO == null){
-//                    areaShopMap.put(areaId,new ObjectMapVO<>(areaMap.get(areaId),shopInfoDTO.getShopName()));
+//                    areaShopMap.put(areaId,new ObjectMapDTO<>(areaMap.get(areaId),shopInfoDTO.getShopName()));
 //                } else {
 //                    objectMapVO.setNumber(objectMapVO.getNumber()+"\n"+shopInfoDTO.getShopName());
 //                }
-//                resultMap.put(areaId, new ObjectMapVO<>(shopInfoDTO.getShopName(), orderRecords));
+//                resultMap.put(areaId, new ObjectMapDTO<>(shopInfoDTO.getShopName(), orderRecords));
 //
 //            });
 //            return CommonResult.success(resultMap);

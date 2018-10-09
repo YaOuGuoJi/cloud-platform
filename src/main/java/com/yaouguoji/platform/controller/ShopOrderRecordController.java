@@ -5,13 +5,13 @@ import com.google.common.collect.Lists;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.AreaDTO;
+import com.yaouguoji.platform.dto.ObjectMapDTO;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.AreaService;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.ShopInfoService;
-import com.yaouguoji.platform.vo.ObjectMapVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -84,9 +84,9 @@ public class ShopOrderRecordController {
             }
             List<ShopInfoDTO> shopInfoDTOs
                     = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
-            List<ObjectMapVO> resultList = Lists.newArrayList();
+            List<ObjectMapDTO> resultList = Lists.newArrayList();
             shopInfoDTOs.forEach(shopInfoDTO ->
-                resultList.add(new ObjectMapVO<>(shopInfoDTO, shopIds2ResultMap.get(shopInfoDTO.getShopId())))
+                resultList.add(new ObjectMapDTO<>(shopInfoDTO, shopIds2ResultMap.get(shopInfoDTO.getShopId())))
             );
             return CommonResult.success(resultList);
         } catch (ParseException e) {
@@ -105,11 +105,11 @@ public class ShopOrderRecordController {
             }
             List<AreaDTO> areaDTOS = areaService.selectAll();
             Map<Integer, Object> areaId2NumberMap = orderRecordService.findAreaOrderNumber(startTime, endTime, type);
-            List<ObjectMapVO> resultList = Lists.newArrayList();
+            List<ObjectMapDTO> resultList = Lists.newArrayList();
             areaDTOS.forEach(areaDTO -> {
-                ObjectMapVO objectMapVO =
-                        new ObjectMapVO<>(areaDTO, areaId2NumberMap.getOrDefault(areaDTO.getAreaId(), 0));
-                resultList.add(objectMapVO);
+                ObjectMapDTO objectMapDTO =
+                        new ObjectMapDTO<>(areaDTO, areaId2NumberMap.getOrDefault(areaDTO.getAreaId(), 0));
+                resultList.add(objectMapDTO);
             });
             return CommonResult.success(resultList);
         } catch (ParseException e) {
