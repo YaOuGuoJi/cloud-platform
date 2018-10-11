@@ -45,7 +45,7 @@
 
             SELECT COUNT(*) OrderNumb,SUM(price) Amount, HOUR(UpdateTime) Times
             FROM order_record
-            WHERE shopId=#{shopId}  AND updateTime>#{startTime} AND updateTime<#{endTime} AND orderstatus='已完成'
+            WHERE ShopId=#{shopId}  AND updateTime>#{startTime} AND updateTime<#{endTime} AND orderstatus='已完成'
             GROUP BY HOUR(UpdateTime) ORDER BY HOUR(UpdateTime)
 
         ]]>
@@ -55,19 +55,19 @@
 
             SELECT COUNT(*) OrderNumb,SUM(price) Amount,DATE_FORMAT(updateTime, '%Y/%M/%D') Times
             FROM order_record
-            WHERE shopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
+            WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
             GROUP BY DATE_FORMAT(updateTime, '%Y/%M/%D')
             ORDER BY DATE_FORMAT(updateTime, '%Y/%M/%D')
 
         ]]>
     </select>
 
-    <select id=" shopGoodsSellTypeCount" resultMap="shopCount">
+    <select id="shopGoodsSellTypeCount" resultMap="shopCount">
         <![CDATA[
 
             SELECT COUNT(*) OrderNumb,ProductType
             FROM order_record
-            WHERE shopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
+            WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
             GROUP BY ProductType
             ORDER BY OrderNumb
 

@@ -33,8 +33,10 @@ public class ShopCountController {
      * @return
      */
     @GetMapping("/shop/count/goodsSales")
-    public CommonResult goodsSalesCount(int shopId, String startTime, String endTime) {
-
+    public CommonResult goodsSalesCount(Integer shopId, String startTime, String endTime) {
+        if(shopId==null || startTime==null || endTime==null){
+            CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         try {
             Date start = smp.parse(startTime);
             Date end = smp.parse(endTime);
@@ -54,7 +56,7 @@ public class ShopCountController {
      */
     @GetMapping("/shop/count/goodsPlayOrders")
     public CommonResult goodsPlayOrdersCount(Integer shopId, String startTime, String endTime) {
-        if(shopId==null && startTime==null && endTime==null){
+        if(shopId==null || startTime==null || endTime==null){
             CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         try{
@@ -78,7 +80,7 @@ public class ShopCountController {
     @GetMapping("/shop/count/goodsStrike")
     public CommonResult goodsStrikeCount(Integer shopId, String startTime, String endTime) {
 
-        if(shopId==null && startTime==null && endTime==null){
+        if(shopId==null || startTime==null || endTime==null){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
             try{
@@ -101,7 +103,7 @@ public class ShopCountController {
      */
     @GetMapping("/shop/count/timeSectionSalesAndVolume")
     public CommonResult timeSectionSalesAndVolumeCount(Integer shopId, String startTime, String endTime){
-        if(shopId==null && startTime==null && endTime ==null){
+        if(shopId==null || startTime==null || endTime ==null){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         try{
@@ -125,7 +127,7 @@ public class ShopCountController {
      */
     @GetMapping("/shop/count/everydayVolume")
     public CommonResult everydayVolumeCount(Integer shopId, String startTime, String endTime){
-        if(shopId == null && startTime == null && endTime == null){
+        if(shopId == null || startTime == null || endTime == null){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         try{
@@ -148,7 +150,7 @@ public class ShopCountController {
      */
     @GetMapping("/shop/count/shopGoodsSellType")
     public CommonResult shopGoodsSellTypeCount(Integer shopId,String startTime,String endTime){
-        if(shopId ==null && startTime==null &&endTime ==null){
+        if(shopId ==null || startTime==null || endTime ==null){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         try{
