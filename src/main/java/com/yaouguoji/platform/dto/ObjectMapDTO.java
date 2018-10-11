@@ -17,6 +17,10 @@ public class ObjectMapDTO<O, N> implements Serializable {
         this.number = number;
     }
 
+    public ObjectMapDTO(){
+
+    }
+
     /**
      * dto对象
      */

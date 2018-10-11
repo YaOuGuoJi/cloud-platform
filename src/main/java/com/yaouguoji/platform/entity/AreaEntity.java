@@ -16,4 +16,6 @@ public class AreaEntity {
 
     private Date aUpdateTime;
 
+    private String aAddress;
+
 }

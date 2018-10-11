@@ -52,7 +52,7 @@
 
     <select id="findAll" parameterType="map" resultMap="shopInfoEntity">
         SELECT
-        <include refid="allFields"/>
+        <include refid="allFields" />
         FROM shop_info
         WHERE 1=1
     </select>

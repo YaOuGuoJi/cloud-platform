@@ -41,7 +41,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 
         List<ObjectMapDTO<Integer, Object>> result = Lists.newArrayList();
         for (int i = 0; i < request.getLimit(); i++) {
-            result.add(new ObjectMapDTO<>(10000 + i, i * 1000));
+            result.add(new ObjectMapDTO<>(100000 + i, i * 1000));
         }
         return result;
     }

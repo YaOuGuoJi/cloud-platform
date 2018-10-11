@@ -2,6 +2,7 @@ package com.yaouguoji.platform.controller;
 
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.*;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.*;
@@ -104,59 +105,6 @@ public class AreaController {
         return CommonResult.success(resultMap.values());
     }
 
-//    /**
-//     * 查询一个分区内前几名等商家销售额、成交量的排名
-//     *
-//     * @param limit
-//     * @param start
-//     * @param end
-//     * @param type
-//     * @return
-//     */
-//    @GetMapping("/areaRank")
-//    public CommonResult areaShopRank(int limit, String start, String end, int type){
-//        try {
-//            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
-//            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
-//
-//            List<AreaDTO> areaDTOS = areaService.selectAll();
-//            if (CollectionUtils.isEmpty(areaDTOS)){
-//                return CommonResult.fail(HttpStatus.NOT_FOUND);
-//            }
-//            Map<Integer, AreaDTO> areaMap = areaDTOS.stream().collect(Collectors.toMap(AreaDTO::getAreaId, area -> area));
-//            List<ShopInfoDTO> shopInfoDTOS = shopInfoService.findAll();
-//            if (CollectionUtils.isEmpty(shopInfoDTOS)){
-//                return CommonResult.fail(HttpStatus.NOT_FOUND);
-//            }
-//            Map<Integer,Integer> shopId2AreaIdMap = shopInfoDTOS
-//                    .stream()
-//                    .collect(Collectors.toMap(ShopInfoDTO::getShopId,ShopInfoDTO::getRegionId));
-//            Map<Integer,ObjectMapDTO<AreaDTO,Object>> areaShopMap = Maps.newHashMap();
-//            Map<Integer,Object> orderRecords = orderRecordService.findShopIdsRankByOrders(limit,startTime,endTime,type);
-//            if (CollectionUtils.isEmpty(orderRecords)){
-//                return CommonResult.fail(HttpStatus.NOT_FOUND);
-//            }
-//            Map<Object,ObjectMapDTO<Object,Object>> resultMap = Maps.newHashMap();
-//            shopInfoDTOS.forEach(shopInfoDTO -> {
-//                Integer areaId = shopId2AreaIdMap.get(shopInfoDTO.getShopId());
-//                ObjectMapDTO<AreaDTO,Object> objectMapVO = areaShopMap.get(areaId);
-//                if (objectMapVO == null){
-//                    areaShopMap.put(areaId,new ObjectMapDTO<>(areaMap.get(areaId),shopInfoDTO.getShopName()));
-//                } else {
-//                    objectMapVO.setNumber(objectMapVO.getNumber()+"\n"+shopInfoDTO.getShopName());
-//                }
-//                resultMap.put(areaId, new ObjectMapDTO<>(shopInfoDTO.getShopName(), orderRecords));
-//
-//            });
-//            return CommonResult.success(resultMap);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-//        }
-//
-//    }
-
-
     /**
      * 查询一个分区内前几名等商家销售额、成交量的排名
      *
@@ -205,5 +153,66 @@ public class AreaController {
         private Object payTimes;
         private Object payPrice;
 
+    }
+
+    /**
+     * 查询一个分区内前几名商家的销售额、销售量排名
+     *
+     * @param limit
+     * @param areaId
+     * @param start
+     * @param end
+     * @return
+     */
+    @GetMapping("/area/shop/rank")
+    public CommonResult areaShopRank1(Integer limit, Integer areaId, String start, String end){
+        try {
+            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
+            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            OrderRecordRequest request = new OrderRecordRequest();
+            request.setLimit(limit);
+            request.setId(areaId);
+            request.setStartTime(startTime);
+            request.setEndTime(endTime);
+            request.setType(1);
+            List<ObjectMapDTO<Integer,Object>> areaShopRank = orderRecordService.findAreaShopRankByType(request);
+            request.setType(2);
+            List<ObjectMapDTO<Integer,Object>> areaShopRank2 = orderRecordService.findAreaShopRankByType(request);
+            List<ShopInfoDTO> shopInfoDTOS = shopInfoService.findAll();
+            Map<Integer,ShopInfoDTO> shopInfoDTOMap = shopInfoDTOS.stream().collect(Collectors.toMap(ShopInfoDTO::getShopId,shopInfoDTOs -> shopInfoDTOs));
+            List<ObjectMapDTO<ShopInfoDTO,Object>> areaShopList = new ArrayList<>();
+            for(int i = 0; i < areaShopRank.size(); i++){
+                ObjectMapDTO<ShopInfoDTO, Object> shopInfo = new ObjectMapDTO<>();
+                ObjectMapDTO<Integer,Object> shopMap = areaShopRank.get(i);
+                Integer shopIds = shopMap.getDtoObject();
+                Object number = shopMap.getNumber();
+                ShopInfoDTO shopInfoDTO = shopInfoDTOMap.get(shopIds);
+                shopInfo.setDtoObject(shopInfoDTO);
+                shopInfo.setNumber(number);
+                areaShopList.add(shopInfo);
+            }
+            List<ObjectMapDTO<ShopInfoDTO,Object>> areaShopList2 = new ArrayList<>();
+            for (int i = 0; i < areaShopRank2.size(); i++){
+                ObjectMapDTO<Integer,Object> shopMap2 = areaShopRank.get(i);
+                Integer shopIds = shopMap2.getDtoObject();
+                Object numbers = shopMap2.getNumber();
+                ShopInfoDTO shopInfoDTOs = shopInfoDTOMap.get(shopIds);
+                ObjectMapDTO<ShopInfoDTO, Object> shopInfo2 = new ObjectMapDTO<>();
+                shopInfo2.setDtoObject(shopInfoDTOs);
+                shopInfo2.setNumber(numbers);
+                areaShopList2.add(shopInfo2);
+            }
+            Map<String,Object> areaShopRankMap = new HashMap<>();
+            areaShopRankMap.put("orderCount",areaShopList);
+            areaShopRankMap.put("OrderPrice",areaShopList2);
+
+            return new CommonResultBuilder()
+                    .code(200).message("查询成功")
+                    .data("data", areaShopRankMap)
+                    .build();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
     }
 }

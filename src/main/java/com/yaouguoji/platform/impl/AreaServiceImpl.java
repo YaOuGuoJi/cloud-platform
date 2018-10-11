@@ -49,6 +49,7 @@ public class AreaServiceImpl implements AreaService {
         AreaEntity area = new AreaEntity();
         area.setAName(record.getAName());
         area.setASort(record.getASort());
+        area.setAAddress(record.getAAddress());
 
         areaMapper.insert(area);
         return area.getAreaId();

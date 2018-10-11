@@ -35,4 +35,9 @@ public class AreaDTO implements Serializable {
      */
     private Date aUpdateTime;
 
+    /**
+     * 分区地址
+     */
+    private String aAddress;
+
 }
