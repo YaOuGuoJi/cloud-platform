@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.CarMapper">
+
+    <resultMap id="Car" type="com.yaouguoji.platform.entity.CarEntity">
+        <result property="id" column="id"/>
+        <result property="ownerId" column="owner_id"/>
+        <result property="license" column="license"/>
+        <result property="addTime" column="add_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="allFields">
+       id,
+       owner_id,
+       license,
+       add_time,
+       update_time
+    </sql>
+
+    <insert id="addCar" parameterType="map" useGeneratedKeys="true" keyProperty="car.id">
+          insert into car(owner_id, license,add_time)
+          values
+          (#{car.ownerId},#{car.license},NOW())
+    </insert>
+
+    <update id="updateCar" parameterType="com.yaouguoji.platform.entity.CarEntity">
+        update car set
+        owner_id=#{car.ownerId},
+        license=#{car.license},
+        update_time=NOW()
+        where id=#{car.id}
+    </update>
+
+    <delete id="deleteCar" parameterType="java.lang.Integer">
+        delete  from  car where id=#{id}
+    </delete>
+
+    <select id="selectCarById" parameterType="java.lang.Integer" resultMap="Car">
+        select <include refid="allFields"></include>
+        from car where id=#{id}
+    </select>
+
+    <select id="selectCarByLicense" parameterType="java.lang.String" resultMap="Car">
+          select <include refid="allFields" ></include>
+          from car where license=#{license}
+    </select>
+
+    <select id="selectAll" parameterType="com.yaouguoji.platform.entity.CarEntity"
+            resultMap="Car">
+          select <include refid="allFields"></include>
+          from car
+    </select>
+
+</mapper>
