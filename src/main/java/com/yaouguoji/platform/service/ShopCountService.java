@@ -38,7 +38,6 @@ public interface ShopCountService {
      * @return
      */
     List<ShopCountDTO> timeSectionSalesAndVolumeCount(int shopId, Date startTime, Date endTime);
-
     /**
      * 日成交量走势
      * @param shopId
@@ -47,7 +46,6 @@ public interface ShopCountService {
      * @return
      */
     List<ShopCountDTO> everydayVolumeCount(int shopId, Date startTime, Date endTime);
-
     /**
      * 商品类别销售排名
      * @param shopId
