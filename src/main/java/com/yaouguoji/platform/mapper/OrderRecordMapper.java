@@ -13,6 +13,34 @@ import java.util.List;
 public interface OrderRecordMapper {
 
     /**
+     * 查询区域内商户订单量排名
+     *
+     * @param areaId
+     * @param limit
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderNumberEntity> findAreaShopOrderNumRank(@Param("areaId") int areaId,
+                                                     @Param("limit") int limit,
+                                                     @Param("startTime") Date startTime,
+                                                     @Param("endTime") Date endTime);
+
+    /**
+     * 查询区域内商户订单总额排名
+     *
+     * @param areaId
+     * @param limit
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderNumberEntity> findAreaShopOrderPriceRank(@Param("areaId") int areaId,
+                                                       @Param("limit") int limit,
+                                                       @Param("startTime") Date startTime,
+                                                       @Param("endTime") Date endTime);
+
+    /**
      * 查询时间段内各个区域的订单量
      *
      * @param startTime
@@ -20,7 +48,7 @@ public interface OrderRecordMapper {
      * @return
      */
     List<OrderNumberEntity> findAreaOrderNum(@Param("startTime") Date startTime,
-                                                @Param("endTime") Date endTime);
+                                             @Param("endTime") Date endTime);
 
     /**
      * 查询时间段内各个区域的订单总额

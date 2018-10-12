@@ -193,7 +193,7 @@ public class AreaController {
             }
             List<ObjectMapDTO<ShopInfoDTO,Object>> areaShopList2 = new ArrayList<>();
             for (int i = 0; i < areaShopRank2.size(); i++){
-                ObjectMapDTO<Integer,Object> shopMap2 = areaShopRank.get(i);
+                ObjectMapDTO<Integer,Object> shopMap2 = areaShopRank2.get(i);
                 Integer shopIds = shopMap2.getDtoObject();
                 Object numbers = shopMap2.getNumber();
                 ShopInfoDTO shopInfoDTOs = shopInfoDTOMap.get(shopIds);
