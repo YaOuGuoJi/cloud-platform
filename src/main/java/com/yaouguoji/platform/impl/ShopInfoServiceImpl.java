@@ -35,10 +35,10 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 
     @Override
     public List<ShopInfoDTO> batchFindByShopIdList(List<Integer> shopIdList) {
-        List<ShopInfoEntity> entityList = shopInfoMapper.findByShopIdList(shopIdList);
-        if (CollectionUtils.isEmpty(entityList)) {
+        if (CollectionUtils.isEmpty(shopIdList)) {
             return Collections.emptyList();
         }
+        List<ShopInfoEntity> entityList = shopInfoMapper.findByShopIdList(shopIdList);
         return BeansListUtils.copyListProperties(entityList, ShopInfoDTO.class);
     }
 

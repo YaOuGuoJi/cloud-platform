@@ -124,6 +124,9 @@ public class AreaController {
             request.setEndTime(endTime);
             request.setType(1);
             List<ObjectMapDTO<Integer, Object>> areaShopRank = orderRecordService.findAreaShopRankByType(request);
+            if (CollectionUtils.isEmpty(areaShopRank)) {
+                return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+            }
             List<Integer> shopIdList = areaShopRank.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
             List<ShopInfoDTO> shopInfoDTOList = shopInfoService.batchFindByShopIdList(shopIdList);
             Map<Integer, ShopInfoDTO> shopInfoDTOMap =
@@ -135,6 +138,9 @@ public class AreaController {
             });
             request.setType(2);
             List<ObjectMapDTO<Integer, Object>> areaShopRank2 = orderRecordService.findAreaShopRankByType(request);
+            if (CollectionUtils.isEmpty(areaShopRank2)){
+                return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+            }
             List<Integer> shopIdList2 = areaShopRank2.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
             List<ShopInfoDTO> shopInfoDTOLists = shopInfoService.batchFindByShopIdList(shopIdList2);
             Map<Integer,ShopInfoDTO> shopInfoDTOMaps =
