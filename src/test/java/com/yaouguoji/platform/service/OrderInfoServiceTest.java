@@ -29,9 +29,9 @@ public class OrderInfoServiceTest {
         OrderRecordRequest orderRecordRequest = new OrderRecordRequest();
         orderRecordRequest.setId(1);
         orderRecordRequest.setLimit(10);
-        orderRecordRequest.setStartTime(new DateTime().minusDays(10).toDate());
+        orderRecordRequest.setStartTime(new DateTime().minusMonths(10).toDate());
         orderRecordRequest.setEndTime(new Date());
-        orderRecordRequest.setType(1);
+        orderRecordRequest.setType(2);
         List<ObjectMapDTO<Integer, Object>> areaShopRankByType = orderRecordService.findAreaShopRankByType(orderRecordRequest);
         Assert.assertFalse(CollectionUtils.isEmpty(areaShopRankByType));
     }
@@ -54,11 +54,11 @@ public class OrderInfoServiceTest {
     @Test
     public void testSelect() {
         OrderRecordDTO orderRecordDTO = orderRecordService.findOrderDetailsByOrderId(4);
-        Assert.assertTrue(orderRecordDTO != null);
+        Assert.assertNotNull(orderRecordDTO);
         List<OrderRecordDTO> byUser = orderRecordService.findOrdersByUserId(100000000, new DateTime().minusDays(1).toDate(), new Date());
-        Assert.assertTrue(byUser.size() == 1);
+        Assert.assertEquals(1, byUser.size());
         List<OrderRecordDTO> byShop = orderRecordService.findOrdersByShopId(100003, new DateTime().minusDays(3).toDate(), new Date());
-        Assert.assertTrue(byShop.size() == 2);
+        Assert.assertEquals(2, byShop.size());
     }
 
     @Test

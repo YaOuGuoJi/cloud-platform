@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderRecordMapper {
 
     /**
-     * 查询区域内订单量排名
+     * 查询区域内商户订单量排名
      *
      * @param areaId
      * @param limit
@@ -27,7 +27,7 @@ public interface OrderRecordMapper {
                                                      @Param("endTime") Date endTime);
 
     /**
-     * 查询区域内订单总额排名
+     * 查询区域内商户订单总额排名
      *
      * @param areaId
      * @param limit
