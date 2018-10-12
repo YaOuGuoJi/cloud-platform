@@ -6,8 +6,6 @@ import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.*;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.*;
-import com.yaouguoji.platform.dto.ObjectMapDTO;
-import lombok.Data;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -103,56 +101,6 @@ public class AreaController {
             }
         });
         return CommonResult.success(resultMap.values());
-    }
-
-    /**
-     * 查询一个分区内前几名等商家销售额、成交量的排名
-     *
-     * @param limit
-     * @param start
-     * @param end
-     * @param type
-     * @return
-     */
-    @GetMapping("/areaRank")
-    public CommonResult areaShopRank(int limit, String start, String end, int type) {
-        try {
-            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
-            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
-            List<AreaDTO> areaDTOS = areaService.selectAll();
-            Map<Integer, String> areaMap = areaDTOS.stream().collect(Collectors.toMap(AreaDTO::getAreaId, AreaDTO::getASort));
-            if (CollectionUtils.isEmpty(areaDTOS)) {
-                return CommonResult.fail(HttpStatus.NOT_FOUND);
-            }
-            List<ShopInfoDTO> shopInfoDTOS = shopInfoService.findAll();
-            Map<Integer, Object> orderRecordsTimesMap = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, 1);
-            Map<Integer, Object> orderRecordsPriceMap = orderRecordService.findShopIdsRankByOrders(limit, startTime, endTime, 2);
-            Map<Integer, List<ShopInfoDTO>> areaShopGroupMap = shopInfoDTOS.stream().collect(Collectors.groupingBy(ShopInfoDTO::getRegionId));
-            Map<String, Map<String, CountPay>> areaShopMap = Maps.newHashMap();
-            for (Map.Entry<Integer, List<ShopInfoDTO>> entry : areaShopGroupMap.entrySet()) {
-                Map<String, CountPay> shopMap = Maps.newHashMap();
-                List<ShopInfoDTO> shopList = entry.getValue();
-                for (ShopInfoDTO shopInfoDTO : shopList) {
-                    CountPay countPay = new CountPay();
-                    countPay.setPayTimes(orderRecordsTimesMap.getOrDefault(shopInfoDTO.getShopId(), 0));
-                    countPay.setPayPrice(orderRecordsPriceMap.getOrDefault(shopInfoDTO.getShopId(), 0));
-                    shopMap.put(shopInfoDTO.getShopName(), countPay);
-                }
-                areaShopMap.put(areaMap.get(entry.getKey()), shopMap);
-            }
-            return CommonResult.success(areaShopMap);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-        }
-
-    }
-
-    @Data
-    private class CountPay {
-        private Object payTimes;
-        private Object payPrice;
-
     }
 
     /**
