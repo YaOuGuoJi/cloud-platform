@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -132,6 +133,16 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             return Collections.emptyList();
         }
         return BeansListUtils.copyListProperties(list, OrderRecordJsonDTO.class);
+    }
+
+    /**
+     * 查找大于我的消费额的用户数
+     * @param totalPrice
+     * @return
+     */
+    @Override
+    public int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice) {
+        return orderRecordMapper.findUsersWhoAreLargeThanMySpending(totalPrice);
     }
 
 }

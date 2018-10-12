@@ -5,6 +5,7 @@ import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderRecordJsonEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -114,5 +115,11 @@ public interface OrderRecordMapper {
     List<OrderRecordJsonEntity> findOrderRecordByUserId(@Param("userId") String userId,
                                                         @Param("year") String year);
 
+    /**
+     * 查找大于我的消费额的用户数
+     * @param totalPrice 当前用户消费额
+     * @return
+     */
+    int findUsersWhoAreLargeThanMySpending(@Param("totalPrice")BigDecimal totalPrice);
 
 }

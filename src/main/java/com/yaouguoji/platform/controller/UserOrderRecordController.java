@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -83,12 +85,16 @@ public class UserOrderRecordController {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+        UserInfoDTO info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
+        if (info == null) {
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
-        if (list == null || list.size() == 0) {
+        int totalUserNum = userInfoService.findTotalUserNum();
+        if (CollectionUtils.isEmpty(list)) {
             Map<String, Object> noRecordUserReportMap = Maps.newHashMap();
-            RankUserAndCountPercent rankUserAndCountPercent = new RankUserAndCountPercent(userId, year).invoke();
-            noRecordUserReportMap.put("rank", rankUserAndCountPercent.getAllUserTotalConsumptionMap().get(Integer.parseInt(userId)));
-            noRecordUserReportMap.put("beyondPercent", rankUserAndCountPercent.getResult());
+            noRecordUserReportMap.put("rank", totalUserNum);
+            noRecordUserReportMap.put("beyondPercent", 0);
             return CommonResult.success(noRecordUserReportMap);
         }
         Integer orderNumber = list.size();
@@ -123,12 +129,12 @@ public class UserOrderRecordController {
             CountPay countPay = new CountPay(value.size(), price);
             payTypeMap.put(entry.getKey(), countPay);
         }
-        RankUserAndCountPercent rankUserAndCountPercent = new RankUserAndCountPercent(userId, year).invoke();
-        Map<Integer, Integer> allUserTotalConsumptionMap = rankUserAndCountPercent.getAllUserTotalConsumptionMap();
-        BigDecimal result = rankUserAndCountPercent.getResult();
+        int beyondMe = orderRecordService.findUsersWhoAreLargeThanMySpending(totalPrice);
+        BigDecimal beyondUserNum = new BigDecimal(totalUserNum - beyondMe);
+        BigDecimal result = beyondUserNum.divide(new BigDecimal(totalUserNum), 2, BigDecimal.ROUND_HALF_EVEN).multiply(new BigDecimal("100.00"));
         Map<String, Object> userReportMap = Maps.newHashMap();
         userReportMap.put("beyondPercent", result);
-        userReportMap.put("rank", allUserTotalConsumptionMap.get(Integer.parseInt(userId)));
+        userReportMap.put("rank", beyondMe);
         userReportMap.put("orderNumber", orderNumber);
         userReportMap.put("totalPrice", totalPrice);
         userReportMap.put("firstOrder", firstOrder);
@@ -174,36 +180,4 @@ public class UserOrderRecordController {
         }
     }
 
-    /**
-     * 统计用户的消费排名并计算超过人数的百分比
-     */
-    @Data
-    private class RankUserAndCountPercent {
-        private String userId;
-        private String year;
-        private Map<Integer, Integer> allUserTotalConsumptionMap;
-        private BigDecimal result;
-
-        RankUserAndCountPercent(String userId, String year) {
-            this.userId = userId;
-            this.year = year;
-        }
-
-        RankUserAndCountPercent invoke() {
-            List<ObjectMapDTO<Integer, BigDecimal>> allUserTotalConsumptionList = userInfoService.findAllUserTotalConsumption(year);
-            allUserTotalConsumptionMap = Maps.newHashMap();
-            for (int i = 0; i < allUserTotalConsumptionList.size(); i++) {
-                allUserTotalConsumptionMap.put(allUserTotalConsumptionList.get(i).getObjectKey(), i + 1);
-            }
-            BigDecimal ranking = new BigDecimal(allUserTotalConsumptionMap.get(Integer.parseInt(userId)));
-            BigDecimal userSum = new BigDecimal(allUserTotalConsumptionList.size());
-            result = new BigDecimal("0.00");
-            ObjectMapDTO<Integer, BigDecimal> objectMapDTO = allUserTotalConsumptionList.get(allUserTotalConsumptionMap.get(Integer.parseInt(userId)) - 1);
-            if (objectMapDTO.getObjectValue() != null) {
-                BigDecimal userSumSubtractRanking = userSum.subtract(ranking);
-                result = (userSumSubtractRanking.divide(userSum, 2, BigDecimal.ROUND_HALF_EVEN)).multiply(new BigDecimal("100.00"));
-            }
-            return this;
-        }
-    }
 }

@@ -173,4 +173,16 @@
         ORDER BY a.AddTime
     </select>
 
+    <!--查找大于我的消费额的用户数-->
+    <select id="findUsersWhoAreLargeThanMySpending" resultType="int">
+        <![CDATA[
+        SELECT COUNT(a.totalPrice)
+        FROM
+            (SELECT SUM(ore.Price) totalPrice
+            FROM order_record ore
+            GROUP BY ore.UserId
+            HAVING totalPrice >= #{totalPrice}) a
+        ]]>
+    </select>
+    
 </mapper>

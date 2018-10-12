@@ -55,9 +55,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoMapper.updateById(entity);
     }
 
-    @Override
-    public List<ObjectMapDTO<Integer, BigDecimal>> findAllUserTotalConsumption(String year) {
 
-        return userInfoMapper.findAllUserTotalConsumption(year);
+    /**
+     * 查找所有用户总数
+     * @return
+     */
+    @Override
+    public int findTotalUserNum() {
+        return userInfoMapper.findTotalUserNum();
     }
 }

@@ -35,10 +35,9 @@ public interface UserInfoService {
     int updateUserInfo(UserInfoDTO userInfoDTO);
 
     /**
-     * 查询所有用户的全年消费金额并降序
-     * @param year 年份
+     * 查找所有用户总数
      * @return
      */
-    List<ObjectMapDTO<Integer, BigDecimal>> findAllUserTotalConsumption(String year);
+    int findTotalUserNum();
 
 }
