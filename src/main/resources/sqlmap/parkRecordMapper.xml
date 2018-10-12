@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.ParkRecordMapper">
+    <resultMap id="parkRecordEntity" type="com.yaouguoji.platform.entity.ParkRecordEntity">
+        <result column="id" property="id"/>
+        <result column="car_id" property="carId"/>
+        <result column="active_type" property="activeType"/>
+        <result column="add_time" property="addTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="allFields">
+       id,
+       car_id,
+       active_type,
+       add_time,
+       update_time
+    </sql>
+
+    <insert id="addParkRecord" parameterType="com.yaouguoji.platform.entity.ParkRecordEntity"
+            useGeneratedKeys="true" keyProperty="parkRecord.id">
+        insert into park_record(car_id,active_type,add_time)
+        values (#{parkRecord.carId},#{parkRecord.activeType},NOW())
+    </insert>
+
+    <delete id="deleteParkRecord" parameterType="java.lang.Integer">
+        delete from park_record where id=#{id}
+    </delete>
+
+    <select id="selectParkRecordById" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
+        select
+        <include refid="allFields"/>
+        from park_record where id=#{id}
+    </select>
+
+    <select id="selectParkRecordByCarId" parameterType="java.lang.Integer" resultMap="parkRecordEntity">
+        select
+        <include refid="allFields"/>
+        from park_record where car_id=#{cid}
+    </select>
+
+    <select id="selectNowCarNum" resultType="java.lang.Integer">
+        select count(id) from park_record where active_type in (0,1) group by active_type
+    </select>
+
+</mapper>

@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 public class UserOrderRecordController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserOrderRecordController.class);
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Resource
     private OrderRecordService orderRecordService;
@@ -52,9 +51,10 @@ public class UserOrderRecordController {
         if (userInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
-            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            Date startTime = sdf.parse(start);
+            Date endTime = sdf.parse(end);
             PageInfo<OrderRecordDTO> orderPageInfo =
                     orderRecordService.pageFindOrderRecordByUserId(userId, pageNum, pageSize, startTime, endTime);
             return new CommonResultBuilder()
