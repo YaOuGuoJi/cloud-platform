@@ -1,11 +1,8 @@
 package com.yaouguoji.platform.mapper;
 
 import com.yaouguoji.platform.entity.UserInfoEntity;
-import com.yaouguoji.platform.vo.ObjectMapDTO;
 import org.apache.ibatis.annotations.Param;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author liuwen
