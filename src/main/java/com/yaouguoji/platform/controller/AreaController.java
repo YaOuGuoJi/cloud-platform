@@ -6,6 +6,8 @@ import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.*;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class AreaController {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final Logger LOGGER = LoggerFactory.getLogger(AreaController.class);
 
     @Resource
     private AreaService areaService;
@@ -157,6 +160,7 @@ public class AreaController {
                     .data("OrderPrice",areaShopPriceList)
                     .build();
         } catch (ParseException e) {
+            LOGGER.info("时间解析异常",e);
             e.printStackTrace();
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
