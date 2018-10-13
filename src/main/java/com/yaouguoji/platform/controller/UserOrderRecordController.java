@@ -84,7 +84,7 @@ public class UserOrderRecordController {
         }
         UserInfoDTO info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
         if (info == null) {
-            return CommonResult.fail(HttpStatus.NOT_FOUND);
+            return CommonResult.fail(HttpStatus.NOT_FOUND.value, "没有此用户");
         }
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
         int totalUserNum = userInfoService.findTotalUserNum();
