@@ -2,24 +2,29 @@ package com.yaouguoji.platform.entity;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ShopCountEntity {
 
     /**
      * 下单方式
      */
-    private Object orderChannel;
+    private String orderChannel;
     /**
      * 订单数
      */
-    private Object orderNumb;
+    private int orderNumb;
     /**
      * 销售额
      */
-    private Object amount;
+    private BigDecimal amount;
     /**
      * 时间段
      */
     private Object Times;
-
+    /**
+     * 商品类别
+     */
+    private String productType;
 }

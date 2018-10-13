@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 @Data
-public class GoodsSellType implements Serializable {
+public class GoodsSellTypeDTO implements Serializable {
     private static final long serialVersionUID = 178705633869795972L;
     /**
      * 订单数
@@ -20,5 +20,5 @@ public class GoodsSellType implements Serializable {
     /**
      * 商品类别
      */
-    private String produceType;
+    private String productType;
 }

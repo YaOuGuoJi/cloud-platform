@@ -7,23 +7,24 @@
         <result column="Amount" property="amount"/>
         <result column="OrderNumb" property="orderNumb"/>
         <result column="Times" property="times"/>
+        <result column="ProductType" property="productType"/>
     </resultMap>
 
 
-    <select id="goodsSalesCount" resultMap="shopCount">
+    <select id="salesAndOrdrs" resultMap="shopCount">
         <![CDATA[
 
-            SELECT SUM(Price) Amount, OrderChannel
+            SELECT SUM(Price) Amount, OrderChannel,COUNT(UserId) OrderNumb
             FROM order_record
             WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
             GROUP BY OrderChannel ORDER BY Amount
 
         ]]>
     </select>
-    <select id="goodsPlayOrdersCount" resultMap="shopCount">
+    <select id="playOrdersAndTotal" resultMap="shopCount">
         <![CDATA[
 
-            SELECT COUNT(*) OrderNumb, OrderChannel
+            SELECT COUNT(ShopId) OrderNumb, OrderChannel,SUM(Price) Amount
             FROM order_record
             WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
             GROUP BY OrderChannel ORDER BY OrderNumb
@@ -40,7 +41,7 @@
 
         ]]>
     </select>
-    <select id="timeSectionSalesAndVolumeCount" resultMap="shopCount">
+    <select id="timeQuantumSalesAndOrder" resultMap="shopCount">
         <![CDATA[
 
             SELECT COUNT(*) OrderNumb,SUM(price) Amount, HOUR(UpdateTime) Times
@@ -50,22 +51,22 @@
 
         ]]>
     </select>
-    <select id="everydayVolumeCount" resultMap="shopCount">
+    <select id="oneDaySalesAndOrders" resultMap="shopCount">
     <![CDATA[
 
-            SELECT COUNT(*) OrderNumb,SUM(price) Amount,DATE_FORMAT(updateTime, '%Y/%M/%D') Times
+            SELECT COUNT(*) OrderNumb,SUM(price) Amount,DATE_FORMAT(updateTime, '%Y-%m-%d') Times
             FROM order_record
             WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
-            GROUP BY DATE_FORMAT(updateTime, '%Y/%M/%D')
-            ORDER BY DATE_FORMAT(updateTime, '%Y/%M/%D')
+            GROUP BY DATE_FORMAT(updateTime, '%Y-%m-%d')
+            ORDER BY DATE_FORMAT(updateTime, '%Y-%m-%d')
 
         ]]>
     </select>
 
-    <select id="shopGoodsSellTypeCount" resultMap="shopCount">
+    <select id="goodsSellTypeCount" resultMap="shopCount">
         <![CDATA[
 
-            SELECT COUNT(*) OrderNumb,ProductType
+            SELECT COUNT(*) OrderNumb,ProductType,sum(Price) Amount
             FROM order_record
             WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
             GROUP BY ProductType

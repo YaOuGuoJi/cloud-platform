@@ -25,13 +25,13 @@ public class ShopCountServiceTest {
         Date end = sdf.parse("2018-09-01 09:33:35");*/
      Date startTime=new Date("2010/10/10 00:00:00");
      Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.goodsSalesCount(100001, startTime,endTime));
+        Assert.assertNotNull(shopCountService.SalesAndOrdrsCount(100001, startTime,endTime));
     }
     @Test
     public void goodsPlayOrdersCountTest(){
         Date startTime=new Date("2010/10/10 00:00:00");
         Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.goodsPlayOrdersCount(100001, startTime,endTime));
+        Assert.assertNotNull(shopCountService.playOrdersAndTotalCount(100001, startTime,endTime));
     }
     @Test
     public void goodsStrikeCountTest(){
@@ -43,18 +43,18 @@ public class ShopCountServiceTest {
     public void timeSectionSalesAndVolumeCountTest(){
         Date startTime=new Date("2017/10/10 00:00:00");
         Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.timeSectionSalesAndVolumeCount(100001, startTime,endTime));
+        Assert.assertNotNull(shopCountService.timeQuantumSalesAndOrderCount(100001, startTime,endTime));
     }
     @Test
     public void everydayVolumeCountTest(){
         Date startTime=new Date("2017/10/10 00:00:00");
         Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.everydayVolumeCount(100001, startTime,endTime));
+        Assert.assertNotNull(shopCountService.oneDaySalesAndOrdersCount(100001, startTime,endTime));
     }
     @Test
     public void shopGoodsSellTypeCountTest(){
         Date startTime=new Date("2017/10/10 00:00:00");
         Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.shopGoodsSellTypeCount(100001, startTime,endTime));
+        Assert.assertNotNull(shopCountService.goodsSellTypeCount(100001, startTime,endTime));
     }
 }

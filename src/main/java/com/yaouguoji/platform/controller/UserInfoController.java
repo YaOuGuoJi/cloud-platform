@@ -42,7 +42,7 @@ public class UserInfoController {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         List<OrderRecordDTO> consumPionData = orderRecordService.findOrdersByUserId(userId, new DateTime().minusMonths(1).toDate(), new Date());
-        if(consumPionData==null){
+        if(consumPionData==null && consumPionData.size()==0){
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         Map<String,Object> datas = new HashMap<>();

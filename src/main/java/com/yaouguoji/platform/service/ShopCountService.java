@@ -1,5 +1,8 @@
 package com.yaouguoji.platform.service;
 
+import com.yaouguoji.platform.dto.GoodsSellTypeDTO;
+import com.yaouguoji.platform.dto.SalesAndPlayOrderDTO;
+import com.yaouguoji.platform.dto.SalesDTO;
 import com.yaouguoji.platform.dto.ShopCountDTO;
 
 import java.util.Date;
@@ -13,7 +16,7 @@ public interface ShopCountService {
      * @param endTime
      * @return
      */
-    List<ShopCountDTO> goodsSalesCount(int shopId, Date startTime, Date endTime);
+    List<SalesDTO> SalesAndOrdrsCount(int shopId, Date startTime, Date endTime);
     /**
      * 下单量查询
      * @param shopId
@@ -21,7 +24,7 @@ public interface ShopCountService {
      * @param endTime
      * @return
      */
-    List<ShopCountDTO> goodsPlayOrdersCount(int shopId, Date startTime, Date endTime);
+    List<SalesDTO> playOrdersAndTotalCount(int shopId, Date startTime, Date endTime);
     /**
      * 成交量查询
      * @param shopId
@@ -37,7 +40,7 @@ public interface ShopCountService {
      * @param endTime
      * @return
      */
-    List<ShopCountDTO> timeSectionSalesAndVolumeCount(int shopId, Date startTime, Date endTime);
+    List<SalesAndPlayOrderDTO> timeQuantumSalesAndOrderCount(int shopId, Date startTime, Date endTime);
     /**
      * 日成交量走势
      * @param shopId
@@ -45,7 +48,7 @@ public interface ShopCountService {
      * @param endTime
      * @return
      */
-    List<ShopCountDTO> everydayVolumeCount(int shopId, Date startTime, Date endTime);
+    List<SalesAndPlayOrderDTO> oneDaySalesAndOrdersCount(int shopId, Date startTime, Date endTime);
     /**
      * 商品类别销售排名
      * @param shopId
@@ -53,6 +56,6 @@ public interface ShopCountService {
      * @param endTime
      * @return
      */
-    List<ShopCountDTO> shopGoodsSellTypeCount(int shopId,Date startTime,Date endTime);
+    List<GoodsSellTypeDTO> goodsSellTypeCount(int shopId, Date startTime, Date endTime);
 
 }

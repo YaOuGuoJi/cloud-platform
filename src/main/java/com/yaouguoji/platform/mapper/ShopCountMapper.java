@@ -16,7 +16,7 @@ public interface ShopCountMapper {
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> goodsSalesCount(@Param("shopId") int shopId,
+    List<ShopCountEntity> salesAndOrdrs(@Param("shopId") int shopId,
                                           @Param("startTime") Date startTime,
                                           @Param("endTime") Date endTime);
 
@@ -27,7 +27,7 @@ public interface ShopCountMapper {
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> goodsPlayOrdersCount(@Param("shopId") int shopId,
+    List<ShopCountEntity> playOrdersAndTotal(@Param("shopId") int shopId,
                                                @Param("startTime") Date startTime,
                                                @Param("endTime") Date endTime);
 
@@ -49,7 +49,7 @@ public interface ShopCountMapper {
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> timeSectionSalesAndVolumeCount(@Param("shopId") int shopId,
+    List<ShopCountEntity> timeQuantumSalesAndOrder(@Param("shopId") int shopId,
                                                          @Param("startTime") Date startTime,
                                                          @Param("endTime") Date endTime);
 
@@ -60,7 +60,7 @@ public interface ShopCountMapper {
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> everydayVolumeCount(@Param("shopId") int shopId,
+    List<ShopCountEntity> oneDaySalesAndOrders(@Param("shopId") int shopId,
                                               @Param("startTime") Date startTime,
                                               @Param("endTime") Date endTime);
     /**
@@ -70,7 +70,7 @@ public interface ShopCountMapper {
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> shopGoodsSellTypeCount(@Param("shopId") int shopId,
+    List<ShopCountEntity> goodsSellTypeCount(@Param("shopId") int shopId,
                                                  @Param("startTime") Date startTime,
                                                  @Param("endTime") Date endTime);
 }
