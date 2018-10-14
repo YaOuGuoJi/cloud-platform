@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaouguoji.platform.mapper.UserFrequencyMapper">
+    <resultMap id="userFrequency" type="com.yaouguoji.platform.entity.UserFrequencyEntity">
+        <result column="frequency" property="frequency"/>
+        <result column="numberOfPeople" property="numberOfPeople"/>
+    </resultMap>
+    <select id="selectUserFrequency" resultMap="userFrequency">
+        select frequency,count(UserId) numberOfPeople
+        from
+        (select UserId,count(userId) frequency
+        from order_record
+        where ShopId=#{shopId} and AddTime between #{startTime} and #{endTime} and OrderStatus='已完成'
+        group by UserId)w
+        group by frequency
+    </select>
+    <select id="selectUserTotalAndAverageFrequency" resultType="java.util.Map">
+      select sum(frequency) totalFrequency,avg(frequency) averageFrequency
+      from
+      (select UserId,count(userId) frequency
+        from order_record
+        where ShopId=#{shopId} and AddTime between #{startTime} and #{endTime} and OrderStatus='已完成'
+        group by UserId)w
+    </select>
+</mapper>

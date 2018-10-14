@@ -1,6 +1,6 @@
 package com.yaouguoji.platform.mapper;
 
-import com.yaouguoji.platform.entity.UserAgeAndSexSplitEntity;
+import com.yaouguoji.platform.entity.UserSexAndAgeEntity;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,14 +13,14 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AgeAndSexSplitTest {
+public class SexAndAgeTest {
     @Resource
-    private UserAgeAndSexSplitMapper userAgeAndSexSplitMapper;
+    private UserSexAndAgeMapper userAgeAndSexSplitMapper;
     @Test
-    public void selectAgeAndtSplittest(){
+    public void selectSexAndAgeTest(){
         Date startTime=new Date("2014/01/01");
         Date endTime=new Date();
-        List<UserAgeAndSexSplitEntity> userAgeAndSexSplitEntities = userAgeAndSexSplitMapper.selectAgeAndSexSplitEntityMapper(100001, startTime, endTime);
+        List<UserSexAndAgeEntity> userAgeAndSexSplitEntities = userAgeAndSexSplitMapper.selectAgeAndSexSplitEntityMapper(100001, startTime, endTime);
         Assert.assertNotNull(userAgeAndSexSplitEntities);
     }
 
