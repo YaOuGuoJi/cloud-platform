@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +32,7 @@ public class ShowShopInfoController {
             Date endTime = SIMPLE_DATE_FORMAT.parse(end);
             Map<String, Map<String, Integer>> userSexAndAges = showUserInfoToShop.selectAgeAndSexSplit(shopId, startTime, endTime);
             UserPriceCountDTO userPriceCountDTO = showUserInfoToShop.selectUserPriceCount(shopId, startTime, endTime);
-            Map<String, Object> userFrequency = showUserInfoToShop.selectUserFrequencyCount(shopId, startTime, endTime);
+            Map<String, BigDecimal> userFrequency = showUserInfoToShop.selectUserFrequencyCount(shopId, startTime, endTime);
             if (!CollectionUtils.isEmpty(userSexAndAges) && userPriceCountDTO != null && !CollectionUtils.isEmpty(userFrequency)) {
                 return new CommonResultBuilder()
                         .code(200)

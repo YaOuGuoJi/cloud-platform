@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class UserFrequencyTest {
     public void selectUserTotalAndAverage() {
         Date startTime = new Date("2014/01/01");
         Date endTime = new Date();
-        Map userTotalAndAverageFrequency = userFrequencyMapper.selectUserTotalAndAverageFrequency(100001, startTime, endTime);
+        final Map<String, BigDecimal> userTotalAndAverageFrequency = userFrequencyMapper.selectUserTotalAndAverageFrequency(100001, startTime, endTime);
         Assert.assertNotNull(userTotalAndAverageFrequency);
     }
 

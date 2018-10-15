@@ -3,6 +3,7 @@ package com.yaouguoji.platform.mapper;
 import com.yaouguoji.platform.entity.UserFrequencyEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface UserFrequencyMapper {
      * @param endTime
      * @return
      */
-    Map selectUserTotalAndAverageFrequency(@Param("shopId") Integer shopId,
-                                           @Param("startTime") Date startTime,
-                                           @Param("endTime") Date endTime);
+    Map<String, BigDecimal> selectUserTotalAndAverageFrequency(@Param("shopId") Integer shopId,
+                                                               @Param("startTime") Date startTime,
+                                                               @Param("endTime") Date endTime);
 }

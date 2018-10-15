@@ -2,6 +2,7 @@ package com.yaouguoji.platform.service;
 
 import com.yaouguoji.platform.dto.UserPriceCountDTO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -34,5 +35,5 @@ public interface ShowUserInfoToShop {
      * @param endTime
      * @return
      */
-    Map<String, Object> selectUserFrequencyCount(Integer shopId, Date startTime, Date endTime);
+    Map<String, BigDecimal> selectUserFrequencyCount(Integer shopId, Date startTime, Date endTime);
 }

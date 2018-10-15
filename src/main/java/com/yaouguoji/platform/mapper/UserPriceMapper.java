@@ -30,7 +30,7 @@ public interface UserPriceMapper {
      * @param endTime
      * @return
      */
-    Map selectUserAverageAndTotalPrice(@Param("shopId") Integer shopId,
-                                       @Param("startTime") Date startTime,
-                                       @Param("endTime") Date endTime);
+    Map<String, BigDecimal> selectUserAverageAndTotalPrice(@Param("shopId") Integer shopId,
+                                                           @Param("startTime") Date startTime,
+                                                           @Param("endTime") Date endTime);
 }

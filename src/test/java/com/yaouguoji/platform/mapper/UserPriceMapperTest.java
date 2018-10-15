@@ -23,8 +23,8 @@ public class UserPriceMapperTest {
         Date startTime = new Date("2014/01/01");
         Date endTime = new Date();
         Double ratio = 0.3;
-        Map userAverageAndTotalPrice = userPriceMapper.selectUserAverageAndTotalPrice(100001, startTime, endTime);
-        BigDecimal averagePrice = (BigDecimal)userAverageAndTotalPrice.get("averagePrice");
+        Map<String, BigDecimal> userAverageAndTotalPrice = userPriceMapper.selectUserAverageAndTotalPrice(100001, startTime, endTime);
+        BigDecimal averagePrice = userAverageAndTotalPrice.get("averagePrice");
         UserPriceCountEntity userPriceCountEntity = userPriceMapper.selectUserPriceSplit(100001, startTime, endTime, averagePrice, ratio);
         Assert.assertNotNull(userPriceCountEntity);
     }
