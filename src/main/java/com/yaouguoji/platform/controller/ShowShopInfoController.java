@@ -43,7 +43,7 @@ public class ShowShopInfoController {
             }
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
-            LOGGER.error("参数时间异常!", e);
+            LOGGER.error("时间参数异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
 

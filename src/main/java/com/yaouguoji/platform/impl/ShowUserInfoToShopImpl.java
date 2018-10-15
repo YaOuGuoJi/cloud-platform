@@ -68,21 +68,15 @@ public class ShowUserInfoToShopImpl implements ShowUserInfoToShop {
     public UserPriceCountDTO selectUserPriceCount(Integer shopId, Date startTime, Date endTime) {
         //统计消费分布上下浮动百分比
         final Double ratio = 0.3;
-        //平均消费水平
-        BigDecimal averagePrice = new BigDecimal(0.00);
-        //累计销售额
-        BigDecimal totalPrice = new BigDecimal("0.00");
-        //创建返回对象，默认所有值为0
-        UserPriceCountDTO userPriceCountDTO = new UserPriceCountDTO(totalPrice, averagePrice, 0, 0, 0);
+        //创建返回对象，并初始化所有值为0
+        UserPriceCountDTO userPriceCountDTO = new UserPriceCountDTO(new BigDecimal("0.00"), new BigDecimal(0.00), 0, 0, 0);
         Map userAverageAndTotalPrice = userPriceMapper.selectUserAverageAndTotalPrice(shopId, startTime, endTime);
         if (CollectionUtils.isEmpty(userAverageAndTotalPrice)) {
             return userPriceCountDTO;
         }
-        averagePrice = (BigDecimal) userAverageAndTotalPrice.get("averagePrice");
-        totalPrice = (BigDecimal) userAverageAndTotalPrice.get("totalPrice");
-        userPriceCountDTO.setAveragePrice(averagePrice);
-        userPriceCountDTO.setTotalPrice(totalPrice);
-        UserPriceCountEntity userPriceCountEntity = userPriceMapper.selectUserPriceSplit(shopId, startTime, endTime, averagePrice, ratio);
+        userPriceCountDTO.setAveragePrice((BigDecimal) userAverageAndTotalPrice.get("averagePrice"));
+        userPriceCountDTO.setTotalPrice((BigDecimal) userAverageAndTotalPrice.get("totalPrice"));
+        UserPriceCountEntity userPriceCountEntity = userPriceMapper.selectUserPriceSplit(shopId, startTime, endTime, userPriceCountDTO.getAveragePrice(), ratio);
         if (userPriceCountEntity == null) {
             return userPriceCountDTO;
         }
