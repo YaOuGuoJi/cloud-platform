@@ -170,18 +170,24 @@
         FROM order_record a
         LEFT JOIN shop_info b ON a.ShopId = b.ShopId
         WHERE a.UserId = #{userId} AND YEAR(a.AddTime) = #{year}
+        <if test="month != null and month !=''">
+            AND MONTH(a.AddTime) = #{month}
+        </if>
         ORDER BY a.AddTime
     </select>
 
     <!--查找大于我的消费额的用户数-->
     <select id="findUsersWhoAreLargeThanMySpending" resultType="int">
-        <![CDATA[
         SELECT COUNT(a.totalPrice)
         FROM
             (SELECT SUM(ore.Price) totalPrice
             FROM order_record ore
             WHERE YEAR(ore.AddTime) = #{year}
+            <if test="month != null and month !=''">
+                AND MONTH(ore.AddTime) = #{month}
+            </if>
             GROUP BY ore.UserId
+        <![CDATA[
             HAVING totalPrice >= #{totalPrice}) a
         ]]>
     </select>

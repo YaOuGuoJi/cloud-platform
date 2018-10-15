@@ -113,7 +113,8 @@ public interface OrderRecordMapper {
      * @return
      */
     List<OrderRecordJsonEntity> findOrderRecordByUserId(@Param("userId") String userId,
-                                                        @Param("year") String year);
+                                                        @Param("year") String year,
+                                                        @Param("month") String month);
 
     /**
      * 查找大于我的消费额的用户数
@@ -121,6 +122,7 @@ public interface OrderRecordMapper {
      * @return
      */
     int findUsersWhoAreLargeThanMySpending(@Param("totalPrice")BigDecimal totalPrice,
-                                           @Param("year") String year);
+                                           @Param("year") String year,
+                                           @Param("month") String month);
 
 }

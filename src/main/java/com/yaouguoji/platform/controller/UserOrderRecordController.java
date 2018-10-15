@@ -78,45 +78,62 @@ public class UserOrderRecordController {
      * @return
      */
     @GetMapping("/order/user/report")
-    public CommonResult userReport(String userId, String year) {
+    public CommonResult userReport(String userId, String year, String month) {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
-        UserInfoDTO info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
-        if (info == null) {
-            return CommonResult.fail(HttpStatus.NOT_FOUND.value, "没有此用户");
+        try {
+            UserInfoDTO info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
+            if (info == null) {
+                return CommonResult.fail(HttpStatus.NOT_FOUND.value, "没有此用户");
+            }
+        } catch (NumberFormatException e) {
+            LOGGER.error("参数异常", e);
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         if (!year.matches("20[1-5][0-9]")) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
-        List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
         int totalUserNum = userInfoService.findTotalUserNum();
-        if (CollectionUtils.isEmpty(list)) {
-            Map<String, Object> noRecordUserReportMap = Maps.newHashMap();
-            noRecordUserReportMap.put("rank", totalUserNum);
-            noRecordUserReportMap.put("beyondPercent", 0);
-            return CommonResult.success(noRecordUserReportMap);
+        List<OrderRecordJsonDTO> list;
+        BigDecimal totalPrice = new BigDecimal("0.00");
+        Map<String, CountPay> reportMap = Maps.newHashMap();
+        OrderRecordJsonDTO maxPriceOrder;
+        Map<String, Object> userReportMap = Maps.newHashMap();
+        if (!StringUtils.isBlank(month) && month.matches("^0?[1-9]$|^1[0-2]$")) {
+            list = orderRecordService.findOrderRecordByUserId(userId, year, month);
+            if (CollectionUtils.isEmpty(list)) {
+                return getCommonResult(totalUserNum);
+            }
+            maxPriceOrder = list.get(0);
+            for (OrderRecordJsonDTO o : list) {
+                totalPrice = totalPrice.add(o.getPrice());
+                if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
+                    maxPriceOrder = o;
+                }
+                int dayOfMonth = new DateTime(o.getAddTime()).getDayOfMonth();
+                countPayByMonthOrDay(reportMap, o, dayOfMonth);
+            }
+            userReportMap.put("dayReport", reportMap);
+        } else {
+            list = orderRecordService.findOrderRecordByUserId(userId, year, month);
+            maxPriceOrder = list.get(0);
+            if (CollectionUtils.isEmpty(list)) {
+                return getCommonResult(totalUserNum);
+            }
+            for (OrderRecordJsonDTO o : list) {
+                totalPrice = totalPrice.add(o.getPrice());
+                if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
+                    maxPriceOrder = o;
+                }
+                int monthOfYear = new DateTime(o.getAddTime()).getMonthOfYear();
+                countPayByMonthOrDay(reportMap, o, monthOfYear);
+            }
+            SpecialOrder firstOrder = new SpecialOrder(list.get(0));
+            userReportMap.put("monthReport", reportMap);
+            userReportMap.put("firstOrder", firstOrder);
         }
         Integer orderNumber = list.size();
-        BigDecimal totalPrice = new BigDecimal("0.00");
-        SpecialOrder firstOrder = new SpecialOrder(list.get(0));
-        OrderRecordJsonDTO maxPriceOrder = list.get(0);
-        Map<String, CountPay> monthReportMap = Maps.newHashMap();
-        for (OrderRecordJsonDTO o : list) {
-            totalPrice = totalPrice.add(o.getPrice());
-            if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
-                maxPriceOrder = o;
-            }
-            int month = new DateTime(o.getAddTime()).getMonthOfYear();
-            if (monthReportMap.containsKey(month + "")) {
-                CountPay countPay = monthReportMap.get(month + "");
-                countPay.plusPayTime();
-                countPay.setPayPrice(countPay.getPayPrice().add(o.getPrice()));
-            } else {
-                CountPay countPay = new CountPay(1, o.getPrice() == null ? new BigDecimal("0.00") : o.getPrice());
-                monthReportMap.put(month + "", countPay);
-            }
-        }
         Map<String, CountPay> payTypeMap = Maps.newHashMap();
         SpecialOrder maxPriceOrderFinal = new SpecialOrder(maxPriceOrder);
         Map<String, List<OrderRecordJsonDTO>> payTypeGroupingMap = list.stream().collect(Collectors.groupingBy(OrderRecordJsonDTO::getPayType));
@@ -129,19 +146,45 @@ public class UserOrderRecordController {
             CountPay countPay = new CountPay(value.size(), price);
             payTypeMap.put(entry.getKey(), countPay);
         }
-        int beyondMe = orderRecordService.findUsersWhoAreLargeThanMySpending(totalPrice, year);
+        int beyondMe = orderRecordService.findUsersWhoAreLargeThanMySpending(totalPrice, year, month);
         BigDecimal beyondUserNum = new BigDecimal(totalUserNum - beyondMe);
         BigDecimal result = beyondUserNum.divide(new BigDecimal(totalUserNum), 2, BigDecimal.ROUND_HALF_EVEN).multiply(new BigDecimal("100.00"));
-        Map<String, Object> userReportMap = Maps.newHashMap();
         userReportMap.put("beyondPercent", result);
         userReportMap.put("rank", beyondMe);
         userReportMap.put("orderNumber", orderNumber);
         userReportMap.put("totalPrice", totalPrice);
-        userReportMap.put("firstOrder", firstOrder);
         userReportMap.put("maxPriceOrder", maxPriceOrderFinal);
-        userReportMap.put("monthReport", monthReportMap);
         userReportMap.put("payType", payTypeMap);
         return CommonResult.success(userReportMap);
+    }
+
+    /**
+     *统计用户年度或者月度支付次数和总金额
+     * @param reportMap
+     * @param o
+     * @param dayOrMonth
+     */
+    private void countPayByMonthOrDay(Map<String, CountPay> reportMap, OrderRecordJsonDTO o, int dayOrMonth) {
+        if (reportMap.containsKey(dayOrMonth + "")) {
+            CountPay countPay = reportMap.get(dayOrMonth + "");
+            countPay.plusPayTime();
+            countPay.setPayPrice(countPay.getPayPrice().add(o.getPrice()));
+        } else {
+            CountPay countPay = new CountPay(1, o.getPrice() == null ? new BigDecimal("0.00") : o.getPrice());
+            reportMap.put(dayOrMonth + "", countPay);
+        }
+    }
+
+    /**
+     * 用户未下单时只返回排名和超越人数百分比
+     * @param totalUserNum 所有用户数
+     * @return
+     */
+    private CommonResult getCommonResult(int totalUserNum) {
+        Map<String, Object> noRecordUserReportMap = Maps.newHashMap();
+        noRecordUserReportMap.put("rank", totalUserNum);
+        noRecordUserReportMap.put("beyondPercent", 0);
+        return CommonResult.success(noRecordUserReportMap);
     }
 
     /**

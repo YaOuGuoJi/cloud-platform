@@ -104,13 +104,13 @@ public interface OrderRecordService {
      * @param year 年份
      * @return
      */
-    List<OrderRecordJsonDTO> findOrderRecordByUserId (String userId, String year);
+    List<OrderRecordJsonDTO> findOrderRecordByUserId (String userId, String year, String month);
 
     /**
      * 查找大于我的消费额的用户数
      * @param totalPrice
      * @return
      */
-    int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year);
+    int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year, String month);
 
 }

@@ -127,8 +127,8 @@ public class OrderRecordServiceImpl implements OrderRecordService {
      * @return
      */
     @Override
-    public List<OrderRecordJsonDTO> findOrderRecordByUserId(String userId, String year) {
-        List<OrderRecordJsonEntity> list = orderRecordMapper.findOrderRecordByUserId(userId, year);
+    public List<OrderRecordJsonDTO> findOrderRecordByUserId(String userId, String year, String month) {
+        List<OrderRecordJsonEntity> list = orderRecordMapper.findOrderRecordByUserId(userId, year, month);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
         }
@@ -141,8 +141,8 @@ public class OrderRecordServiceImpl implements OrderRecordService {
      * @return
      */
     @Override
-    public int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year) {
-        return orderRecordMapper.findUsersWhoAreLargeThanMySpending(totalPrice, year);
+    public int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year, String month) {
+        return orderRecordMapper.findUsersWhoAreLargeThanMySpending(totalPrice, year, month);
     }
 
 }
