@@ -120,6 +120,7 @@ public interface OrderRecordMapper {
      * @param totalPrice 当前用户消费额
      * @return
      */
-    int findUsersWhoAreLargeThanMySpending(@Param("totalPrice")BigDecimal totalPrice);
+    int findUsersWhoAreLargeThanMySpending(@Param("totalPrice")BigDecimal totalPrice,
+                                           @Param("year") String year);
 
 }

@@ -111,6 +111,6 @@ public interface OrderRecordService {
      * @param totalPrice
      * @return
      */
-    int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice);
+    int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year);
 
 }

@@ -86,6 +86,9 @@ public class UserOrderRecordController {
         if (info == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "没有此用户");
         }
+        if (!year.matches("20[1-5][0-9]")) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year);
         int totalUserNum = userInfoService.findTotalUserNum();
         if (CollectionUtils.isEmpty(list)) {
@@ -126,7 +129,7 @@ public class UserOrderRecordController {
             CountPay countPay = new CountPay(value.size(), price);
             payTypeMap.put(entry.getKey(), countPay);
         }
-        int beyondMe = orderRecordService.findUsersWhoAreLargeThanMySpending(totalPrice);
+        int beyondMe = orderRecordService.findUsersWhoAreLargeThanMySpending(totalPrice, year);
         BigDecimal beyondUserNum = new BigDecimal(totalUserNum - beyondMe);
         BigDecimal result = beyondUserNum.divide(new BigDecimal(totalUserNum), 2, BigDecimal.ROUND_HALF_EVEN).multiply(new BigDecimal("100.00"));
         Map<String, Object> userReportMap = Maps.newHashMap();

@@ -180,6 +180,7 @@
         FROM
             (SELECT SUM(ore.Price) totalPrice
             FROM order_record ore
+            WHERE YEAR(ore.AddTime) = #{year}
             GROUP BY ore.UserId
             HAVING totalPrice >= #{totalPrice}) a
         ]]>

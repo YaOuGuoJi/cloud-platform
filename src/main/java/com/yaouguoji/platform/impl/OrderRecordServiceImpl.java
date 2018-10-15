@@ -141,8 +141,8 @@ public class OrderRecordServiceImpl implements OrderRecordService {
      * @return
      */
     @Override
-    public int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice) {
-        return orderRecordMapper.findUsersWhoAreLargeThanMySpending(totalPrice);
+    public int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year) {
+        return orderRecordMapper.findUsersWhoAreLargeThanMySpending(totalPrice, year);
     }
 
 }
