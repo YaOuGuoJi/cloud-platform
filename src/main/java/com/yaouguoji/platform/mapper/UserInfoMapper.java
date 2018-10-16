@@ -31,4 +31,12 @@ public interface UserInfoMapper {
      * @return
      */
     int insertUserInfo(@Param("userInfoEntity") UserInfoEntity userInfoEntity);
+
+    /**
+     * 查找所有用户总数
+     * @return
+     */
+    int findTotalUserNum();
+
+
 }

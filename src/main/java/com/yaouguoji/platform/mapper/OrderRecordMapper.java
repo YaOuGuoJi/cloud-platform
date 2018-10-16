@@ -1,9 +1,11 @@
 package com.yaouguoji.platform.mapper;
 
-import com.yaouguoji.platform.entity.OrderRecordEntity;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
+import com.yaouguoji.platform.entity.OrderRecordEntity;
+import com.yaouguoji.platform.entity.OrderRecordJsonEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,34 @@ import java.util.List;
 public interface OrderRecordMapper {
 
     /**
+     * 查询区域内商户订单量排名
+     *
+     * @param areaId
+     * @param limit
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderNumberEntity> findAreaShopOrderNumRank(@Param("areaId") int areaId,
+                                                     @Param("limit") int limit,
+                                                     @Param("startTime") Date startTime,
+                                                     @Param("endTime") Date endTime);
+
+    /**
+     * 查询区域内商户订单总额排名
+     *
+     * @param areaId
+     * @param limit
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderNumberEntity> findAreaShopOrderPriceRank(@Param("areaId") int areaId,
+                                                       @Param("limit") int limit,
+                                                       @Param("startTime") Date startTime,
+                                                       @Param("endTime") Date endTime);
+
+    /**
      * 查询时间段内各个区域的订单量
      *
      * @param startTime
@@ -20,7 +50,7 @@ public interface OrderRecordMapper {
      * @return
      */
     List<OrderNumberEntity> findAreaOrderNum(@Param("startTime") Date startTime,
-                                                @Param("endTime") Date endTime);
+                                             @Param("endTime") Date endTime);
 
     /**
      * 查询时间段内各个区域的订单总额
@@ -103,4 +133,24 @@ public interface OrderRecordMapper {
     List<OrderRecordEntity> selectOrderRecordsByShopId(@Param("shopId") int shopId,
                                                        @Param("start") Date startTime,
                                                        @Param("end") Date endTime);
+
+    /**
+     * 根据用户ID查询该用户所有订单
+     *
+     * @param userId 用户ID
+     * @return
+     */
+    List<OrderRecordJsonEntity> findOrderRecordByUserId(@Param("userId") String userId,
+                                                        @Param("year") String year,
+                                                        @Param("month") String month);
+
+    /**
+     * 查找大于我的消费额的用户数
+     * @param totalPrice 当前用户消费额
+     * @return
+     */
+    int findUsersWhoAreLargeThanMySpending(@Param("totalPrice")BigDecimal totalPrice,
+                                           @Param("year") String year,
+                                           @Param("month") String month);
+
 }

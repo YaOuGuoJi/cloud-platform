@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaouguoji.platform.mapper.ShopCountMapper">
+
+    <resultMap id="shopCount" type="com.yaouguoji.platform.entity.ShopCountEntity">
+        <result column="GroupName" property="groupName"/>
+        <result column="Amount" property="amount"/>
+        <result column="OrderNumb" property="orderNumb"/>
+    </resultMap>
+
+    <select id="ordersFinished" resultMap="shopCount">
+        <![CDATA[
+            SELECT SUM(Price) as Amount, OrderChannel as GroupName, COUNT(UserId) as OrderNumb
+            FROM order_record
+            WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
+            GROUP BY OrderChannel
+        ]]>
+    </select>
+    <select id="ordersCanceled" resultMap="shopCount">
+        <![CDATA[
+            SELECT COUNT(ShopId) as OrderNumb, OrderChannel as GroupName, SUM(Price) as Amount
+            FROM order_record
+            WHERE ShopId=#{shopId} AND Orderstatus='取消' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
+            GROUP BY OrderChannel
+        ]]>
+    </select>
+
+    <select id="ordersByHours" resultMap="shopCount">
+        <![CDATA[
+            SELECT COUNT(*) as OrderNumb, SUM(price) as Amount, HOUR(UpdateTime) as GroupName
+            FROM order_record
+            WHERE ShopId=#{shopId} AND UpdateTime>#{startTime} AND UpdateTime<#{endTime} AND Orderstatus='已完成'
+            GROUP BY HOUR(UpdateTime)
+        ]]>
+    </select>
+
+    <select id="ordersByMonthOrDay" resultMap="shopCount">
+        SELECT COUNT(OrderId) as OrderNumb, SUM(Price) as Amount
+        <if test="month != null and month != ''">,
+            DAY(UpdateTime) as GroupName
+        </if>
+        <if test="month == '' or month == null">,
+            MONTH (UpdateTime) as GroupName
+        </if>
+        FROM order_record
+        WHERE OrderStatus = #{status} AND ShopId = #{shopId} AND YEAR(UpdateTime) = #{year}
+        <if test="month != null and month != ''">
+            AND MONTH(UpdateTime) = #{month}
+            GROUP BY DAY(UpdateTime)
+        </if>
+        <if test="month == '' or month == null">
+            GROUP BY MONTH(UpdateTime)
+        </if>
+    </select>
+
+    <select id="goodsSellTypeCount" resultMap="shopCount">
+        <![CDATA[
+            SELECT COUNT(*) as OrderNumb, ProductType as GroupName, SUM(Price) as Amount
+            FROM order_record
+            WHERE ShopId=#{shopId} AND UpdateTime>#{startTime} AND UpdateTime<#{endTime} AND Orderstatus='已完成'
+            GROUP BY ProductType
+        ]]>
+    </select>
+
+</mapper>

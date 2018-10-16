@@ -91,4 +91,12 @@
         )
     </insert>
 
+    <!--查找所有用户总数-->
+    <select id="findTotalUserNum" resultType="int">
+        SELECT
+        COUNT(u.UserId) AS totalNum
+        FROM user_info u
+    </select>
+
+
 </mapper>
