@@ -1,27 +1,28 @@
 package com.yaouguoji.platform.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
-import com.yaouguoji.platform.dto.AreaDTO;
-import com.yaouguoji.platform.dto.CameraDTO;
-import com.yaouguoji.platform.dto.CameraRecordDTO;
+import com.yaouguoji.platform.common.CommonResultBuilder;
+import com.yaouguoji.platform.dto.*;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.AreaService;
-import com.yaouguoji.platform.service.CameraRecordService;
-import com.yaouguoji.platform.service.CameraService;
-import com.yaouguoji.platform.vo.ObjectMapVO;
+import com.yaouguoji.platform.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/camera")
 public class AreaController {
+
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final Logger LOGGER = LoggerFactory.getLogger(AreaController.class);
 
     @Resource
     private AreaService areaService;
@@ -29,6 +30,10 @@ public class AreaController {
     private CameraService cameraService;
     @Resource
     private CameraRecordService cameraRecordService;
+    @Resource
+    private ShopInfoService shopInfoService;
+    @Resource
+    private OrderRecordService orderRecordService;
 
     /**
      * 根据id查询分区信息
@@ -88,16 +93,73 @@ public class AreaController {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
         Map<Integer, AreaDTO> areaMap = areaDTOS.stream().collect(Collectors.toMap(AreaDTO::getAreaId, area -> area));
-        Map<Integer, ObjectMapVO<AreaDTO, Integer>> resultMap = Maps.newHashMap();
+        Map<Integer, ObjectMapDTO<AreaDTO, Integer>> resultMap = Maps.newHashMap();
         cameraRecordDTOS.forEach(cameraRecordDTO -> {
             int areaId = cameraId2AreaIdMap.get(cameraRecordDTO.getCameraId());
-            ObjectMapVO<AreaDTO, Integer> objectMapVO = resultMap.get(areaId);
-            if (objectMapVO == null) {
-                resultMap.put(areaId, new ObjectMapVO<>(areaMap.get(areaId), cameraRecordDTO.getCrNumber()));
+            ObjectMapDTO<AreaDTO, Integer> objectMapDTO = resultMap.get(areaId);
+            if (objectMapDTO == null) {
+                resultMap.put(areaId, new ObjectMapDTO<>(areaMap.get(areaId), cameraRecordDTO.getCrNumber()));
             } else {
-                objectMapVO.setNumber(objectMapVO.getNumber() + cameraRecordDTO.getCrNumber());
+                objectMapDTO.setNumber(objectMapDTO.getNumber() + cameraRecordDTO.getCrNumber());
             }
         });
         return CommonResult.success(resultMap.values());
+    }
+
+    /**
+     * 查询一个分区内前几名商家的销售额、销售量排名
+     *
+     * @param limit
+     * @param areaId
+     * @param start
+     * @param end
+     * @return
+     */
+    @GetMapping("/area/shop/rank")
+    public CommonResult areaShopRank1(Integer limit, Integer areaId, String start, String end) {
+        try {
+            Date startTime = SIMPLE_DATE_FORMAT.parse(start);
+            Date endTime = SIMPLE_DATE_FORMAT.parse(end);
+            OrderRecordRequest request = new OrderRecordRequest();
+            request.setLimit(limit);
+            request.setId(areaId);
+            request.setStartTime(startTime);
+            request.setEndTime(endTime);
+            request.setType(1);
+            List<ObjectMapDTO<ShopInfoDTO, Object>> orderCount = buildAreaShopList(request);
+            request.setType(2);
+            List<ObjectMapDTO<ShopInfoDTO, Object>> orderPrice = buildAreaShopList(request);
+            return new CommonResultBuilder()
+                    .code(200).message("查询成功")
+                    .data("orderCount", orderCount)
+                    .data("orderPrice", orderPrice)
+                    .build();
+        } catch (ParseException e) {
+            LOGGER.info("时间解析异常", e);
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+    }
+
+    /**
+     * 进行查询，并转换成需要的格式
+     *
+     * @param request
+     * @return
+     */
+    private List<ObjectMapDTO<ShopInfoDTO, Object>> buildAreaShopList(OrderRecordRequest request) {
+        List<ObjectMapDTO<Integer, Object>> areaShopRank = orderRecordService.findAreaShopRankByType(request);
+        if (CollectionUtils.isEmpty(areaShopRank)) {
+            return Lists.newArrayList();
+        }
+        List<Integer> shopIdList = areaShopRank.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
+        List<ShopInfoDTO> shopInfoDTOList = shopInfoService.batchFindByShopIdList(shopIdList);
+        Map<Integer, ShopInfoDTO> shopInfoDTOMap =
+                shopInfoDTOList.stream().collect(Collectors.toMap(ShopInfoDTO::getShopId, shop -> shop));
+        List<ObjectMapDTO<ShopInfoDTO, Object>> result = new ArrayList<>();
+        areaShopRank.forEach(objectMapDTO -> {
+            Integer shopId = objectMapDTO.getDtoObject();
+            result.add(new ObjectMapDTO<>(shopInfoDTOMap.get(shopId), objectMapDTO.getNumber()));
+        });
+        return result;
     }
 }

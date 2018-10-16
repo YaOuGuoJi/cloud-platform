@@ -12,6 +12,13 @@ import java.util.List;
 public interface ShopInfoService {
 
     /**
+     * 查询所有商家信息
+     *
+     * @return
+     */
+    List<ShopInfoDTO> findAll();
+
+    /**
      * 批量查询
      *
      * @param shopIdList
