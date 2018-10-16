@@ -57,6 +57,28 @@
         b.ShopType
     </sql>
 
+    <select id="findAreaShopOrderNumRank" resultMap="orderNumberEntity">
+        <![CDATA[
+            SELECT order_record.ShopId as Id, COUNT(order_record.OrderId) as Result
+            FROM order_record INNER JOIN shop_info ON shop_info.ShopId = order_record.ShopId
+            WHERE shop_info.RegionId = #{areaId} AND order_record.AddTime between #{startTime} AND #{endTime}
+            GROUP BY order_record.ShopId
+            ORDER BY COUNT(order_record.OrderId) DESC
+            LIMIT #{limit}
+        ]]>
+    </select>
+
+    <select id="findAreaShopOrderPriceRank" resultMap="orderNumberEntity">
+        <![CDATA[
+            SELECT order_record.ShopId as Id, SUM(order_record.Price) as Result
+            FROM order_record INNER JOIN shop_info ON shop_info.ShopId = order_record.ShopId
+            WHERE shop_info.RegionId = #{areaId} AND order_record.AddTime BETWEEN #{startTime} AND #{endTime}
+            GROUP BY order_record.ShopId
+            ORDER BY SUM(order_record.Price) DESC
+            LIMIT #{limit}
+        ]]>
+    </select>
+
     <select id="findAreaOrderNum" resultMap="orderNumberEntity">
         <![CDATA[
             SELECT shop_info.RegionId as Id, COUNT(order_record.OrderId) as Result
@@ -191,5 +213,5 @@
             HAVING totalPrice >= #{totalPrice}) a
         ]]>
     </select>
-    
+
 </mapper>

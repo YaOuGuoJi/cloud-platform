@@ -7,6 +7,7 @@
         <result column="a_sort" jdbcType="VARCHAR" property="aSort" />
         <result column="a_add_time" jdbcType="TIMESTAMP" property="aAddTime"/>
         <result column="a_update_time" jdbcType="TIMESTAMP" property="aUpdateTime"/>
+        <result column="a_address" jdbcType="VARCHAR" property="aAddress"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -14,7 +15,8 @@
         a_name,
         a_sort,
         a_add_time,
-        a_update_time
+        a_update_time,
+        a_address
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
