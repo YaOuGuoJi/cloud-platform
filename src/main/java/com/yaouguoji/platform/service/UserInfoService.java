@@ -30,4 +30,5 @@ public interface UserInfoService {
      * @return
      */
     int updateUserInfo(UserInfoDTO userInfoDTO);
+
 }

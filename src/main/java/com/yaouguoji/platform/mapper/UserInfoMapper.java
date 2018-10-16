@@ -31,4 +31,5 @@ public interface UserInfoMapper {
      * @return
      */
     int insertUserInfo(@Param("userInfoEntity") UserInfoEntity userInfoEntity);
+
 }
