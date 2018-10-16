@@ -18,11 +18,12 @@ public class ShopCountEntity {
     /**
      * 销售额
      */
+
     private BigDecimal amount;
     /**
      * 时间段
      */
-    private Object Times;
+    private String Time;
     /**
      * 商品类别
      */

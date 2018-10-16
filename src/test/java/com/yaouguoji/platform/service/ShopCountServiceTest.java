@@ -33,12 +33,7 @@ public class ShopCountServiceTest {
         Date endTime=new Date();
         Assert.assertNotNull(shopCountService.playOrdersAndTotalCount(100001, startTime,endTime));
     }
-    @Test
-    public void goodsStrikeCountTest(){
-        Date startTime=new Date("2010/10/10 00:00:00");
-        Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.goodsStrikeCount(100001, startTime,endTime));
-    }
+
     @Test
     public void timeSectionSalesAndVolumeCountTest(){
         Date startTime=new Date("2017/10/10 00:00:00");
@@ -46,10 +41,9 @@ public class ShopCountServiceTest {
         Assert.assertNotNull(shopCountService.timeQuantumSalesAndOrderCount(100001, startTime,endTime));
     }
     @Test
-    public void everydayVolumeCountTest(){
-        Date startTime=new Date("2017/10/10 00:00:00");
-        Date endTime=new Date();
-        Assert.assertNotNull(shopCountService.oneDaySalesAndOrdersCount(100001, startTime,endTime));
+    public void orderNumAndAmountTest(){
+        Assert.assertNotNull(shopCountService.orderNumAndAmount(100001,"2018",null));
+//        Assert.assertNotNull(shopCountService.orderNumAndAmount(100001,"2018","9"));
     }
     @Test
     public void shopGoodsSellTypeCountTest(){

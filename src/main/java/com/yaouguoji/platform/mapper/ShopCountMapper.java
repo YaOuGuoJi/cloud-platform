@@ -31,16 +31,7 @@ public interface ShopCountMapper {
                                                @Param("startTime") Date startTime,
                                                @Param("endTime") Date endTime);
 
-    /**
-     * 实际销售量统计
-     * @param shopId
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    List<ShopCountEntity> goodsStrikeCount(@Param("shopId") int shopId,
-                                           @Param("startTime") Date startTime,
-                                           @Param("endTime") Date endTime);
+
 
     /**
      * 每天每个时间段销量统计
@@ -54,15 +45,16 @@ public interface ShopCountMapper {
                                                          @Param("endTime") Date endTime);
 
     /**
-     * 时间段内商铺日销售额统计
+     * 月或日销售额及订单量统计
      * @param shopId
-     * @param startTime
-     * @param endTime
+     * @param year
+     * @param month
      * @return
      */
-    List<ShopCountEntity> oneDaySalesAndOrders(@Param("shopId") int shopId,
-                                              @Param("startTime") Date startTime,
-                                              @Param("endTime") Date endTime);
+    List<ShopCountEntity> orderNumAndAmount(@Param("shopId") int shopId,
+                                              @Param("year") String year,
+                                              @Param("month") String month,
+                                            @Param("status") String status);
     /**
      * 时间段内商品销售类别统计
      * @param shopId

@@ -6,8 +6,9 @@
         <result column="OrderChannel" property="orderChannel"/>
         <result column="Amount" property="amount"/>
         <result column="OrderNumb" property="orderNumb"/>
-        <result column="Times" property="times"/>
         <result column="ProductType" property="productType"/>
+        <result column="dTime" property="time"/>
+        <result column="mTime" property="time"/>
     </resultMap>
 
 
@@ -31,36 +32,36 @@
 
         ]]>
     </select>
-    <select id="goodsStrikeCount" resultMap="shopCount">
-        <![CDATA[
 
-            SELECT COUNT(*) OrderNumb,OrderChannel
-            FROM order_record
-            WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
-            GROUP BY OrderChannel ORDER BY OrderNumb
 
-        ]]>
-    </select>
+
     <select id="timeQuantumSalesAndOrder" resultMap="shopCount">
         <![CDATA[
 
-            SELECT COUNT(*) OrderNumb,SUM(price) Amount, HOUR(UpdateTime) Times
+            SELECT COUNT(*) OrderNumb,SUM(price) Amount, HOUR(UpdateTime) dTime
             FROM order_record
             WHERE ShopId=#{shopId}  AND updateTime>#{startTime} AND updateTime<#{endTime} AND orderstatus='已完成'
             GROUP BY HOUR(UpdateTime) ORDER BY HOUR(UpdateTime)
 
         ]]>
     </select>
-    <select id="oneDaySalesAndOrders" resultMap="shopCount">
-    <![CDATA[
-
-            SELECT COUNT(*) OrderNumb,SUM(price) Amount,DATE_FORMAT(updateTime, '%Y-%m-%d') Times
+    <select id="orderNumAndAmount" resultMap="shopCount">
+            SELECT COUNT(OrderId) OrderNumb,SUM(Price) Amount,
+            <if test="month != null and month != ''">
+                DAY(UpdateTime) dTime
+            </if>
+            <if test="month == '' or month == null">
+                MONTH (UpdateTime) mTime
+            </if>
             FROM order_record
-            WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
-            GROUP BY DATE_FORMAT(updateTime, '%Y-%m-%d')
-            ORDER BY DATE_FORMAT(updateTime, '%Y-%m-%d')
-
-        ]]>
+            WHERE OrderStatus = #{status} AND ShopId = #{shopId} AND YEAR(UpdateTime) = #{year}
+            <if test="month != null and month != ''">
+                AND MONTH(UpdateTime) = #{month}
+                GROUP BY DAY(UpdateTime)
+            </if>
+            <if test="month == '' or month == null">
+                GROUP BY MONTH(UpdateTime)
+            </if>
     </select>
 
     <select id="goodsSellTypeCount" resultMap="shopCount">

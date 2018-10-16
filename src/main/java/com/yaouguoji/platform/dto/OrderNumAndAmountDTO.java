@@ -4,10 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 @Data
-public class SalesAndPlayOrderDTO implements Serializable {
+public class OrderNumAndAmountDTO implements Serializable {
     private static final long serialVersionUID = 6249949202327915508L;
     /**
      * 订单数
@@ -20,5 +19,5 @@ public class SalesAndPlayOrderDTO implements Serializable {
     /**
      * 时间段
      */
-    private Object Times;
+    private String time;
 }

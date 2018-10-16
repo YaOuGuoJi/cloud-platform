@@ -1,7 +1,8 @@
 package com.yaouguoji.platform.impl;
 
+import com.yaouguoji.platform.constant.OrderStatus;
 import com.yaouguoji.platform.dto.GoodsSellTypeDTO;
-import com.yaouguoji.platform.dto.SalesAndPlayOrderDTO;
+import com.yaouguoji.platform.dto.OrderNumAndAmountDTO;
 import com.yaouguoji.platform.dto.SalesDTO;
 import com.yaouguoji.platform.dto.ShopCountDTO;
 import com.yaouguoji.platform.entity.ShopCountEntity;
@@ -33,23 +34,17 @@ public class ShopCountServiceImpl implements ShopCountService {
         return BeansListUtils.copyListProperties(playOrdersAndTotalCountDatas,SalesDTO.class);
     }
 
-    @Override
-    public List<ShopCountDTO> goodsStrikeCount(int shopId, Date startTime, Date endTime) {
-        List<ShopCountEntity> goodsStrikeDatas = shopCountMapper.goodsStrikeCount(shopId, startTime, endTime);
-
-        return BeansListUtils.copyListProperties(goodsStrikeDatas,ShopCountDTO.class);
-    }
 
     @Override
-    public List<SalesAndPlayOrderDTO> timeQuantumSalesAndOrderCount(int shopId, Date startTime, Date endTime) {
+    public List<OrderNumAndAmountDTO> timeQuantumSalesAndOrderCount(int shopId, Date startTime, Date endTime) {
         List<ShopCountEntity> timeQuantumSalesAndOrderDatas = shopCountMapper.timeQuantumSalesAndOrder(shopId, startTime, endTime);
-        return BeansListUtils.copyListProperties(timeQuantumSalesAndOrderDatas, SalesAndPlayOrderDTO.class);
+        return BeansListUtils.copyListProperties(timeQuantumSalesAndOrderDatas, OrderNumAndAmountDTO.class);
     }
 
     @Override
-    public List<SalesAndPlayOrderDTO> oneDaySalesAndOrdersCount(int shopId, Date startTime, Date endTime) {
-        List<ShopCountEntity> oneDaySalesAndOrdersDatas = shopCountMapper.oneDaySalesAndOrders(shopId, startTime, endTime);
-        return BeansListUtils.copyListProperties(oneDaySalesAndOrdersDatas,SalesAndPlayOrderDTO.class);
+    public List<OrderNumAndAmountDTO> orderNumAndAmount(int shopId, String year, String month) {
+        List<ShopCountEntity> orderNumAndAmount = shopCountMapper.orderNumAndAmount(shopId, year, month, OrderStatus.COMPLETE);
+        return BeansListUtils.copyListProperties(orderNumAndAmount, OrderNumAndAmountDTO.class);
     }
 
     @Override
