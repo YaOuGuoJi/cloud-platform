@@ -10,18 +10,18 @@ public class UserPriceCountDTO implements Serializable {
     private static final long serialVersionUID = 3392179774135797211L;
     private BigDecimal totalPrice;
     private BigDecimal averagePrice;
-    private Integer lessAverage;
-    private Integer nearAverage;
-    private Integer overAverage;
+    private Distributed distributed;
 
     public UserPriceCountDTO() {
+        this.totalPrice = new BigDecimal("0.00");
+        this.averagePrice = new BigDecimal("0.00");
+        this.distributed = new Distributed();
     }
 
-    public UserPriceCountDTO(BigDecimal totalPrice, BigDecimal averagePrice, Integer lessAverage, Integer nearAverage, Integer overAverage) {
-        this.totalPrice = totalPrice;
-        this.averagePrice = averagePrice;
-        this.lessAverage = lessAverage;
-        this.nearAverage = nearAverage;
-        this.overAverage = overAverage;
+    @Data
+    public class Distributed {
+        private Integer lessAverage;
+        private Integer nearAverage;
+        private Integer overAverage;
     }
 }

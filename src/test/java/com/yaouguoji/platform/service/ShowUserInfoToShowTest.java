@@ -16,7 +16,7 @@ import java.util.Map;
 @SpringBootTest
 public class ShowUserInfoToShowTest {
     @Resource
-    private ShowUserInfoToShop showUserInfoToShop;
+    private ShopUserAnalysisService showUserInfoToShop;
 
     @Test
     public void selectAgeAndSexSplitTest() {
@@ -38,7 +38,7 @@ public class ShowUserInfoToShowTest {
     public void selectUserFrequencyCount() {
         Date startTime = new Date("2014/01/01");
         Date endTime = new Date();
-        Map<String, BigDecimal> userFrequency = showUserInfoToShop.selectUserFrequencyCount(100001, startTime, endTime);
+        Map<String, Object> userFrequency = showUserInfoToShop.selectUserFrequencyCount(100001, startTime, endTime);
         Assert.assertNotNull(userFrequency);
     }
 }

@@ -2,11 +2,10 @@ package com.yaouguoji.platform.service;
 
 import com.yaouguoji.platform.dto.UserPriceCountDTO;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
-public interface ShowUserInfoToShop {
+public interface ShopUserAnalysisService {
     /**
      * 根据日期以及商铺的id查该商铺顾客的每个年龄段的男女人数以及性别该商铺总的男女人数
      *
@@ -35,5 +34,5 @@ public interface ShowUserInfoToShop {
      * @param endTime
      * @return
      */
-    Map<String, BigDecimal> selectUserFrequencyCount(Integer shopId, Date startTime, Date endTime);
+    Map<String, Object> selectUserFrequencyCount(Integer shopId, Date startTime, Date endTime);
 }
