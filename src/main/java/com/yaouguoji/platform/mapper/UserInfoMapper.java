@@ -3,7 +3,6 @@ package com.yaouguoji.platform.mapper;
 import com.yaouguoji.platform.entity.UserInfoEntity;
 import org.apache.ibatis.annotations.Param;
 
-
 /**
  * @author liuwen
  */

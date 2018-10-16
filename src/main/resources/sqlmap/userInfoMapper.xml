@@ -98,5 +98,5 @@
         FROM user_info u
     </select>
 
-    
+
 </mapper>
