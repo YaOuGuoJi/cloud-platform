@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -91,21 +93,21 @@ public class UserOrderRecordController {
             LOGGER.error("参数异常", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
-        if (!year.matches("20[1-5][0-9]")) {
+        String yearRegex = "20[1-5][0-9]";
+        if (!Pattern.matches(yearRegex, year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         int totalUserNum = userInfoService.findTotalUserNum();
-        List<OrderRecordJsonDTO> list;
+        List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year, month);
+        if (CollectionUtils.isEmpty(list)) {
+            return getCommonResult(totalUserNum);
+        }
         BigDecimal totalPrice = new BigDecimal("0.00");
         Map<String, CountPay> reportMap = Maps.newHashMap();
-        OrderRecordJsonDTO maxPriceOrder;
+        OrderRecordJsonDTO maxPriceOrder = list.get(0);
         Map<String, Object> userReportMap = Maps.newHashMap();
-        if (!StringUtils.isBlank(month) && month.matches("^0?[1-9]$|^1[0-2]$")) {
-            list = orderRecordService.findOrderRecordByUserId(userId, year, month);
-            if (CollectionUtils.isEmpty(list)) {
-                return getCommonResult(totalUserNum);
-            }
-            maxPriceOrder = list.get(0);
+        String monthRegex = "^0?[1-9]$|^1[0-2]$";
+        if (!StringUtils.isBlank(month) && Pattern.matches(monthRegex, month)) {
             for (OrderRecordJsonDTO o : list) {
                 totalPrice = totalPrice.add(o.getPrice());
                 if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
@@ -116,11 +118,6 @@ public class UserOrderRecordController {
             }
             userReportMap.put("dayReport", reportMap);
         } else {
-            list = orderRecordService.findOrderRecordByUserId(userId, year, month);
-            maxPriceOrder = list.get(0);
-            if (CollectionUtils.isEmpty(list)) {
-                return getCommonResult(totalUserNum);
-            }
             for (OrderRecordJsonDTO o : list) {
                 totalPrice = totalPrice.add(o.getPrice());
                 if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
