@@ -1,5 +1,6 @@
 package com.yaouguoji.platform.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
@@ -18,7 +19,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/camera")
 public class AreaController {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -126,43 +126,40 @@ public class AreaController {
             request.setStartTime(startTime);
             request.setEndTime(endTime);
             request.setType(1);
-            List<ObjectMapDTO<Integer, Object>> areaShopRank = orderRecordService.findAreaShopRankByType(request);
-            if (CollectionUtils.isEmpty(areaShopRank)) {
-                return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-            }
-            List<Integer> shopIdList = areaShopRank.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
-            List<ShopInfoDTO> shopInfoDTOList = shopInfoService.batchFindByShopIdList(shopIdList);
-            Map<Integer, ShopInfoDTO> shopInfoDTOMap =
-                    shopInfoDTOList.stream().collect(Collectors.toMap(ShopInfoDTO::getShopId, shop -> shop));
-            List<ObjectMapDTO<ShopInfoDTO, Object>> areaShopCountList = new ArrayList<>();
-            areaShopRank.forEach(objectMapDTO -> {
-                Integer shopId = objectMapDTO.getDtoObject();
-                areaShopCountList.add(new ObjectMapDTO<>(shopInfoDTOMap.get(shopId),objectMapDTO.getNumber()));
-            });
+            List<ObjectMapDTO<ShopInfoDTO, Object>> orderCount = buildAreaShopList(request);
             request.setType(2);
-            List<ObjectMapDTO<Integer, Object>> areaShopRank2 = orderRecordService.findAreaShopRankByType(request);
-            if (CollectionUtils.isEmpty(areaShopRank2)){
-                return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
-            }
-            List<Integer> shopIdList2 = areaShopRank2.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
-            List<ShopInfoDTO> shopInfoDTOLists = shopInfoService.batchFindByShopIdList(shopIdList2);
-            Map<Integer,ShopInfoDTO> shopInfoDTOMaps =
-                    shopInfoDTOLists.stream().collect(Collectors.toMap(ShopInfoDTO::getShopId,shop -> shop));
-            List<ObjectMapDTO<ShopInfoDTO,Object>> areaShopPriceList = new ArrayList<>();
-            areaShopRank2.forEach(objectMapDTO -> {
-                Integer shopId = objectMapDTO.getDtoObject();
-                areaShopPriceList.add(new ObjectMapDTO<>(shopInfoDTOMaps.get(shopId),objectMapDTO.getNumber()));
-            });
-
+            List<ObjectMapDTO<ShopInfoDTO, Object>> orderPrice = buildAreaShopList(request);
             return new CommonResultBuilder()
                     .code(200).message("查询成功")
-                    .data("orderCount",areaShopCountList)
-                    .data("OrderPrice",areaShopPriceList)
+                    .data("orderCount", orderCount)
+                    .data("orderPrice", orderPrice)
                     .build();
         } catch (ParseException e) {
-            LOGGER.info("时间解析异常",e);
-            e.printStackTrace();
+            LOGGER.info("时间解析异常", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+    }
+
+    /**
+     * 进行查询，并转换成需要的格式
+     *
+     * @param request
+     * @return
+     */
+    private List<ObjectMapDTO<ShopInfoDTO, Object>> buildAreaShopList(OrderRecordRequest request) {
+        List<ObjectMapDTO<Integer, Object>> areaShopRank = orderRecordService.findAreaShopRankByType(request);
+        if (CollectionUtils.isEmpty(areaShopRank)) {
+            return Lists.newArrayList();
+        }
+        List<Integer> shopIdList = areaShopRank.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
+        List<ShopInfoDTO> shopInfoDTOList = shopInfoService.batchFindByShopIdList(shopIdList);
+        Map<Integer, ShopInfoDTO> shopInfoDTOMap =
+                shopInfoDTOList.stream().collect(Collectors.toMap(ShopInfoDTO::getShopId, shop -> shop));
+        List<ObjectMapDTO<ShopInfoDTO, Object>> result = new ArrayList<>();
+        areaShopRank.forEach(objectMapDTO -> {
+            Integer shopId = objectMapDTO.getDtoObject();
+            result.add(new ObjectMapDTO<>(shopInfoDTOMap.get(shopId), objectMapDTO.getNumber()));
+        });
+        return result;
     }
 }
