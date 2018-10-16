@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @RestController
 public class ShopCountController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopCountController.class);
