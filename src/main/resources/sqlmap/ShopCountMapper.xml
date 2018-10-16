@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaouguoji.platform.mapper.ShopCountMapper">
+
+    <resultMap id="shopCount" type="com.yaouguoji.platform.entity.ShopCountEntity">
+        <result column="OrderChannel" property="orderChannel"/>
+        <result column="Amount" property="amount"/>
+        <result column="OrderNumb" property="orderNumb"/>
+        <result column="Times" property="times"/>
+    </resultMap>
+
+
+    <select id="goodsSalesCount" resultMap="shopCount">
+        <![CDATA[
+
+            SELECT SUM(Price) Amount, OrderChannel
+            FROM order_record
+            WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
+            GROUP BY OrderChannel ORDER BY Amount
+
+        ]]>
+    </select>
+    <select id="goodsPlayOrdersCount" resultMap="shopCount">
+        <![CDATA[
+
+            SELECT COUNT(*) OrderNumb, OrderChannel
+            FROM order_record
+            WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
+            GROUP BY OrderChannel ORDER BY OrderNumb
+
+        ]]>
+    </select>
+    <select id="goodsStrikeCount" resultMap="shopCount">
+        <![CDATA[
+
+            SELECT COUNT(*) OrderNumb,OrderChannel
+            FROM order_record
+            WHERE ShopId=#{shopId} AND Orderstatus='已完成' AND UpdateTime > #{startTime} AND UpdateTime < #{endTime}
+            GROUP BY OrderChannel ORDER BY OrderNumb
+
+        ]]>
+    </select>
+    <select id="timeSectionSalesAndVolumeCount" resultMap="shopCount">
+        <![CDATA[
+
+            SELECT COUNT(*) OrderNumb,SUM(price) Amount, HOUR(UpdateTime) Times
+            FROM order_record
+            WHERE ShopId=#{shopId}  AND updateTime>#{startTime} AND updateTime<#{endTime} AND orderstatus='已完成'
+            GROUP BY HOUR(UpdateTime) ORDER BY HOUR(UpdateTime)
+
+        ]]>
+    </select>
+    <select id="everydayVolumeCount" resultMap="shopCount">
+    <![CDATA[
+
+            SELECT COUNT(*) OrderNumb,SUM(price) Amount,DATE_FORMAT(updateTime, '%Y/%M/%D') Times
+            FROM order_record
+            WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
+            GROUP BY DATE_FORMAT(updateTime, '%Y/%M/%D')
+            ORDER BY DATE_FORMAT(updateTime, '%Y/%M/%D')
+
+        ]]>
+    </select>
+
+    <select id="shopGoodsSellTypeCount" resultMap="shopCount">
+        <![CDATA[
+
+            SELECT COUNT(*) OrderNumb,ProductType
+            FROM order_record
+            WHERE ShopId=#{shopId}  AND updateTime>#{startTime}AND updateTime<#{endTime} AND orderstatus='已完成'
+            GROUP BY ProductType
+            ORDER BY OrderNumb
+
+        ]]>
+    </select>
+
+</mapper>
