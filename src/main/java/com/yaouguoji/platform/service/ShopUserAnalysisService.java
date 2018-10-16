@@ -14,7 +14,7 @@ public interface ShopUserAnalysisService {
      * @param endTime
      * @return
      */
-    Map<String, Map<String, Integer>> selectAgeAndSexSplit(Integer shopId, Date startTime, Date endTime);
+    Map<String, Map<String, Integer>> selectAgeAndSexCount(Integer shopId, Date startTime, Date endTime);
 
     /**
      * 根据日期以及商铺的id查该商铺顾客的消费额度分布

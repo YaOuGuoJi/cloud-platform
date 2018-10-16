@@ -19,9 +19,9 @@ import java.util.Map;
 
 @RestController
 public class ShowShopInfoController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowShopInfoController.class);
     @Resource
     private ShopUserAnalysisService shopUserAnalysisService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShowShopInfoController.class);
 
     @GetMapping(value = "/shop/consumer/analysis")
     public CommonResult<Map<String, Object>> selectShopManagementInfo(Integer shopId, String start, String end) {
@@ -32,7 +32,7 @@ public class ShowShopInfoController {
             if (startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "开始时间必须小于结束时间");
             }
-            Map<String, Map<String, Integer>> userSexAndAges = shopUserAnalysisService.selectAgeAndSexSplit(shopId, startTime, endTime);
+            Map<String, Map<String, Integer>> userSexAndAges = shopUserAnalysisService.selectAgeAndSexCount(shopId, startTime, endTime);
             if (CollectionUtils.isEmpty(userSexAndAges)) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }

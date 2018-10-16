@@ -25,7 +25,7 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
     private ShopUserAnalysisMapper shopUserAnalysisMapper;
 
     @Override
-    public Map<String, Map<String, Integer>> selectAgeAndSexSplit(Integer shopId, Date startTime, Date endTime) {
+    public Map<String, Map<String, Integer>> selectAgeAndSexCount(Integer shopId, Date startTime, Date endTime) {
         final int[] ageArray = {0, 18, 45, 65};
         List<UserSexAndAgeEntity> ageAndSexEntities = shopUserAnalysisMapper.ageAndSexSplit(shopId, startTime, endTime);
         if (CollectionUtils.isEmpty(ageAndSexEntities)) {
