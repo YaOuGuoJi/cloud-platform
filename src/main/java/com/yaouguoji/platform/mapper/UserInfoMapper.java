@@ -1,6 +1,5 @@
 package com.yaouguoji.platform.mapper;
 
-import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.entity.UserInfoEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,12 +31,5 @@ public interface UserInfoMapper {
      * @return
      */
     int insertUserInfo(@Param("userInfoEntity") UserInfoEntity userInfoEntity);
-
-    /**
-     * 身份判断（会员）
-     * @param userId
-     * @return
-     */
-    UserInfoEntity selectIsVip(@Param("userId") int userId);
 
 }

@@ -41,14 +41,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoMapper.insertUserInfo(entity);
         return entity.getUserId();
     }
-    @Override
-    public boolean selectIsVip(int userId){
-        UserInfoEntity userInfoEntity = userInfoMapper.selectIsVip(userId);
-        if (userInfoEntity == null) {
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public int updateUserInfo(UserInfoDTO userInfoDTO) {

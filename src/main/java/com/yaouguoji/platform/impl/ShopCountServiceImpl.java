@@ -1,9 +1,6 @@
 package com.yaouguoji.platform.impl;
 
 import com.yaouguoji.platform.constant.OrderStatus;
-import com.yaouguoji.platform.dto.GoodsSellTypeDTO;
-import com.yaouguoji.platform.dto.OrderNumAndAmountDTO;
-import com.yaouguoji.platform.dto.SalesDTO;
 import com.yaouguoji.platform.dto.ShopCountDTO;
 import com.yaouguoji.platform.entity.ShopCountEntity;
 import com.yaouguoji.platform.mapper.ShopCountMapper;
@@ -21,36 +18,33 @@ public class ShopCountServiceImpl implements ShopCountService {
     private ShopCountMapper shopCountMapper;
 
     @Override
-    public List<SalesDTO> SalesAndOrdrsCount(int shopId, Date startTime, Date endTime) {
-        List<ShopCountEntity> SalesAndOrdrsCountDatas = shopCountMapper.salesAndOrdrs(shopId, startTime, endTime);
-
-        return BeansListUtils.copyListProperties(SalesAndOrdrsCountDatas, SalesDTO.class);
+    public List<ShopCountDTO> ordersFinished(int shopId, Date startTime, Date endTime) {
+        List<ShopCountEntity> entities = shopCountMapper.ordersFinished(shopId, startTime, endTime);
+        return BeansListUtils.copyListProperties(entities, ShopCountDTO.class);
     }
 
     @Override
-    public List<SalesDTO> playOrdersAndTotalCount(int shopId, Date startTime, Date endTime) {
-        List<ShopCountEntity> playOrdersAndTotalCountDatas = shopCountMapper.playOrdersAndTotal(shopId, startTime, endTime);
-
-        return BeansListUtils.copyListProperties(playOrdersAndTotalCountDatas,SalesDTO.class);
-    }
-
-
-    @Override
-    public List<OrderNumAndAmountDTO> timeQuantumSalesAndOrderCount(int shopId, Date startTime, Date endTime) {
-        List<ShopCountEntity> timeQuantumSalesAndOrderDatas = shopCountMapper.timeQuantumSalesAndOrder(shopId, startTime, endTime);
-        return BeansListUtils.copyListProperties(timeQuantumSalesAndOrderDatas, OrderNumAndAmountDTO.class);
+    public List<ShopCountDTO> ordersCanceled(int shopId, Date startTime, Date endTime) {
+        List<ShopCountEntity> entities = shopCountMapper.ordersCanceled(shopId, startTime, endTime);
+        return BeansListUtils.copyListProperties(entities, ShopCountDTO.class);
     }
 
     @Override
-    public List<OrderNumAndAmountDTO> orderNumAndAmount(int shopId, String year, String month) {
-        List<ShopCountEntity> orderNumAndAmount = shopCountMapper.orderNumAndAmount(shopId, year, month, OrderStatus.COMPLETE);
-        return BeansListUtils.copyListProperties(orderNumAndAmount, OrderNumAndAmountDTO.class);
+    public List<ShopCountDTO> ordersByHours(int shopId, Date startTime, Date endTime) {
+        List<ShopCountEntity> entities = shopCountMapper.ordersByHours(shopId, startTime, endTime);
+        return BeansListUtils.copyListProperties(entities, ShopCountDTO.class);
     }
 
     @Override
-    public List<GoodsSellTypeDTO> goodsSellTypeCount(int shopId, Date startTime, Date endTime) {
-        List<ShopCountEntity> goodsSellTypeCountDatas = shopCountMapper.goodsSellTypeCount(shopId, startTime, endTime);
-        return BeansListUtils.copyListProperties(goodsSellTypeCountDatas, GoodsSellTypeDTO.class);
+    public List<ShopCountDTO> ordersByMonthOrDay(int shopId, int year, int month) {
+        List<ShopCountEntity> orderNumAndAmount = shopCountMapper.ordersByMonthOrDay(shopId, year, month, OrderStatus.COMPLETE);
+        return BeansListUtils.copyListProperties(orderNumAndAmount, ShopCountDTO.class);
+    }
+
+    @Override
+    public List<ShopCountDTO> goodsSellTypeCount(int shopId, Date startTime, Date endTime) {
+        List<ShopCountEntity> entities = shopCountMapper.goodsSellTypeCount(shopId, startTime, endTime);
+        return BeansListUtils.copyListProperties(entities, ShopCountDTO.class);
     }
 
 }

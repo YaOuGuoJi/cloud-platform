@@ -8,24 +8,18 @@ import java.math.BigDecimal;
 public class ShopCountEntity {
 
     /**
-     * 下单方式
+     * 分组名
      */
-    private String orderChannel;
+    private String groupName;
+
     /**
      * 订单数
      */
-    private int orderNumb;
+    private Integer orderNumb;
+
     /**
      * 销售额
      */
-
     private BigDecimal amount;
-    /**
-     * 时间段
-     */
-    private String Time;
-    /**
-     * 商品类别
-     */
-    private String productType;
+
 }

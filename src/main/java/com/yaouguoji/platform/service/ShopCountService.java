@@ -1,54 +1,60 @@
 package com.yaouguoji.platform.service;
 
-import com.yaouguoji.platform.dto.GoodsSellTypeDTO;
-import com.yaouguoji.platform.dto.OrderNumAndAmountDTO;
-import com.yaouguoji.platform.dto.SalesDTO;
 import com.yaouguoji.platform.dto.ShopCountDTO;
 
 import java.util.Date;
 import java.util.List;
 
 public interface ShopCountService {
-    /**
-     * 销售额查询
-     * @param shopId
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    List<SalesDTO> SalesAndOrdrsCount(int shopId, Date startTime, Date endTime);
-    /**
-     * 下单量查询
-     * @param shopId
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    List<SalesDTO> playOrdersAndTotalCount(int shopId, Date startTime, Date endTime);
 
     /**
-     * 某段时间，每天每段时间销量和交易额统计
+     * 商户已完成的订单统计
+     *
      * @param shopId
      * @param startTime
      * @param endTime
      * @return
      */
-    List<OrderNumAndAmountDTO> timeQuantumSalesAndOrderCount(int shopId, Date startTime, Date endTime);
+    List<ShopCountDTO> ordersFinished(int shopId, Date startTime, Date endTime);
+
     /**
-     * 日或月交易额或下单量
+     * 商户已取消的订单统计
+     *
+     * @param shopId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<ShopCountDTO> ordersCanceled(int shopId, Date startTime, Date endTime);
+
+    /**
+     * 商户订单按小时统计
+     *
+     * @param shopId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<ShopCountDTO> ordersByHours(int shopId, Date startTime, Date endTime);
+
+    /**
+     * 商户订单按照月份或天统计 month为空时按照month统计，month不为空时按天统计
+     *
      * @param shopId
      * @param year
      * @param month
      * @return
      */
-    List<OrderNumAndAmountDTO> orderNumAndAmount(int shopId, String year, String month);
+    List<ShopCountDTO> ordersByMonthOrDay(int shopId, int year, int month);
+
     /**
-     * 商品类别销售排名
+     * 按照商品类型统计订单
+     *
      * @param shopId
      * @param startTime
      * @param endTime
      * @return
      */
-    List<GoodsSellTypeDTO> goodsSellTypeCount(int shopId, Date startTime, Date endTime);
+    List<ShopCountDTO> goodsSellTypeCount(int shopId, Date startTime, Date endTime);
 
 }

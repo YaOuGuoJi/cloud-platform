@@ -1,6 +1,5 @@
 package com.yaouguoji.platform.mapper;
 
-
 import com.yaouguoji.platform.entity.ShopCountEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,59 +9,64 @@ import java.util.List;
 public interface ShopCountMapper {
 
     /**
-     * 商品销售价格统计
+     * 商户时间段内订单成交统计
+     *
      * @param shopId
      * @param startTime
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> salesAndOrdrs(@Param("shopId") int shopId,
-                                          @Param("startTime") Date startTime,
-                                          @Param("endTime") Date endTime);
+    List<ShopCountEntity> ordersFinished(@Param("shopId") int shopId,
+                                         @Param("startTime") Date startTime,
+                                         @Param("endTime") Date endTime);
 
     /**
-     * 订单统计（包含未发货）
+     * 商户时间段内已取消订单统计
+     *
      * @param shopId
      * @param startTime
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> playOrdersAndTotal(@Param("shopId") int shopId,
-                                               @Param("startTime") Date startTime,
-                                               @Param("endTime") Date endTime);
-
-
+    List<ShopCountEntity> ordersCanceled(@Param("shopId") int shopId,
+                                         @Param("startTime") Date startTime,
+                                         @Param("endTime") Date endTime);
 
     /**
-     * 每天每个时间段销量统计
+     * 商户时间段内订单按小时统计
+     *
      * @param shopId
      * @param startTime
      * @param endTime
      * @return
      */
-    List<ShopCountEntity> timeQuantumSalesAndOrder(@Param("shopId") int shopId,
-                                                         @Param("startTime") Date startTime,
-                                                         @Param("endTime") Date endTime);
+    List<ShopCountEntity> ordersByHours(@Param("shopId") int shopId,
+                                        @Param("startTime") Date startTime,
+                                        @Param("endTime") Date endTime);
 
     /**
      * 月或日销售额及订单量统计
+     *
      * @param shopId
      * @param year
      * @param month
+     * @param status
      * @return
      */
-    List<ShopCountEntity> orderNumAndAmount(@Param("shopId") int shopId,
-                                              @Param("year") String year,
-                                              @Param("month") String month,
-                                            @Param("status") String status);
+    List<ShopCountEntity> ordersByMonthOrDay(@Param("shopId") int shopId,
+                                             @Param("year") int year,
+                                             @Param("month") int month,
+                                             @Param("status") String status);
+
     /**
      * 时间段内商品销售类别统计
+     *
      * @param shopId
      * @param startTime
      * @param endTime
      * @return
      */
     List<ShopCountEntity> goodsSellTypeCount(@Param("shopId") int shopId,
-                                                 @Param("startTime") Date startTime,
-                                                 @Param("endTime") Date endTime);
+                                             @Param("startTime") Date startTime,
+                                             @Param("endTime") Date endTime);
 }

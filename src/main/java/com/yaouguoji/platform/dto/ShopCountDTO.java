@@ -3,25 +3,24 @@ package com.yaouguoji.platform.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 public class ShopCountDTO implements Serializable {
-    private static final long serialVersionUID = 3165005138739178062L;
+    private static final long serialVersionUID = -1296704492879147180L;
+
     /**
-     * 下单方式
+     * 分组名
      */
-    private Object orderChannel;
+    private String groupName;
+
     /**
      * 订单数
      */
-    private Object orderNumb;
+    private Integer orderNumb;
+
     /**
      * 销售额
      */
-    private Object amount;
-    /**
-     * 时间段
-     */
-    private Object Times;
-
+    private BigDecimal amount;
 }
