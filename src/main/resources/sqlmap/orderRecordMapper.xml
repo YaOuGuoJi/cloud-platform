@@ -15,6 +15,12 @@
         <result column="UpdateTime" property="updateTime" />
     </resultMap>
 
+    <resultMap id="orderRecordJsonEntity" type="com.yaouguoji.platform.entity.OrderRecordJsonEntity" extends="orderRecordEntity">
+        <result column="ShopName" property="shopName"/>
+        <result column="BranchName" property="branchName"/>
+        <result column="ShopType" property="shopType"/>
+    </resultMap>
+
     <resultMap id="orderNumberEntity" type="com.yaouguoji.platform.entity.OrderNumberEntity">
         <result column="Id" property="id"/>
         <result column="Result" property="result"/>
@@ -32,6 +38,23 @@
         Price,
         AddTime,
         UpdateTime
+    </sql>
+
+    <sql id="OrderRecordJson">
+        a.OrderId,
+        a.UserId,
+        a.ShopId,
+        a.OrderChannel,
+        a.OrderStatus,
+        a.ProductType,
+        a.ProductList,
+        a.PayType,
+        a.Price,
+        a.AddTime,
+        a.UpdateTime,
+        b.ShopName,
+        b.BranchName,
+        b.ShopType
     </sql>
 
     <select id="findAreaShopOrderNumRank" resultMap="orderNumberEntity">
@@ -162,5 +185,33 @@
         WHERE ShopId=#{shopId} and AddTime BETWEEN #{start} AND #{end}
     </select>
 
+    <!--查找用户全年订单-->
+    <select id="findOrderRecordByUserId" resultMap="orderRecordJsonEntity">
+        SELECT
+        <include refid="OrderRecordJson"/>
+        FROM order_record a
+        LEFT JOIN shop_info b ON a.ShopId = b.ShopId
+        WHERE a.UserId = #{userId} AND YEAR(a.AddTime) = #{year}
+        <if test="month != null and month !=''">
+            AND MONTH(a.AddTime) = #{month}
+        </if>
+        ORDER BY a.AddTime
+    </select>
+
+    <!--查找大于我的消费额的用户数-->
+    <select id="findUsersWhoAreLargeThanMySpending" resultType="int">
+        SELECT COUNT(a.totalPrice)
+        FROM
+            (SELECT SUM(ore.Price) totalPrice
+            FROM order_record ore
+            WHERE YEAR(ore.AddTime) = #{year}
+            <if test="month != null and month !=''">
+                AND MONTH(ore.AddTime) = #{month}
+            </if>
+            GROUP BY ore.UserId
+        <![CDATA[
+            HAVING totalPrice >= #{totalPrice}) a
+        ]]>
+    </select>
 
 </mapper>

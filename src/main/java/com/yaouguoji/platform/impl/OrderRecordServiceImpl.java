@@ -7,8 +7,10 @@ import com.yaouguoji.platform.constant.OrderRankType;
 import com.yaouguoji.platform.dto.ObjectMapDTO;
 import com.yaouguoji.platform.dto.OrderRecordDTO;
 import com.yaouguoji.platform.dto.OrderRecordRequest;
+import com.yaouguoji.platform.dto.OrderRecordJsonDTO;
 import com.yaouguoji.platform.entity.OrderNumberEntity;
 import com.yaouguoji.platform.entity.OrderRecordEntity;
+import com.yaouguoji.platform.entity.OrderRecordJsonEntity;
 import com.yaouguoji.platform.mapper.OrderRecordMapper;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.util.BeansListUtils;
@@ -18,6 +20,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -146,4 +149,30 @@ public class OrderRecordServiceImpl implements OrderRecordService {
         orderRecordMapper.addOrderInfo(entity);
         return entity.getOrderId();
     }
+
+    /**
+     * 查询该用户所有的订单
+     *
+     * @param userId 用户ID
+     * @return
+     */
+    @Override
+    public List<OrderRecordJsonDTO> findOrderRecordByUserId(String userId, String year, String month) {
+        List<OrderRecordJsonEntity> list = orderRecordMapper.findOrderRecordByUserId(userId, year, month);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return BeansListUtils.copyListProperties(list, OrderRecordJsonDTO.class);
+    }
+
+    /**
+     * 查找大于我的消费额的用户数
+     * @param totalPrice
+     * @return
+     */
+    @Override
+    public int findUsersWhoAreLargeThanMySpending(BigDecimal totalPrice, String year, String month) {
+        return orderRecordMapper.findUsersWhoAreLargeThanMySpending(totalPrice, year, month);
+    }
+
 }

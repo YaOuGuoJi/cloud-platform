@@ -7,7 +7,6 @@ import com.yaouguoji.platform.service.UserInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 
 /**
@@ -50,5 +49,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfoEntity entity = new UserInfoEntity();
         BeanUtils.copyProperties(userInfoDTO, entity);
         return userInfoMapper.updateById(entity);
+    }
+
+
+    /**
+     * 查找所有用户总数
+     * @return
+     */
+    @Override
+    public int findTotalUserNum() {
+        return userInfoMapper.findTotalUserNum();
     }
 }

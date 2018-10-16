@@ -31,4 +31,10 @@ public interface UserInfoService {
      */
     int updateUserInfo(UserInfoDTO userInfoDTO);
 
+    /**
+     * 查找所有用户总数
+     * @return
+     */
+    int findTotalUserNum();
+
 }
