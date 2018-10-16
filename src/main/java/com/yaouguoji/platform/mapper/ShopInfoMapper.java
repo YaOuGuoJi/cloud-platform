@@ -11,6 +11,13 @@ import java.util.List;
 public interface ShopInfoMapper {
 
     /**
+     * 查询所有商铺信息
+     *
+     * @return
+     */
+    List<ShopInfoEntity> findAll();
+
+    /**
      * 查询列表
      *
      * @param shopIdList
