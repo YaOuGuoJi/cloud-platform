@@ -85,8 +85,9 @@ public class UserOrderRecordController {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+        UserInfoDTO info;
         try {
-            UserInfoDTO info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
+            info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
             if (info == null) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND.value, "没有此用户");
             }
@@ -156,6 +157,7 @@ public class UserOrderRecordController {
         userReportMap.put("totalPrice", totalPrice);
         userReportMap.put("maxPriceOrder", maxPriceOrderFinal);
         userReportMap.put("payType", payTypeMap);
+        userReportMap.put("userInfo", info);
         return CommonResult.success(userReportMap);
     }
 
