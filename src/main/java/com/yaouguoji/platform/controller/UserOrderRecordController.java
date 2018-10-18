@@ -106,7 +106,7 @@ public class UserOrderRecordController {
         int totalUserNum = userInfoService.findTotalUserNum();
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year, month);
         if (CollectionUtils.isEmpty(list)) {
-            return getCommonResult(totalUserNum);
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
         BigDecimal totalPrice = new BigDecimal("0.00");
         Map<String, CountPay> reportMap = Maps.newHashMap();
