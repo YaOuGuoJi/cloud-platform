@@ -177,19 +177,7 @@ public class UserOrderRecordController {
             reportMap.put(dayOrMonth + "", countPay);
         }
     }
-
-    /**
-     * 用户未下单时只返回排名和超越人数百分比
-     * @param totalUserNum 所有用户数
-     * @return
-     */
-    private CommonResult getCommonResult(int totalUserNum) {
-        Map<String, Object> noRecordUserReportMap = Maps.newHashMap();
-        noRecordUserReportMap.put("rank", totalUserNum);
-        noRecordUserReportMap.put("beyondPercent", 0);
-        return CommonResult.success(noRecordUserReportMap);
-    }
-
+    
     /**
      * 统计支付的次数和合计金额
      */
