@@ -39,9 +39,9 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
         for (UserSexAndAgeEntity userSexAndAgeEntity : ageAndSexEntities) {
             String ageRegion = this.regionName(ageArray, userSexAndAgeEntity.getAge());
             if (userSexAndAgeEntity.getSex() == 1) {
-                maleAgeSplit.put(ageRegion, maleAgeSplit.getOrDefault(ageRegion, 0) + 1);
+                maleAgeSplit.put(ageRegion, maleAgeSplit.getOrDefault(ageRegion, 0) + userSexAndAgeEntity.getNumberOfPeople());
             } else if (userSexAndAgeEntity.getSex() == 2) {
-                femaleAgeSplit.put(ageRegion, maleAgeSplit.getOrDefault(ageRegion, 0) + 1);
+                femaleAgeSplit.put(ageRegion, femaleAgeSplit.getOrDefault(ageRegion, 0) + userSexAndAgeEntity.getNumberOfPeople());
             }
         }
         return ageAndSex;
@@ -82,7 +82,7 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
         Map<String, Integer> distributed = Maps.newHashMap();
         for (UserFrequencyEntity userFrequencyEntity : userFrequencyEntities) {
             String frequencyName = regionName(frequencySplit, userFrequencyEntity.getFrequency());
-            distributed.put(frequencyName, distributed.getOrDefault(frequencyName, 0));
+            distributed.put(frequencyName, distributed.getOrDefault(frequencyName, 0)+userFrequencyEntity.getNumberOfPeople());
         }
         userFrequencyCount.put("totalFrequency", frequencyMap.get("totalFrequency"));
         userFrequencyCount.put("averageFrequency", averageFrequency);
@@ -93,7 +93,7 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
     private String regionName(int[] array, int value) {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < array.length; i++) {
-            if (value < array[i]) {
+            if (value < array[i+1]) {
                 return sb.append(array[i - 1]).append("-").append(array[i] - 1).toString();
             }
         }
@@ -105,14 +105,14 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
         BigDecimal compared = new BigDecimal("4.00");
         if (average == null || average.compareTo(compared) < 0) {
             arr[0] = 0;
-            arr[1] = 3;
-            arr[2] = 6;
+            arr[1] = 4;
+            arr[2] = 7;
         } else {
             arr[0] = 0;
             arr[1] = average.multiply(new BigDecimal("1.00").subtract(ratio))
-                    .setScale(0, RoundingMode.HALF_UP).intValue();
+                    .setScale(0, RoundingMode.HALF_UP).intValue()+1;
             arr[2] = average.multiply(new BigDecimal("1.00").add(ratio))
-                    .setScale(0, RoundingMode.HALF_UP).intValue();
+                    .setScale(0, RoundingMode.HALF_UP).intValue()+1;
         }
     }
 
