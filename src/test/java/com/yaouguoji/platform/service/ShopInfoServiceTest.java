@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -19,20 +20,25 @@ public class ShopInfoServiceTest {
 
     @Test
     public void insertAndDeleteTest() {
+        String[] phones={"13","17","15","18","16"};
+        Random rd = new Random();
         ShopInfoDTO shopInfoDTO = new ShopInfoDTO();
-        shopInfoDTO.setShopId(0);
+        shopInfoDTO.setShopId(30);
         shopInfoDTO.setShopUuid("");
-        shopInfoDTO.setShopName("测试店名");
+        shopInfoDTO.setShopName("H&M");
         shopInfoDTO.setBranchName("西安亚欧国际店");
-        shopInfoDTO.setRegionId(2);
-        shopInfoDTO.setBrandId(3);
-        shopInfoDTO.setShopType("服饰");
+        int areaId = rd.nextInt(7)+1;
+        shopInfoDTO.setRegionId(areaId);
+        int brandId = rd.nextInt(5)+1;
+        shopInfoDTO.setBrandId(brandId);
+        shopInfoDTO.setShopType("运动品牌");
         shopInfoDTO.setAddress("亚欧风情小镇1号楼111");
-        shopInfoDTO.setShopLogo("https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1535765175&di=0199743b7f771770da0d2a7369dab307&src=http://www.epbiao.com/Public/upload/remote/2017/08/75571501738934.png");
-        shopInfoDTO.setShopOwner("刘文");
-        shopInfoDTO.setPhoneNo("18799342334");
-        shopInfoDTO.setPhoneNo2("13523923344");
-        shopInfoDTO.setAvgPrice(new BigDecimal(355.67));
+        shopInfoDTO.setShopLogo("http://www.logoids.com/upload/image/201807/15307576773935926.jpg");
+        shopInfoDTO.setShopOwner("赞秦");
+        shopInfoDTO.setPhoneNo(phones[(int)(Math.random()*4)]+(int)(Math.random()*10)+"*****"+(int)(Math.random()*10)+(int)(Math.random()*10)+(int)(Math.random()*10));
+        shopInfoDTO.setPhoneNo2(phones[(int)(Math.random()*4)]+(int)(Math.random()*10)+"*****"+(int)(Math.random()*10)+(int)(Math.random()*10)+(int)(Math.random()*10));
+        int price = rd.nextInt(300)+1;
+        shopInfoDTO.setAvgPrice(new BigDecimal(price));
         shopInfoDTO.setDeleted(0);
 
         int shopId = shopInfoService.insertShopInfo(shopInfoDTO);
