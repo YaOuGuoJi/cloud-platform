@@ -68,13 +68,16 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
 
     @Override
     public Map<String, Object> selectUserFrequencyCount(Integer shopId, Date startTime, Date endTime) {
-        // 统计消费次数上下依据平均消费次数浮动百分比,最小为0.15，最大为0.875
         // 根据上述百分比将统计分为三个阶段，放在如下数组中
-        int[] frequencySplit = new int[3];
+        int[] frequencySplit = {0, 4, 7};
+        BigDecimal compared = new BigDecimal("4.00");
         Map<String, Object> userFrequencyCount = Maps.newHashMap();
         Map<String, BigDecimal> frequencyMap = shopUserAnalysisMapper.averageAndTotalFrequency(shopId, startTime, endTime);
         BigDecimal averageFrequency = frequencyMap.get("averageFrequency").setScale(2, RoundingMode.HALF_UP);
-        this.constructFrequency(frequencySplit, averageFrequency);
+        // 平均值超过compared参数时调整分段
+        if (averageFrequency != null && averageFrequency.compareTo(compared) >= 0) {
+            this.rebuildFrequency(frequencySplit, averageFrequency);
+        }
         List<UserFrequencyEntity> userFrequencyEntities = shopUserAnalysisMapper.userFrequencyCount(shopId, startTime, endTime);
         if (CollectionUtils.isEmpty(userFrequencyEntities)) {
             return userFrequencyCount;
@@ -82,7 +85,8 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
         Map<String, Integer> distributed = Maps.newHashMap();
         for (UserFrequencyEntity userFrequencyEntity : userFrequencyEntities) {
             String frequencyName = regionName(frequencySplit, userFrequencyEntity.getFrequency());
-            distributed.put(frequencyName, distributed.getOrDefault(frequencyName, 0)+userFrequencyEntity.getNumberOfPeople());
+            distributed.put(frequencyName,
+                    distributed.getOrDefault(frequencyName, 0) + userFrequencyEntity.getNumberOfPeople());
         }
         userFrequencyCount.put("totalFrequency", frequencyMap.get("totalFrequency"));
         userFrequencyCount.put("averageFrequency", averageFrequency);
@@ -100,20 +104,13 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
         return sb.append(array[array.length - 1]).append("more").toString();
     }
 
-    private void constructFrequency(int[] arr, BigDecimal average) {
+    private void rebuildFrequency(int[] arr, BigDecimal average) {
+        // 调整频率分段
         final BigDecimal ratio = new BigDecimal("0.30");
-        BigDecimal compared = new BigDecimal("4.00");
-        if (average == null || average.compareTo(compared) < 0) {
-            arr[0] = 0;
-            arr[1] = 4;
-            arr[2] = 7;
-        } else {
-            arr[0] = 0;
-            arr[1] = average.multiply(new BigDecimal("1.00").subtract(ratio))
-                    .setScale(0, RoundingMode.HALF_UP).intValue()+1;
-            arr[2] = average.multiply(new BigDecimal("1.00").add(ratio))
-                    .setScale(0, RoundingMode.HALF_UP).intValue()+1;
-        }
+        arr[1] = average.multiply(new BigDecimal("1.00").subtract(ratio))
+                .setScale(0, RoundingMode.HALF_UP).intValue() + 1;
+        arr[2] = average.multiply(new BigDecimal("1.00").add(ratio))
+                .setScale(0, RoundingMode.HALF_UP).intValue() + 1;
     }
 
 }

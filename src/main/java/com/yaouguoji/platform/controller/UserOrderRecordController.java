@@ -15,8 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -79,12 +81,13 @@ public class UserOrderRecordController {
      * @return
      */
     @GetMapping("/order/user/report")
-    public CommonResult userReport(String userId, String year, String month) {
+    public CommonResult userReport(String userId, String year, @RequestParam(required = false, defaultValue = "") String month) {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+        UserInfoDTO info;
         try {
-            UserInfoDTO info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
+            info = userInfoService.findUserInfoByUserId(Integer.parseInt(userId));
             if (info == null) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND.value, "没有此用户");
             }
@@ -96,17 +99,20 @@ public class UserOrderRecordController {
         if (!Pattern.matches(yearRegex, year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+        String monthRegex = "^0?[1-9]$|^1[0-2]$|^$";
+        if (!Pattern.matches(monthRegex, month)) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         int totalUserNum = userInfoService.findTotalUserNum();
         List<OrderRecordJsonDTO> list = orderRecordService.findOrderRecordByUserId(userId, year, month);
         if (CollectionUtils.isEmpty(list)) {
-            return getCommonResult(totalUserNum);
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
         BigDecimal totalPrice = new BigDecimal("0.00");
         Map<String, CountPay> reportMap = Maps.newHashMap();
         OrderRecordJsonDTO maxPriceOrder = list.get(0);
         Map<String, Object> userReportMap = Maps.newHashMap();
-        String monthRegex = "^0?[1-9]$|^1[0-2]$";
-        if (!StringUtils.isBlank(month) && Pattern.matches(monthRegex, month)) {
+        if (!StringUtils.isBlank(month)) {
             for (OrderRecordJsonDTO o : list) {
                 totalPrice = totalPrice.add(o.getPrice());
                 if (o.getPrice().compareTo(maxPriceOrder.getPrice()) > 0) {
@@ -151,6 +157,7 @@ public class UserOrderRecordController {
         userReportMap.put("totalPrice", totalPrice);
         userReportMap.put("maxPriceOrder", maxPriceOrderFinal);
         userReportMap.put("payType", payTypeMap);
+        userReportMap.put("userInfo", info);
         return CommonResult.success(userReportMap);
     }
 
@@ -170,19 +177,7 @@ public class UserOrderRecordController {
             reportMap.put(dayOrMonth + "", countPay);
         }
     }
-
-    /**
-     * 用户未下单时只返回排名和超越人数百分比
-     * @param totalUserNum 所有用户数
-     * @return
-     */
-    private CommonResult getCommonResult(int totalUserNum) {
-        Map<String, Object> noRecordUserReportMap = Maps.newHashMap();
-        noRecordUserReportMap.put("rank", totalUserNum);
-        noRecordUserReportMap.put("beyondPercent", 0);
-        return CommonResult.success(noRecordUserReportMap);
-    }
-
+    
     /**
      * 统计支付的次数和合计金额
      */
