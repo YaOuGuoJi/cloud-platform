@@ -26,7 +26,7 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
 
     @Override
     public Map<String, Map<String, Integer>> selectAgeAndSexCount(Integer shopId, Date startTime, Date endTime) {
-        final int[] ageArray = {0, 18, 45, 65};
+        final int[] ageArray = {0, 18, 46, 66};
         List<UserSexAndAgeEntity> ageAndSexEntities = shopUserAnalysisMapper.ageAndSexSplit(shopId, startTime, endTime);
         if (CollectionUtils.isEmpty(ageAndSexEntities)) {
             return Maps.newHashMap();
@@ -93,7 +93,7 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
     private String regionName(int[] array, int value) {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < array.length; i++) {
-            if (value < array[i+1]) {
+            if (value < array[i]) {
                 return sb.append(array[i - 1]).append("-").append(array[i] - 1).toString();
             }
         }
