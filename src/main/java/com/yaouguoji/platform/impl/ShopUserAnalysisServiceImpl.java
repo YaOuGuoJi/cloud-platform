@@ -39,9 +39,9 @@ public class ShopUserAnalysisServiceImpl implements ShopUserAnalysisService {
         for (UserSexAndAgeEntity userSexAndAgeEntity : ageAndSexEntities) {
             String ageRegion = this.regionName(ageArray, userSexAndAgeEntity.getAge());
             if (userSexAndAgeEntity.getSex() == 1) {
-                maleAgeSplit.put(ageRegion, maleAgeSplit.getOrDefault(ageRegion, 0) + 1);
+                maleAgeSplit.put(ageRegion, maleAgeSplit.getOrDefault(ageRegion, 0) + userSexAndAgeEntity.getNumberOfPeople());
             } else if (userSexAndAgeEntity.getSex() == 2) {
-                femaleAgeSplit.put(ageRegion, maleAgeSplit.getOrDefault(ageRegion, 0) + 1);
+                femaleAgeSplit.put(ageRegion, femaleAgeSplit.getOrDefault(ageRegion, 0) + userSexAndAgeEntity.getNumberOfPeople());
             }
         }
         return ageAndSex;
