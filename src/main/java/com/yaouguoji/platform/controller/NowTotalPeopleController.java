@@ -1,6 +1,7 @@
 package com.yaouguoji.platform.controller;
 
 import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.NowTotalPeopleService;
 import org.springframework.util.CollectionUtils;
@@ -19,7 +20,10 @@ public class NowTotalPeopleController {
     public CommonResult nowPeople() {
         Map<String, Integer> nowPeople = nowTotalPeopleService.todayTotalPeople();
         if (CollectionUtils.isEmpty(nowPeople)) {
-            return CommonResult.fail(HttpStatus.NOT_FOUND);
+            return  new CommonResultBuilder().code(200)
+                    .message("无数据")
+                    .data("totalPeople",0)
+                    .build();
         }
         return CommonResult.success(nowPeople);
     }
