@@ -4,6 +4,6 @@
     <select id="todayTotalPriceAndFrequency" resultType="java.util.Map">
         SELECT COUNT(OrderId) frequency,SUM(Price) price
         FROM order_record
-        WHERE ADDTIME BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d') AND NOW() AND OrderStatus='已完成'
+        WHERE ADDTIME BETWEEN #{startTime} AND #{endTime} AND OrderStatus='已完成'
     </select>
 </mapper>

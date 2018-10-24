@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -14,7 +15,7 @@ public class TodayPriceAndFrequencyServiceImpl implements TodayPriceAndFrequency
     private TodayTotalPriceAndFrequencyMapper todayTotalPriceAndFrequencyMapper;
 
     @Override
-    public Map<String, BigDecimal> todayPriceAndFrequency() {
-        return todayTotalPriceAndFrequencyMapper.todayTotalPriceAndFrequency();
+    public Map<String, BigDecimal> todayPriceAndFrequency(Date startTime,Date endTime) {
+        return todayTotalPriceAndFrequencyMapper.todayTotalPriceAndFrequency(startTime,endTime);
     }
 }
