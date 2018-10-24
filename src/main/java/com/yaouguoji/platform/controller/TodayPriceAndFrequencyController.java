@@ -31,16 +31,15 @@ public class TodayPriceAndFrequencyController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             if (start.compareTo("") == 0) {
-                Map<String,Integer> time=new HashMap();
+                Map<String, Integer> time = new HashMap();
                 rebulidTime(time);
-                start=time.get("year")+"-"+time.get("month")+"-"+time.get("day")+" 00:00:00";
+                start = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " 00:00:00";
             }
             if (end.compareTo("") == 0) {
-                Map<String,Integer> time=new HashMap();
+                Map<String, Integer> time = new HashMap();
                 rebulidTime(time);
-                end=time.get("year")+"-"+time.get("month")+"-"+time.get("day")+" "+time.get("hour")+":"+time.get("minute")+":"+time.get("second");
+                end = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " " + time.get("hour") + ":" + time.get("minute") + ":" + time.get("second");
             }
-            System.out.println(end+"   "+start);
             Date startTime = sdf.parse(start);
             Date endTime = sdf.parse(end);
             if (startTime.after(endTime)) {
@@ -60,14 +59,15 @@ public class TodayPriceAndFrequencyController {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
     }
-    private void rebulidTime(Map<String,Integer> time){
+
+    private void rebulidTime(Map<String, Integer> time) {
         DateTime nowTime = new DateTime();
-        time.put("year",nowTime.getYear());
-        time.put("month",nowTime.getMonthOfYear());
-        time.put("day",nowTime.getDayOfMonth());
-        time.put("hour",nowTime.getHourOfDay());
-        time.put("minute",nowTime.getMinuteOfHour());
-        time.put("second",nowTime.getSecondOfMinute());
+        time.put("year", nowTime.getYear());
+        time.put("month", nowTime.getMonthOfYear());
+        time.put("day", nowTime.getDayOfMonth());
+        time.put("hour", nowTime.getHourOfDay());
+        time.put("minute", nowTime.getMinuteOfHour());
+        time.put("second", nowTime.getSecondOfMinute());
     }
 
 }
