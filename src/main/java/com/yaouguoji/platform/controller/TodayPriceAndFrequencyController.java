@@ -45,6 +45,9 @@ public class TodayPriceAndFrequencyController {
             if (startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "开始时间必须小于结束时间");
             }
+            if(endTime.after(new Date())){
+                return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "结束时间必须小于当前时间");
+            }
             Map<String, BigDecimal> todayPriceAndFrequency = todayPriceAndFrequencyService.todayPriceAndFrequency(startTime, endTime);
             if (CollectionUtils.isEmpty(todayPriceAndFrequency)) {
                 return new CommonResultBuilder().code(200)
