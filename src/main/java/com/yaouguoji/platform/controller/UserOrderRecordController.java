@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -177,7 +176,7 @@ public class UserOrderRecordController {
             reportMap.put(dayOrMonth + "", countPay);
         }
     }
-    
+
     /**
      * 统计支付的次数和合计金额
      */
