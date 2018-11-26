@@ -10,6 +10,6 @@ public class HearthController {
 
     @GetMapping("/index")
     public String index() {
-        return "I'm alive.";
+        return "hello, I'm alive.";
     }
 }
