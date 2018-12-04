@@ -42,7 +42,7 @@ public class ShopOrderRecordController {
     @Resource
     private AreaService areaService;
 
-    @GetMapping("/order/shop/page")
+    @GetMapping("/shop/order/page")
     public CommonResult shopOrder(int shopId, int pageNum, int pageSize, String start, String end) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -69,7 +69,7 @@ public class ShopOrderRecordController {
         }
     }
 
-    @GetMapping("/order/shop/rank")
+    @GetMapping("/shop/order/rank")
     public CommonResult shopOrderRankTop(int limit, String start, String end, int type) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -96,7 +96,7 @@ public class ShopOrderRecordController {
         }
     }
 
-    @GetMapping("/order/shop/area")
+    @GetMapping("/shop/order/area")
     public CommonResult areaShopOrder(String start, String end, int type) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
