@@ -9,6 +9,8 @@ spring:
     username: yaouguoji
     password: liuwen
     driver-class-name: com.mysql.jdbc.Driver
+  jmx:
+    default-domain: platform
 
 mybatis:
   mapper-locations: classpath:sqlmap/*.xml
