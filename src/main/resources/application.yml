@@ -11,6 +11,11 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jmx:
     default-domain: platform
+  redis:
+    database: 0
+    host: 47.92.154.234
+    port: 6379
+    password: yaouguoji
 
 mybatis:
   mapper-locations: classpath:sqlmap/*.xml

@@ -1,5 +1,8 @@
 package com.yaouguoji.platform.service;
 
+/**
+ * @author liuwen
+ */
 public interface SmsClientService {
 
     /**
