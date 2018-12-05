@@ -6,6 +6,7 @@ import com.yaouguoji.platform.dto.ShopAccountDTO;
  * @author liuwen
  * @date 2018/12/4
  */
+@Deprecated
 public interface ShopAccountService {
 
     /**
