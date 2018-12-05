@@ -1,6 +1,7 @@
 package com.yaouguoji.platform.service;
 
 import com.yaouguoji.platform.dto.ShopInfoDTO;
+import com.yaouguoji.platform.entity.ShopInfoEntity;
 
 import java.util.List;
 
@@ -33,6 +34,14 @@ public interface ShopInfoService {
      * @return
      */
     ShopInfoDTO findShopInfoByShopId(int shopId);
+
+    /**
+     * 根据用户电话查询用户信息
+     *
+     * @param phoneNum
+     * @return
+     */
+    ShopInfoDTO findShopInfoByPhone(String phoneNum);
 
     /**
      * 插入商户详细信息

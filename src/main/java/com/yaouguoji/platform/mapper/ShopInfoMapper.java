@@ -57,5 +57,13 @@ public interface ShopInfoMapper {
      */
     ShopInfoEntity findShopInfoById(@Param("shopId") int shopId);
 
+    /**
+     * 根据用户电话查询用户
+     *
+     * @param phoneNum
+     * @return
+     */
+    ShopInfoEntity findShopInfoByPhone(@Param("phoneNum")String phoneNum);
+
 
 }

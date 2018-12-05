@@ -54,6 +54,17 @@ public class ShopInfoServiceImpl implements ShopInfoService {
     }
 
     @Override
+    public ShopInfoDTO findShopInfoByPhone(String phoneNum) {
+        ShopInfoEntity shopInfoEntity = shopInfoMapper.findShopInfoByPhone(phoneNum);
+        if (shopInfoEntity == null) {
+            return null;
+        }
+        ShopInfoDTO shopInfoDTO = new ShopInfoDTO();
+        BeanUtils.copyProperties(shopInfoEntity,shopInfoDTO);
+        return shopInfoDTO;
+    }
+
+    @Override
     public int insertShopInfo(ShopInfoDTO shopInfoDTO) {
         if (shopInfoDTO == null) {
             return 0;
