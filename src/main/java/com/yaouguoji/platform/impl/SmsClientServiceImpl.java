@@ -25,7 +25,7 @@ public class SmsClientServiceImpl implements SmsClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsClientServiceImpl.class);
     private static final String OK = "OK";
-    private static final String VERIFY_CODE_TEMPLATE = "SMS_152286822";
+    private static final String VERIFY_CODE_TEMPLATE = "SMS_152286904";
     private static final Long EXPIRED_TIME = 15 * 60 * 1000L;
 
     @Resource
