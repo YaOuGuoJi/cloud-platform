@@ -17,9 +17,9 @@ public class ShopAccountEntity {
     private Integer shopId;
 
     /**
-     * 密码
+     * 手机号码
      */
-    private String password;
+    private String phoneNum;
 
     /**
      * 添加时间

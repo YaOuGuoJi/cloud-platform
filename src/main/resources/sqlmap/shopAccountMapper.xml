@@ -3,14 +3,14 @@
 <mapper namespace="com.yaouguoji.platform.mapper.ShopAccountMapper">
     <resultMap id="shopAccountEntity" type="com.yaouguoji.platform.entity.ShopAccountEntity">
         <result property="shopId" column="ShopId"/>
-        <result property="password" column="Password"/>
+        <result property="phoneNum" column="PhoneNum"/>
         <result property="addTime" column="AddTime"/>
         <result property="updateTime" column="UpdateTime"/>
     </resultMap>
 
     <sql id="allFields">
         ShopId,
-        Password,
+        PhoneNum,
         AddTime,
         UpdateTime
     </sql>
@@ -19,7 +19,7 @@
         SELECT
         <include refid="allFields"/>
         FROM shop_account
-        WHERE ShopId=#{shopId}
+        WHERE PhoneNum=#{phoneNum}
     </select>
 
 
@@ -27,12 +27,12 @@
         INSERT INTO shop_account
         (
             ShopId,
-            Password,
+            PhoneNum,
             AddTime,
             UpdateTime
         ) VALUES (
             #{shopAccountEntity.shopId},
-            #{shopAccountEntity.password},
+            #{shopAccountEntity.phoneNum},
             NOW(),
             NOW()
         )

@@ -11,10 +11,10 @@ public interface ShopAccountService {
     /**
      * 查询商户账号
      *
-     * @param shopId
+     * @param phoneNum
      * @return
      */
-    ShopAccountDTO findShopAccountByShopId(Integer shopId);
+    ShopAccountDTO findShopAccountByShopId(String phoneNum);
 
     /**
      * 插入商户账号

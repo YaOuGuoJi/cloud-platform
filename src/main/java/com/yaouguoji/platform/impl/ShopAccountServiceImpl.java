@@ -21,11 +21,11 @@ public class ShopAccountServiceImpl implements ShopAccountService {
     private ShopAccountMapper shopAccountMapper;
 
     @Override
-    public ShopAccountDTO findShopAccountByShopId(Integer shopId) {
-        if (shopId == null || shopId <= 0) {
+    public ShopAccountDTO findShopAccountByShopId(String phoneNum) {
+        if (phoneNum == null) {
             return null;
         }
-        ShopAccountEntity entity = shopAccountMapper.findByShopId(shopId);
+        ShopAccountEntity entity = shopAccountMapper.findByShopId(phoneNum);
         if (entity == null) {
             return null;
         }
@@ -37,7 +37,7 @@ public class ShopAccountServiceImpl implements ShopAccountService {
     @Override
     public Integer addShopAccount(ShopAccountDTO shopAccountDTO) {
         if (shopAccountDTO == null || shopAccountDTO.getShopId() <= 0
-                || StringUtils.isEmpty(shopAccountDTO.getPassword())) {
+                || StringUtils.isEmpty(shopAccountDTO.getPhoneNum())) {
             return 0;
         }
         ShopAccountEntity entity = new ShopAccountEntity();

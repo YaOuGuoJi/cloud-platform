@@ -12,10 +12,10 @@ public interface ShopAccountMapper {
     /**
      * 根据商户id查询
      *
-     * @param shopId
+     * @param phoneNum
      * @return
      */
-    ShopAccountEntity findByShopId(@Param("shopId") int shopId);
+    ShopAccountEntity findByShopId(@Param("phoneNum") String phoneNum);
 
     /**
      * 添加
