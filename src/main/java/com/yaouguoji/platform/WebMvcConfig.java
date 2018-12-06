@@ -25,7 +25,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(shopInterceptor).addPathPatterns("/shop/**");
+        registry.addInterceptor(shopInterceptor).addPathPatterns("/shop/**")
+                .excludePathPatterns("/shop/verifyCode")
+                .excludePathPatterns("/shop/login");
     }
 
     @Override
