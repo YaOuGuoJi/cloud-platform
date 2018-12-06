@@ -30,6 +30,7 @@ public interface UserInfoMapper {
      * @param userInfoEntity
      * @return
      */
+    @Deprecated
     int insertUserInfo(@Param("userInfoEntity") UserInfoEntity userInfoEntity);
 
     /**
