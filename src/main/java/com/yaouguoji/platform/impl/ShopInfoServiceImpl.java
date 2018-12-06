@@ -54,13 +54,13 @@ public class ShopInfoServiceImpl implements ShopInfoService {
     }
 
     @Override
-    public ShopInfoDTO findShopInfoByPhone(String phoneNum) {
-        ShopInfoEntity shopInfoEntity = shopInfoMapper.findShopInfoByPhone(phoneNum);
+    public ShopInfoDTO findShopInfoByPhone(String phoneNo) {
+        ShopInfoEntity shopInfoEntity = shopInfoMapper.findShopInfoByPhone(phoneNo);
         if (shopInfoEntity == null) {
             return null;
         }
         ShopInfoDTO shopInfoDTO = new ShopInfoDTO();
-        BeanUtils.copyProperties(shopInfoEntity,shopInfoDTO);
+        BeanUtils.copyProperties(shopInfoEntity, shopInfoDTO);
         return shopInfoDTO;
     }
 

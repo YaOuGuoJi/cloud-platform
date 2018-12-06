@@ -142,11 +142,11 @@
         WHERE ShopId=#{shopId} AND Deleted=0
     </select>
 
-    <select id="findShopInfoByPhoneNum" parameterType="map" resultMap="com.yaouguoji.platform.entity.ShopInfoEntity">
+    <select id="findShopInfoByPhone" parameterType="map" resultType="com.yaouguoji.platform.entity.ShopInfoEntity">
         SELECT
         <include refid="allFields"/>
-        from shop_info
-        WHERE PhoneNo = #{phoneNum}
+        FROM shop_info
+        WHERE PhoneNo=#{phoneNo} AND Deleted=0
     </select>
 
 </mapper>

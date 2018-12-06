@@ -38,10 +38,10 @@ public interface ShopInfoService {
     /**
      * 根据用户电话查询用户信息
      *
-     * @param phoneNum
+     * @param phoneNo
      * @return
      */
-    ShopInfoDTO findShopInfoByPhone(String phoneNum);
+    ShopInfoDTO findShopInfoByPhone(String phoneNo);
 
     /**
      * 插入商户详细信息

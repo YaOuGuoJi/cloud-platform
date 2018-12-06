@@ -34,8 +34,9 @@ public class ShopInfoServiceTest {
         shopInfoDTO.setShopType("运动品牌");
         shopInfoDTO.setAddress("亚欧风情小镇1号楼111");
         shopInfoDTO.setShopLogo("http://www.logoids.com/upload/image/201807/15307576773935926.jpg");
-        shopInfoDTO.setShopOwner("赞秦");
-        shopInfoDTO.setPhoneNo(phones[(int)(Math.random()*4)]+(int)(Math.random()*10)+"*****"+(int)(Math.random()*10)+(int)(Math.random()*10)+(int)(Math.random()*10));
+        shopInfoDTO.setShopOwner("闫蕊");
+//        shopInfoDTO.setPhoneNo(phones[(int)(Math.random()*4)]+(int)(Math.random()*10)+"*****"+(int)(Math.random()*10)+(int)(Math.random()*10)+(int)(Math.random()*10));
+        shopInfoDTO.setPhoneNo("15991183772");
         shopInfoDTO.setPhoneNo2(phones[(int)(Math.random()*4)]+(int)(Math.random()*10)+"*****"+(int)(Math.random()*10)+(int)(Math.random()*10)+(int)(Math.random()*10));
         int price = rd.nextInt(300)+1;
         shopInfoDTO.setAvgPrice(new BigDecimal(price));

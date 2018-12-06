@@ -60,10 +60,10 @@ public interface ShopInfoMapper {
     /**
      * 根据用户电话查询用户
      *
-     * @param phoneNum
+     * @param phoneNo
      * @return
      */
-    ShopInfoEntity findShopInfoByPhone(@Param("phoneNum")String phoneNum);
+    ShopInfoEntity findShopInfoByPhone(@Param("phoneNo")String phoneNo);
 
 
 }
