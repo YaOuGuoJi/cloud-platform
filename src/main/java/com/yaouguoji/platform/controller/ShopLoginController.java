@@ -10,10 +10,11 @@ import com.yaouguoji.platform.util.ShopTokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -31,7 +32,18 @@ public class ShopLoginController {
     @Resource
     private SmsClientService smsClientService;
 
-    @RequestMapping("/shop/verifyCode")
+    @GetMapping("/isLogin")
+    public CommonResult isLogin(HttpServletRequest request) {
+        String token = ShopTokenUtil.getShopToken(request);
+        try {
+            ShopTokenUtil.verifyToken(token);
+        } catch (Exception e) {
+            return CommonResult.success(false);
+        }
+        return CommonResult.success(true);
+    }
+
+    @GetMapping("/shop/verifyCode")
     public CommonResult shopVerifyCode(String phoneNo) {
         if (StringUtils.isEmpty(phoneNo)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
@@ -47,7 +59,7 @@ public class ShopLoginController {
         return CommonResult.success("发送成功");
     }
 
-    @RequestMapping("/shop/login")
+    @GetMapping("/shop/login")
     public CommonResult login(String code, String phoneNo, HttpServletResponse response) {
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(phoneNo)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
