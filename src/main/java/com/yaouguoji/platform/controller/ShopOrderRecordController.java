@@ -12,6 +12,7 @@ import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.AreaService;
 import com.yaouguoji.platform.service.OrderRecordService;
 import com.yaouguoji.platform.service.ShopInfoService;
+import com.yaouguoji.platform.util.ShopInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -43,12 +44,13 @@ public class ShopOrderRecordController {
     private AreaService areaService;
 
     @GetMapping("/shop/order/page")
-    public CommonResult shopOrder(int shopId, int pageNum, int pageSize, String start, String end) {
+    public CommonResult shopOrder(int pageNum, int pageSize, String start, String end) {
+        int shopId = ShopInfoUtil.getShopId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date startTime = sdf.parse(start);
             Date endTime = sdf.parse(end);
-            if (shopId <= 0 || startTime.after(endTime)) {
+            if (startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
             }
             ShopInfoDTO shopInfoDTO = shopInfoService.findShopInfoByShopId(shopId);

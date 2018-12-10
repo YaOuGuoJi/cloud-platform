@@ -5,6 +5,7 @@ import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.dto.UserPriceCountDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.ShopUserAnalysisService;
+import com.yaouguoji.platform.util.ShopInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -24,7 +25,8 @@ public class ShowShopInfoController {
     private ShopUserAnalysisService shopUserAnalysisService;
 
     @GetMapping(value = "/shop/consumer/analysis")
-    public CommonResult<Map<String, Object>> selectShopManagementInfo(Integer shopId, String start, String end) {
+    public CommonResult<Map<String, Object>> selectShopManagementInfo(String start, String end) {
+        int shopId = ShopInfoUtil.getShopId();
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date startTime = sdf.parse(start);

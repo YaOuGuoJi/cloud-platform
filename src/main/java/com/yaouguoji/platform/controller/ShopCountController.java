@@ -4,6 +4,7 @@ import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.dto.ShopCountDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.ShopCountService;
+import com.yaouguoji.platform.util.ShopInfoUtil;
 import lombok.Data;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -33,15 +34,15 @@ public class ShopCountController {
     /**
      * 商户销售信息查询
      *
-     * @param shopId
      * @param year
      * @param month
      * @return
      */
     @GetMapping("/shop/count")
-    public CommonResult shopAllInfoCount(Integer shopId, int year,
+    public CommonResult shopAllInfoCount(int year,
                                          @RequestParam(required = false, defaultValue = "0") int month) {
-        if (shopId <= 0 || year <= 0) {
+        int shopId = ShopInfoUtil.getShopId();
+        if (year <= 0) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         try {
