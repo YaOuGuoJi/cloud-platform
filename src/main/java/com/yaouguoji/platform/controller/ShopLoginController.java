@@ -6,7 +6,7 @@ import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.ShopInfoService;
 import com.yaouguoji.platform.service.SmsClientService;
-import com.yaouguoji.platform.util.ShopTokenUtil;
+import com.yaouguoji.platform.util.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,9 @@ public class ShopLoginController {
 
     @GetMapping("/isLogin")
     public CommonResult isLogin(HttpServletRequest request) {
-        String token = ShopTokenUtil.getShopToken(request);
+        String token = TokenUtil.getShopToken(request);
         try {
-            ShopTokenUtil.verifyToken(token);
+            TokenUtil.verifyToken(token);
         } catch (Exception e) {
             return CommonResult.success(false);
         }
@@ -75,7 +75,7 @@ public class ShopLoginController {
         try {
             Map<String, String> data = Maps.newHashMap();
             data.put("shopId", shopInfoDTO.getShopId() + "");
-            ShopTokenUtil.updateToken2Cookie(response, data);
+            TokenUtil.updateShopToken2Cookie(response, data);
         } catch (UnsupportedEncodingException e) {
             LOGGER.error("token加密失败!");
             return CommonResult.fail(HttpStatus.ERROR);

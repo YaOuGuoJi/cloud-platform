@@ -2,7 +2,7 @@ package com.yaouguoji.platform.common;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.Claim;
-import com.yaouguoji.platform.util.ShopTokenUtil;
+import com.yaouguoji.platform.util.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -27,10 +28,10 @@ public class ShopInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String shopToken = ShopTokenUtil.getShopToken(request);
+        String shopToken = TokenUtil.getShopToken(request);
         if (!StringUtils.isEmpty(shopToken)) {
             try {
-                Map<String, Claim> claimMap = ShopTokenUtil.verifyToken(shopToken);
+                Map<String, Claim> claimMap = TokenUtil.verifyToken(shopToken);
                 String shopId = claimMap.get("shopId").asString();
                 request.setAttribute("shopId", shopId);
                 return true;
@@ -52,6 +53,10 @@ public class ShopInterceptor implements HandlerInterceptor {
     }
 
     private static void sendJsonMessage(HttpServletResponse response) throws Exception {
+        sendJson(response);
+    }
+
+    static void sendJson(HttpServletResponse response) throws IOException {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
         writer.print(JSON.toJSONString(CommonResult.fail(401, "没有登录！")));
