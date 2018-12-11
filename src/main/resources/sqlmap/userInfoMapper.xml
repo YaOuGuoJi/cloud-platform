@@ -40,6 +40,13 @@
         WHERE UserId=#{userId}
     </select>
 
+    <select id="findUserInfoByPhoneNum" resultType="com.yaouguoji.platform.entity.UserInfoEntity">
+        SELECT
+        <include refid="allFields"/>
+        FROM user_info
+        WHERE Phone = #{phoneNum}
+    </select>
+
     <update id="updateById">
         UPDATE user_info SET
         <if test="userInfoEntity.userName != null">

@@ -16,6 +16,14 @@ public interface UserInfoService {
     UserInfoDTO findUserInfoByUserId(int userId);
 
     /**
+     * 根据手机号查询用户信息
+     *
+     * @param phoneNum
+     * @return
+     */
+    UserInfoDTO findUserInfoByPhoneNum(String phoneNum);
+
+    /**
      * 禁止使用该接口。如需添加用户请在区块链APP注册
      *
      * @param userInfoDTO

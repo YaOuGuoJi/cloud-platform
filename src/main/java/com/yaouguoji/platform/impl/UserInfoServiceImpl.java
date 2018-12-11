@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
+ * @description entity转DTO请使用getUserInfoDTO方法
  * @author liuwen
  */
 @Service
@@ -21,12 +22,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfoDTO findUserInfoByUserId(int userId) {
         UserInfoEntity userInfoEntity = userInfoMapper.selectById(userId);
-        if (userInfoEntity == null) {
-            return null;
-        }
-        UserInfoDTO userInfoDTO = new UserInfoDTO();
-        BeanUtils.copyProperties(userInfoEntity, userInfoDTO);
-        return userInfoDTO;
+        return getUserInfoDTO(userInfoEntity);
+    }
+
+    @Override
+    public UserInfoDTO findUserInfoByPhoneNum(String phoneNum) {
+        UserInfoEntity entity = userInfoMapper.findUserInfoByPhoneNum(phoneNum);
+        return getUserInfoDTO(entity);
     }
 
     @Override
@@ -50,7 +52,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoMapper.updateById(entity);
     }
 
-
     /**
      * 查找所有用户总数
      * @return
@@ -59,4 +60,20 @@ public class UserInfoServiceImpl implements UserInfoService {
     public int findTotalUserNum() {
         return userInfoMapper.findTotalUserNum();
     }
+
+    /**
+     * entity转DTO
+     *
+     * @param entity
+     * @return
+     */
+    private UserInfoDTO getUserInfoDTO(UserInfoEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        UserInfoDTO userInfoDTO = new UserInfoDTO();
+        BeanUtils.copyProperties(entity, userInfoDTO);
+        return userInfoDTO;
+    }
+
 }

@@ -52,7 +52,7 @@ public class ShopLoginController {
         if (shopInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该手机号未注册为商户");
         }
-        int num = smsClientService.sendShopVerifyCode(phoneNo);
+        int num = smsClientService.sendVerifyCode(phoneNo);
         if (num < 0) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试");
         }

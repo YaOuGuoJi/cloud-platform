@@ -41,13 +41,25 @@ public class CommonResult<Content> {
         CommonResult<Content> result = new CommonResult<>();
         result.setCode(HttpStatus.OK.value);
         result.setSuccess(true);
-        result.setMessage("");
+        result.setMessage("操作成功");
         return result;
     }
 
     public static <Content> CommonResult<Content> success(Content data) {
         CommonResult<Content> result = success();
         return result.setData(data);
+    }
+
+    public static <Content> CommonResult<Content> success(String message) {
+        return success(HttpStatus.OK.value, message);
+    }
+    
+    public static <Content> CommonResult<Content> success(int code, String message) {
+        CommonResult<Content> result = new CommonResult<>();
+        result.setCode(code);
+        result.setSuccess(true);
+        result.setMessage(message);
+        return result;
     }
 
     public static <Content> CommonResult<Content> fail(HttpStatus status) {

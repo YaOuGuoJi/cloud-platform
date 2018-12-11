@@ -17,6 +17,14 @@ public interface UserInfoMapper {
     UserInfoEntity selectById(@Param("userId") int userId);
 
     /**
+     * 根据手机号查询用户信息
+     *
+     * @param phoneNum
+     * @return
+     */
+    UserInfoEntity findUserInfoByPhoneNum(@Param("phoneNum") String phoneNum);
+
+    /**
      * 更新
      *
      * @param userInfoEntity

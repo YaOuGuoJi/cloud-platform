@@ -35,7 +35,7 @@ public class SmsClientServiceImpl implements SmsClientService {
     private IAcsClient acsClient;
 
     @Override
-    public int sendShopVerifyCode(String phoneNum) {
+    public int sendVerifyCode(String phoneNum) {
         String verifyCode = this.buildCode();
         redisClientService.set(RedisKeys.SHOP_VERIFY_CODE + phoneNum, verifyCode, EXPIRED_TIME);
         return NumberUtils.toInt(verifyCode);

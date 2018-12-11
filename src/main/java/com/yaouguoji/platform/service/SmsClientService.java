@@ -6,12 +6,12 @@ package com.yaouguoji.platform.service;
 public interface SmsClientService {
 
     /**
-     * 发送商户验证码
+     * 发送验证码
      *
      * @param phoneNum
      * @return
      */
-    int sendShopVerifyCode(String phoneNum);
+    int sendVerifyCode(String phoneNum);
 
     /**
      * 验证手机验证码

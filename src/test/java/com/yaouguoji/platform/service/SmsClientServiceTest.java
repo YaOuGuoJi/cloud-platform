@@ -21,8 +21,8 @@ public class SmsClientServiceTest {
 
     @Test
     public void testSendVerifyCode() {
-        smsClientService.sendShopVerifyCode("15991183772");
-        smsClientService.sendShopVerifyCode("18792863414");
+        smsClientService.sendVerifyCode("15991183772");
+        smsClientService.sendVerifyCode("18792863414");
 
     }
 
