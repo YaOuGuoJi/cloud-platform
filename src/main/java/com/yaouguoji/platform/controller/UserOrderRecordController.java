@@ -44,7 +44,7 @@ public class UserOrderRecordController {
     @Resource
     private UserInfoService userInfoService;
 
-    @GetMapping("/order/user/page")
+    @GetMapping("/user/order/page")
     public CommonResult userOrderRecordPage(int userId, int pageNum, int pageSize, String start, String end) {
         if (userId <= 0 || pageNum <= 0 || pageSize <= 0) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
@@ -79,7 +79,7 @@ public class UserOrderRecordController {
      * @param year   年份
      * @return
      */
-    @GetMapping("/order/user/report")
+    @GetMapping("/user/order/report")
     public CommonResult userReport(String userId, String year, @RequestParam(required = false, defaultValue = "") String month) {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);

@@ -33,7 +33,7 @@ public class ShopLoginController {
     @Resource
     private SmsClientService smsClientService;
 
-    @GetMapping("/isLogin")
+    @GetMapping("/shop/isLogin")
     public CommonResult isLogin(HttpServletRequest request) {
         String token = TokenUtil.getShopToken(request);
         try {
