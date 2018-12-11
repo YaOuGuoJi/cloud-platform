@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -59,7 +60,7 @@ public class ShopLoginController {
         return CommonResult.success(num);
     }
 
-    @GetMapping("/shop/login")
+    @PostMapping("/shop/login")
     public CommonResult login(String code, String phoneNo, HttpServletResponse response) {
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(phoneNo)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
