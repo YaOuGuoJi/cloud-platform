@@ -79,7 +79,7 @@ public class UserOrderRecordController {
      * @param year   年份
      * @return
      */
-    @GetMapping("/user/order/report")
+        @GetMapping("/user/order/report")
     public CommonResult userReport(String userId, String year, @RequestParam(required = false, defaultValue = "") String month) {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(year)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);

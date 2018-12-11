@@ -56,7 +56,7 @@ public class UserLoginController {
         if (result == 0) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试！");
         }
-        return CommonResult.success("发送成功");
+        return CommonResult.success(result);
     }
 
     /**

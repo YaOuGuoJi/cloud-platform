@@ -45,15 +45,15 @@ public class ShopLoginController {
     }
 
     @GetMapping("/shop/verifyCode")
-    public CommonResult shopVerifyCode(String phoneNo) {
-        if (StringUtils.isEmpty(phoneNo)) {
+    public CommonResult shopVerifyCode(String phoneNum) {
+        if (StringUtils.isEmpty(phoneNum)) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
-        ShopInfoDTO shopInfoDTO = shopInfoService.findShopInfoByPhone(phoneNo);
+        ShopInfoDTO shopInfoDTO = shopInfoService.findShopInfoByPhone(phoneNum);
         if (shopInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该手机号未注册为商户");
         }
-        int num = smsClientService.sendVerifyCode(phoneNo);
+        int num = smsClientService.sendVerifyCode(phoneNum);
         if (num < 0) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试");
         }
@@ -61,15 +61,15 @@ public class ShopLoginController {
     }
 
     @PostMapping("/shop/login")
-    public CommonResult login(String code, String phoneNo, HttpServletResponse response) {
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(phoneNo)) {
+    public CommonResult login(String code, String phoneNum, HttpServletResponse response) {
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(phoneNum)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-        ShopInfoDTO shopInfoDTO = shopInfoService.findShopInfoByPhone(phoneNo);
+        ShopInfoDTO shopInfoDTO = shopInfoService.findShopInfoByPhone(phoneNum);
         if (shopInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该手机号未注册为商户");
         }
-        int num = smsClientService.verifyCode(code, phoneNo);
+        int num = smsClientService.verifyCode(code, phoneNum);
         if (num < 0) {
             return CommonResult.fail(403, "验证失败");
         }
