@@ -115,7 +115,7 @@ public class AreaController {
      * @param end
      * @return
      */
-    @GetMapping("/area/shop/rank")
+    @GetMapping("/shop/area/rank")
     public CommonResult areaShopRank1(Integer limit, Integer areaId, String start, String end) {
         try {
             Date startTime = SIMPLE_DATE_FORMAT.parse(start);

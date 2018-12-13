@@ -2,6 +2,7 @@ package com.yaouguoji.platform.controller;
 
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.constant.TokenParameters;
 import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.ShopInfoService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -82,6 +84,20 @@ public class ShopLoginController {
             return CommonResult.fail(HttpStatus.ERROR);
         }
         return CommonResult.success("登录成功");
+    }
+
+    /**
+     * 商户登出
+     *
+     * @param response
+     * @return
+     */
+    @PostMapping("/shop/logout")
+    public CommonResult logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie(TokenParameters.SHOP_COOKIE_NAME, "");
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return CommonResult.success();
     }
 
 }

@@ -2,6 +2,7 @@ package com.yaouguoji.platform.controller;
 
 import com.google.common.collect.Maps;
 import com.yaouguoji.platform.common.CommonResult;
+import com.yaouguoji.platform.constant.TokenParameters;
 import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
 import com.yaouguoji.platform.service.SmsClientService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -63,7 +65,7 @@ public class UserLoginController {
      * 用户登录
      *
      * @param phoneNum 手机号
-     * @param code 验证码
+     * @param code     验证码
      * @param response
      * @return
      */
@@ -108,6 +110,20 @@ public class UserLoginController {
             return CommonResult.success(false);
         }
         return CommonResult.success(true);
+    }
+
+    /**
+     * 用户登出
+     *
+     * @param response
+     * @return
+     */
+    @PostMapping("/user/logout")
+    public CommonResult logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie(TokenParameters.USER_COOKIE_NAME, "");
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return CommonResult.success();
     }
 
 }
