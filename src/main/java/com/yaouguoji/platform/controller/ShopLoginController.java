@@ -55,11 +55,11 @@ public class ShopLoginController {
         if (shopInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该手机号未注册为商户");
         }
-        int num = smsClientService.sendVerifyCode(phoneNum);
-        if (num < 0) {
+        String  code = smsClientService.sendVerifyCode(phoneNum);
+        if (StringUtils.isBlank(code) || code.length() != 6) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试");
         }
-        return CommonResult.success(num);
+        return CommonResult.success(code);
     }
 
     @PostMapping("/shop/login")

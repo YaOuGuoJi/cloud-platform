@@ -54,8 +54,8 @@ public class UserLoginController {
         if (userInfo == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该用户未注册");
         }
-        int result = smsClientService.sendVerifyCode(phoneNum);
-        if (result == 0) {
+        String  result = smsClientService.sendVerifyCode(phoneNum);
+        if (StringUtils.isBlank(regex) || result.length() != 6) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试！");
         }
         return CommonResult.success(result);
