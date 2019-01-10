@@ -80,7 +80,7 @@ public class UserLoginController {
         if (userInfo == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-        int result = smsClientService.verifyCode(phoneNum, code);
+        int result = smsClientService.verifyShopCode(phoneNum, code);
         if (result < 0) {
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }

@@ -71,7 +71,7 @@ public class ShopLoginController {
         if (shopInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该手机号未注册为商户");
         }
-        int num = smsClientService.verifyCode(code, phoneNum);
+        int num = smsClientService.verifyShopCode(code, phoneNum);
         if (num < 0) {
             return CommonResult.fail(403, "验证失败");
         }
