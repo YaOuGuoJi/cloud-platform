@@ -1,9 +1,10 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.xianbester.api.dto.ParkRecordDTO;
+import com.xianbester.api.service.ParkRecordService;
 import com.yaouguoji.platform.common.CommonResult;
-import com.yaouguoji.platform.dto.ParkRecordDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.ParkRecordService;
 import com.yaouguoji.platform.util.CarUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
 public class ParkRecordController {
 
-    @Resource
+    @Reference
     private ParkRecordService parkRecordService;
 
     /**

@@ -1,15 +1,16 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.xianbester.api.dto.OrderRecordDTO;
+import com.xianbester.api.dto.OrderRecordJsonDTO;
+import com.xianbester.api.dto.UserInfoDTO;
+import com.xianbester.api.service.OrderRecordService;
+import com.xianbester.api.service.UserInfoService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
-import com.yaouguoji.platform.dto.OrderRecordDTO;
-import com.yaouguoji.platform.dto.OrderRecordJsonDTO;
-import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.OrderRecordService;
-import com.yaouguoji.platform.service.UserInfoService;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -19,7 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import javax.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,10 +39,10 @@ public class UserOrderRecordController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserOrderRecordController.class);
 
-    @Resource
+    @Reference
     private OrderRecordService orderRecordService;
 
-    @Resource
+    @Reference
     private UserInfoService userInfoService;
 
     @GetMapping("/user/order/page")

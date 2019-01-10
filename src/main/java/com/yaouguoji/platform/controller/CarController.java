@@ -1,20 +1,20 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.xianbester.api.dto.CarDTO;
+import com.xianbester.api.service.CarService;
 import com.yaouguoji.platform.common.CommonResult;
-import com.yaouguoji.platform.dto.CarDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.CarService;
 import com.yaouguoji.platform.util.CarUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
 public class CarController {
 
-    @Resource
+    @Reference
     private CarService carService;
 
     /**

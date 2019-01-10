@@ -1,9 +1,11 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.google.common.collect.Maps;
+import com.xianbester.api.service.TodayPriceAndFrequencyService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.TodayPriceAndFrequencyService;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,18 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 public class TodayPriceAndFrequencyController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodayPriceAndFrequencyController.class);
-    @Resource
+    @Reference
     private TodayPriceAndFrequencyService todayPriceAndFrequencyService;
 
     @GetMapping(value = "/total/priceAndFrequency")
@@ -31,12 +31,12 @@ public class TodayPriceAndFrequencyController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             if (start.compareTo("") == 0) {
-                Map<String, Integer> time = new HashMap();
+                Map<String, Integer> time = Maps.newHashMap();
                 rebulidTime(time);
                 start = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " 00:00:00";
             }
             if (end.compareTo("") == 0) {
-                Map<String, Integer> time = new HashMap();
+                Map<String, Integer> time = Maps.newHashMap();
                 rebulidTime(time);
                 end = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " " + time.get("hour") + ":" + time.get("minute") + ":" + time.get("second");
             }
@@ -45,7 +45,7 @@ public class TodayPriceAndFrequencyController {
             if (startTime.after(endTime)) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "开始时间必须小于结束时间");
             }
-            if(endTime.after(new Date())){
+            if (endTime.after(new Date())) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "结束时间必须小于当前时间");
             }
             Map<String, BigDecimal> todayPriceAndFrequency = todayPriceAndFrequencyService.todayPriceAndFrequency(startTime, endTime);

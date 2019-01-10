@@ -1,12 +1,13 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Maps;
+import com.xianbester.api.dto.ShopInfoDTO;
+import com.xianbester.api.service.ShopInfoService;
+import com.xianbester.api.service.SmsClientService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.constant.TokenParameters;
-import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.ShopInfoService;
-import com.yaouguoji.platform.service.SmsClientService;
 import com.yaouguoji.platform.util.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,9 +30,9 @@ public class ShopLoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopLoginController.class);
 
-    @Resource
+    @Reference
     private ShopInfoService shopInfoService;
-    @Resource
+    @Reference
     private SmsClientService smsClientService;
 
     @GetMapping("/shop/isLogin")
@@ -55,7 +55,7 @@ public class ShopLoginController {
         if (shopInfoDTO == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该手机号未注册为商户");
         }
-        String  code = smsClientService.sendVerifyCode(phoneNum);
+        String code = smsClientService.sendShopVerifyCode(phoneNum);
         if (StringUtils.isBlank(code) || code.length() != 6) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试");
         }

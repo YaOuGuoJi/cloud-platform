@@ -1,21 +1,24 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.xianbester.api.dto.*;
+import com.xianbester.api.service.*;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
-import com.yaouguoji.platform.dto.*;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,15 +27,15 @@ public class AreaController {
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final Logger LOGGER = LoggerFactory.getLogger(AreaController.class);
 
-    @Resource
+    @Reference
     private AreaService areaService;
-    @Resource
+    @Reference
     private CameraService cameraService;
-    @Resource
+    @Reference
     private CameraRecordService cameraRecordService;
-    @Resource
+    @Reference
     private ShopInfoService shopInfoService;
-    @Resource
+    @Reference
     private OrderRecordService orderRecordService;
 
     /**
@@ -152,9 +155,7 @@ public class AreaController {
             return Lists.newArrayList();
         }
         List<Integer> shopIdList = areaShopRank.stream().map(ObjectMapDTO::getDtoObject).collect(Collectors.toList());
-        List<ShopInfoDTO> shopInfoDTOList = shopInfoService.batchFindByShopIdList(shopIdList);
-        Map<Integer, ShopInfoDTO> shopInfoDTOMap =
-                shopInfoDTOList.stream().collect(Collectors.toMap(ShopInfoDTO::getShopId, shop -> shop));
+        Map<Integer, ShopInfoDTO> shopInfoDTOMap = shopInfoService.batchFindByShopIds(shopIdList);
         List<ObjectMapDTO<ShopInfoDTO, Object>> result = new ArrayList<>();
         areaShopRank.forEach(objectMapDTO -> {
             Integer shopId = objectMapDTO.getDtoObject();

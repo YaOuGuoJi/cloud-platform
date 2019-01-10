@@ -1,11 +1,15 @@
 package com.yaouguoji.platform;
 
-import org.mybatis.spring.annotation.MapperScan;
+import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@SpringBootApplication
-@MapperScan("com.yaouguoji.platform.mapper")
+/**
+ * @author liuwen
+ */
+@EnableDubboConfiguration
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class PlatformApplication {
 
     public static void main(String[] args) {

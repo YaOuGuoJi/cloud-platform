@@ -1,10 +1,11 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.xianbester.api.dto.UserPriceCountDTO;
+import com.xianbester.api.service.ShopUserAnalysisService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
-import com.yaouguoji.platform.dto.UserPriceCountDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.ShopUserAnalysisService;
 import com.yaouguoji.platform.util.ShopInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 public class ShowShopInfoController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowShopInfoController.class);
-    @Resource
+    @Reference
     private ShopUserAnalysisService shopUserAnalysisService;
 
     @GetMapping(value = "/shop/consumer/analysis")

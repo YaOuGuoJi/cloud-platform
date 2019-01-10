@@ -1,12 +1,13 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Maps;
+import com.xianbester.api.dto.UserInfoDTO;
+import com.xianbester.api.service.SmsClientService;
+import com.xianbester.api.service.UserInfoService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.constant.TokenParameters;
-import com.yaouguoji.platform.dto.UserInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.SmsClientService;
-import com.yaouguoji.platform.service.UserInfoService;
 import com.yaouguoji.platform.util.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +32,10 @@ public class UserLoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserLoginController.class);
 
-    @Resource
+    @Reference
     private UserInfoService userInfoService;
 
-    @Resource
+    @Reference
     private SmsClientService smsClientService;
 
     /**
@@ -54,7 +54,7 @@ public class UserLoginController {
         if (userInfo == null) {
             return CommonResult.fail(HttpStatus.NOT_FOUND.value, "该用户未注册");
         }
-        String  result = smsClientService.sendVerifyCode(phoneNum);
+        String result = smsClientService.sendShopVerifyCode(phoneNum);
         if (StringUtils.isBlank(regex) || result.length() != 6) {
             return CommonResult.fail(HttpStatus.ERROR.value, "获取验证码失败，请稍后再试！");
         }

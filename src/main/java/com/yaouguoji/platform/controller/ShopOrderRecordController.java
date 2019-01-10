@@ -1,17 +1,18 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.xianbester.api.dto.AreaDTO;
+import com.xianbester.api.dto.ObjectMapDTO;
+import com.xianbester.api.dto.OrderRecordDTO;
+import com.xianbester.api.dto.ShopInfoDTO;
+import com.xianbester.api.service.AreaService;
+import com.xianbester.api.service.OrderRecordService;
+import com.xianbester.api.service.ShopInfoService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
-import com.yaouguoji.platform.dto.AreaDTO;
-import com.yaouguoji.platform.dto.ObjectMapDTO;
-import com.yaouguoji.platform.dto.OrderRecordDTO;
-import com.yaouguoji.platform.dto.ShopInfoDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.AreaService;
-import com.yaouguoji.platform.service.OrderRecordService;
-import com.yaouguoji.platform.service.ShopInfoService;
 import com.yaouguoji.platform.util.ShopInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +35,11 @@ public class ShopOrderRecordController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopOrderRecordController.class);
 
-    @Resource
+    @Reference
     private OrderRecordService orderRecordService;
-    @Resource
+    @Reference
     private ShopInfoService shopInfoService;
-    @Resource
+    @Reference
     private AreaService areaService;
 
     @GetMapping("/shop/order/page")
@@ -85,12 +84,11 @@ public class ShopOrderRecordController {
             if (CollectionUtils.isEmpty(shopIds2ResultMap)) {
                 return CommonResult.fail(HttpStatus.NOT_FOUND);
             }
-            List<ShopInfoDTO> shopInfoDTOs
-                    = shopInfoService.batchFindByShopIdList(new ArrayList<>(shopIds2ResultMap.keySet()));
+            Map<Integer, ShopInfoDTO> shopInfoDTOMap = shopInfoService.batchFindByShopIds(shopIds2ResultMap.keySet());
             List<ObjectMapDTO> resultList = Lists.newArrayList();
-            shopInfoDTOs.forEach(shopInfoDTO ->
-                resultList.add(new ObjectMapDTO<>(shopInfoDTO, shopIds2ResultMap.get(shopInfoDTO.getShopId())))
-            );
+            for (Map.Entry<Integer, ShopInfoDTO> entry : shopInfoDTOMap.entrySet()) {
+                resultList.add(new ObjectMapDTO<>(entry.getValue(), shopIds2ResultMap.get(entry.getKey())));
+            }
             return CommonResult.success(resultList);
         } catch (ParseException e) {
             LOGGER.error("解析时间异常!", e);

@@ -1,9 +1,10 @@
 package com.yaouguoji.platform.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.xianbester.api.dto.ShopCountDTO;
+import com.xianbester.api.service.ShopCountService;
 import com.yaouguoji.platform.common.CommonResult;
-import com.yaouguoji.platform.dto.ShopCountDTO;
 import com.yaouguoji.platform.enums.HttpStatus;
-import com.yaouguoji.platform.service.ShopCountService;
 import com.yaouguoji.platform.util.ShopInfoUtil;
 import lombok.Data;
 import org.joda.time.DateTime;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ShopCountController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopCountController.class);
 
-    @Resource
+    @Reference
     private ShopCountService shopCountService;
 
     /**
