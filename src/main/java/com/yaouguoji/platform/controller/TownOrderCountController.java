@@ -2,7 +2,7 @@ package com.yaouguoji.platform.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Maps;
-import com.xianbester.api.service.TodayPriceAndFrequencyService;
+import com.xianbester.api.service.OrderRecordService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
 import com.yaouguoji.platform.enums.HttpStatus;
@@ -20,12 +20,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * @author zhangqiang
+ * @date 2019-01-11
+ */
 @RestController
-public class TodayPriceAndFrequencyController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TodayPriceAndFrequencyController.class);
-    @Reference
-    private TodayPriceAndFrequencyService todayPriceAndFrequencyService;
+public class TownOrderCountController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TownOrderCountController.class);
+
+    @Reference
+    private OrderRecordService orderRecordService;
+
+    /**
+     * 今日销售额与频率
+     *
+     * @param start
+     * @param end
+     * @return
+     */
     @GetMapping(value = "/total/priceAndFrequency")
     public CommonResult todayPriceAndFrequency(@RequestParam(required = false, defaultValue = "") String start, @RequestParam(required = false, defaultValue = "") String end) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -48,7 +61,7 @@ public class TodayPriceAndFrequencyController {
             if (endTime.after(new Date())) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "结束时间必须小于当前时间");
             }
-            Map<String, BigDecimal> todayPriceAndFrequency = todayPriceAndFrequencyService.todayPriceAndFrequency(startTime, endTime);
+            Map<String, BigDecimal> todayPriceAndFrequency = orderRecordService.todayPriceAndFrequency(startTime, endTime);
             if (CollectionUtils.isEmpty(todayPriceAndFrequency)) {
                 return new CommonResultBuilder().code(200)
                         .message("无数据")
