@@ -35,6 +35,36 @@ public class TownOrderCountController {
     private OrderRecordService orderRecordService;
 
     /**
+     * 按时间段查询订单类型分布
+     *
+     * @param start
+     * @param end
+     * @return
+     */
+    @GetMapping(value = "/total/orderTypeDistribution")
+    public CommonResult orderTypeDistribution(String start, String end) {
+        if (start == null && end == null) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date startTime = sdf.parse(start);
+            Date endTime = sdf.parse(end);
+            if (startTime.after(endTime)) {
+                return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "开始时间必须小于结束时间");
+            }
+            Map<String, Integer> stringIntegerMap = orderRecordService.orderTypeDistribution(startTime, endTime);
+            if (CollectionUtils.isEmpty(stringIntegerMap)) {
+                return CommonResult.fail(404, "该时间段无数据");
+            }
+            return CommonResult.success(stringIntegerMap);
+        } catch (ParseException e) {
+            LOGGER.error("时间参数异常!", e);
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+    }
+
+    /**
      * 今日销售额与频率
      *
      * @param start
