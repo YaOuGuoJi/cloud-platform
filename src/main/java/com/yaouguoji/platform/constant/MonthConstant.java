@@ -65,4 +65,15 @@ public class MonthConstant {
      */
     public static final int DECEMBER = 12;
 
+    /**
+     * 七天
+     */
+    public static final int SEVEN_DAYS = 7;
+
+    /**
+     * 三十天
+     */
+    public static final int THIRTY_DAYS = 30;
+
+
 }

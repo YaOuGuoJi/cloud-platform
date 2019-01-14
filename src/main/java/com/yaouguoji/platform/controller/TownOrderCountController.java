@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.xianbester.api.service.OrderRecordService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
+import com.yaouguoji.platform.constant.MonthConstant;
 import com.yaouguoji.platform.enums.HttpStatus;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -74,6 +76,27 @@ public class TownOrderCountController {
             LOGGER.error("时间参数异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+    }
+
+    /**
+     * 7日或30日订单业态分布
+     *
+     * @return
+     */
+    @GetMapping("/order/type/count")
+    public CommonResult selectTypeCount(){
+        Map<String,Map<Integer,Object>> resultMap = Maps.newHashMap();
+        Map<Integer,Object> sevenDaysCountMap = orderRecordService.selectTypeCount(MonthConstant.SEVEN_DAYS);
+        if (CollectionUtils.isEmpty(sevenDaysCountMap)) {
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
+        resultMap.put("sevenDay",sevenDaysCountMap);
+        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(MonthConstant.THIRTY_DAYS);
+        if (CollectionUtils.isEmpty(oneMonthCountMap)){
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
+        resultMap.put("oneMonth",oneMonthCountMap);
+        return CommonResult.success(resultMap);
     }
 
     private void rebulidTime(Map<String, Integer> time) {
