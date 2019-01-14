@@ -111,7 +111,7 @@ public class TownOrderCountController {
     }
 
     /**
-     * 生成返回值
+     * 计算增长，生成新的map集合
      *
      * @param beforeMap 时间较早的集合
      * @param afterMap  时间较晚的集合
