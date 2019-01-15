@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.xianbester.api.service.OrderRecordService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
-import com.yaouguoji.platform.constant.MonthConstant;
 import com.yaouguoji.platform.enums.HttpStatus;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +28,10 @@ import java.util.Map;
 public class TownOrderCountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TownOrderCountController.class);
+
+    private static final int SEVEN_DAYS = 7;
+
+    private static final int THIRTY_DAYS = 30;
 
     @Reference
     private OrderRecordService orderRecordService;
@@ -116,12 +118,12 @@ public class TownOrderCountController {
     @GetMapping("/order/type/count")
     public CommonResult selectTypeCount(){
         Map<String,Map<Integer,Object>> resultMap = Maps.newHashMap();
-        Map<Integer,Object> sevenDaysCountMap = orderRecordService.selectTypeCount(MonthConstant.SEVEN_DAYS);
+        Map<Integer,Object> sevenDaysCountMap = orderRecordService.selectTypeCount(SEVEN_DAYS);
         if (CollectionUtils.isEmpty(sevenDaysCountMap)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
         resultMap.put("sevenDay",sevenDaysCountMap);
-        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(MonthConstant.THIRTY_DAYS);
+        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(THIRTY_DAYS);
         if (CollectionUtils.isEmpty(oneMonthCountMap)){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
