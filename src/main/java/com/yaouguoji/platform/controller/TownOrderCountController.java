@@ -29,6 +29,10 @@ public class TownOrderCountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TownOrderCountController.class);
 
+    private static final int SEVEN_DAYS = 7;
+
+    private static final int THIRTY_DAYS = 30;
+
     @Reference
     private OrderRecordService orderRecordService;
 
@@ -104,6 +108,27 @@ public class TownOrderCountController {
             LOGGER.error("时间参数异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+    }
+
+    /**
+     * 7日或30日订单业态分布
+     *
+     * @return
+     */
+    @GetMapping("/order/type/count")
+    public CommonResult selectTypeCount(){
+        Map<String,Map<Integer,Object>> resultMap = Maps.newHashMap();
+        Map<Integer,Object> sevenDaysCountMap = orderRecordService.selectTypeCount(SEVEN_DAYS);
+        if (CollectionUtils.isEmpty(sevenDaysCountMap)) {
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
+        resultMap.put("sevenDay",sevenDaysCountMap);
+        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(THIRTY_DAYS);
+        if (CollectionUtils.isEmpty(oneMonthCountMap)){
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
+        resultMap.put("oneMonth",oneMonthCountMap);
+        return CommonResult.success(resultMap);
     }
 
     private void rebulidTime(Map<String, Integer> time) {

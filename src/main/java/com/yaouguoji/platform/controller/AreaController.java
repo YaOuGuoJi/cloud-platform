@@ -100,10 +100,11 @@ public class AreaController {
         cameraRecordDTOS.forEach(cameraRecordDTO -> {
             int areaId = cameraId2AreaIdMap.get(cameraRecordDTO.getCameraId());
             ObjectMapDTO<AreaDTO, Integer> objectMapDTO = resultMap.get(areaId);
+            int peopleNumber = cameraRecordDTO.getCrFemaleNumber() + cameraRecordDTO.getCrMaleNumber();
             if (objectMapDTO == null) {
-                resultMap.put(areaId, new ObjectMapDTO<>(areaMap.get(areaId), cameraRecordDTO.getCrNumber()));
+                resultMap.put(areaId, new ObjectMapDTO<>(areaMap.get(areaId), peopleNumber));
             } else {
-                objectMapDTO.setNumber(objectMapDTO.getNumber() + cameraRecordDTO.getCrNumber());
+                objectMapDTO.setNumber(objectMapDTO.getNumber() + peopleNumber);
             }
         });
         return CommonResult.success(resultMap.values());
