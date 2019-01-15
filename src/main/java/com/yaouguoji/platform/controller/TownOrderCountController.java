@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -124,10 +123,10 @@ public class TownOrderCountController {
         OrderRecordCountDTO sevenDayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before7Days, now));
         OrderRecordCountDTO oneMonthData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(beforeOneMonth, now));
         Map<String, Map<String, BigDecimal>> orderCount = Maps.newHashMap();
-        orderCount.put("todayFrequency", createResult(twoDayData, oneDayData, "frequency"));
-        orderCount.put("todayPrice", createResult(twoDayData, oneDayData, "price"));
-        orderCount.put("todayPeopleNum", createResult(twoDayData, oneDayData, "peopleNum"));
-        orderCount.put("todayAveragePrice", createResult(twoDayData, oneDayData, "averagePrice"));
+        orderCount.put("todayFrequency", createResult(BigDecimal.valueOf(twoDayData.getFrequency()), BigDecimal.valueOf(oneDayData.getFrequency()), "frequency"));
+        orderCount.put("todayPrice", createResult(twoDayData.getPrice(), oneDayData.getPrice(), "price"));
+        orderCount.put("todayPeopleNum", createResult(BigDecimal.valueOf(twoDayData.getPeopleNum()), BigDecimal.valueOf(oneDayData.getPeopleNum()), "peopleNum"));
+        orderCount.put("todayAveragePrice", createResult(twoDayData.getAveragePrice(), oneDayData.getAveragePrice(), "averagePrice"));
         orderCount.put("sevenDayTotal", createTotal(sevenDayData));
         orderCount.put("oneMonthTotal", createTotal(oneMonthData));
         return CommonResult.success(orderCount);
@@ -167,43 +166,26 @@ public class TownOrderCountController {
     /**
      * 计算增长，生成新的map集合
      *
-     * @param beforeData
-     * @param afterData
-     * @param field
+     * @param beforeValue
+     * @param afterValue
      * @return
      */
-    Map<String, BigDecimal> createResult(OrderRecordCountDTO beforeData, OrderRecordCountDTO afterData, String field) {
-        Class dataClass = beforeData.getClass();
-        Field fieldClass;
+    Map<String, BigDecimal> createResult(BigDecimal beforeValue, BigDecimal afterValue, String name) {
         HashMap<String, BigDecimal> resultMap = Maps.newHashMap();
-        try {
-            fieldClass = dataClass.getDeclaredField(field);
-            fieldClass.setAccessible(true);
-            BigDecimal beforeValue = (BigDecimal) fieldClass.get(beforeData);
-            BigDecimal afterValue = (BigDecimal) fieldClass.get(afterData);
-            if (afterValue == null) {
-                resultMap.put(field, BigDecimal.ZERO);
+        if (afterValue == null) {
+            resultMap.put(name, BigDecimal.ZERO);
+        } else {
+            resultMap.put(name, afterValue);
+        }
+        if (beforeValue == null || beforeValue.equals(BigDecimal.ZERO)) {
+            if (resultMap.get(name).equals(BigDecimal.ZERO)) {
                 resultMap.put("raise", BigDecimal.ZERO);
                 return resultMap;
             }
-            resultMap.put(field, afterValue);
-            if (beforeValue.equals(BigDecimal.ZERO) || beforeValue == null) {
-                //当第一个比较值为0时，后一个比较值，为0：返回增长为0；不为0：返回增长500%
-                if (afterValue.equals(BigDecimal.ZERO)) {
-                    resultMap.put("raise", BigDecimal.ZERO);
-                    return resultMap;
-                }
-                resultMap.put("raise", BigDecimal.valueOf(5));
-                return resultMap;
-            }
-            resultMap.put("raise", afterValue.divide(beforeValue, 2, BigDecimal.ROUND_HALF_UP).subtract(BigDecimal.valueOf(1)));
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            LOGGER.error("反射获取字段类错误");
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            LOGGER.error("反射获取字段值错误");
+            resultMap.put("raise", BigDecimal.valueOf(5));
+            return resultMap;
         }
+        resultMap.put("raise", resultMap.get(name).divide(beforeValue, 2, BigDecimal.ROUND_HALF_UP).subtract(BigDecimal.valueOf(1)));
         return resultMap;
     }
 
@@ -223,12 +205,12 @@ public class TownOrderCountController {
         if (orderRecordCountDTO.getFrequency() == null) {
             resultMap.put("frequency", BigDecimal.ZERO);
         } else {
-            resultMap.put("frequency", orderRecordCountDTO.getFrequency());
+            resultMap.put("frequency", BigDecimal.valueOf(orderRecordCountDTO.getFrequency()));
         }
         if (orderRecordCountDTO.getPeopleNum() == null) {
             resultMap.put("peopleNum", BigDecimal.ZERO);
         }
-        resultMap.put("peopleNum", orderRecordCountDTO.getPeopleNum());
+        resultMap.put("peopleNum", BigDecimal.valueOf(orderRecordCountDTO.getPeopleNum()));
         return resultMap;
     }
 
