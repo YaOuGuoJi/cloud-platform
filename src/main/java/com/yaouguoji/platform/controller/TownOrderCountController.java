@@ -79,12 +79,12 @@ public class TownOrderCountController {
         try {
             if (start.compareTo("") == 0) {
                 Map<String, Integer> time = Maps.newHashMap();
-                rebulidTime(time);
+                rebuildTime(time);
                 start = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " 00:00:00";
             }
             if (end.compareTo("") == 0) {
                 Map<String, Integer> time = Maps.newHashMap();
-                rebulidTime(time);
+                rebuildTime(time);
                 end = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " " + time.get("hour") + ":" + time.get("minute") + ":" + time.get("second");
             }
             Date startTime = sdf.parse(start);
@@ -112,21 +112,20 @@ public class TownOrderCountController {
 
     @GetMapping("/town/orderRecordCount")
     public CommonResult townOrderRecordCount() {
-//        Date now = new Date("2018/10/30");
         Date now = new Date();
         Date before24h = new DateTime(now).minusHours(24).toDate();
         Date before48h = new DateTime(now).minusHours(48).toDate();
         Date before7Days = new DateTime(now).minusDays(7).toDate();
-        Date beforeOneMonth = new DateTime(now).minusMonths(1).toDate();
-        OrderRecordCountDTO oneDayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before24h, now));
-        OrderRecordCountDTO twoDayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before48h, before24h));
+        Date before30Days = new DateTime(now).minusDays(30).toDate();
+        OrderRecordCountDTO todayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before24h, now));
+        OrderRecordCountDTO yesterdayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before48h, before24h));
         OrderRecordCountDTO sevenDayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before7Days, now));
-        OrderRecordCountDTO oneMonthData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(beforeOneMonth, now));
+        OrderRecordCountDTO oneMonthData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before30Days, now));
         Map<String, Map<String, BigDecimal>> orderCount = Maps.newHashMap();
-        orderCount.put("todayFrequency", createResult(BigDecimal.valueOf(twoDayData.getFrequency()), BigDecimal.valueOf(oneDayData.getFrequency()), "frequency"));
-        orderCount.put("todayPrice", createResult(twoDayData.getPrice(), oneDayData.getPrice(), "price"));
-        orderCount.put("todayPeopleNum", createResult(BigDecimal.valueOf(twoDayData.getPeopleNum()), BigDecimal.valueOf(oneDayData.getPeopleNum()), "peopleNum"));
-        orderCount.put("todayAveragePrice", createResult(twoDayData.getAveragePrice(), oneDayData.getAveragePrice(), "averagePrice"));
+        orderCount.put("todayFrequency", createResult(BigDecimal.valueOf(yesterdayData.getFrequency()), BigDecimal.valueOf(todayData.getFrequency()), "frequency"));
+        orderCount.put("todayPrice", createResult(yesterdayData.getPrice(), todayData.getPrice(), "price"));
+        orderCount.put("todayPeopleNum", createResult(BigDecimal.valueOf(yesterdayData.getPeopleNum()), BigDecimal.valueOf(todayData.getPeopleNum()), "peopleNum"));
+        orderCount.put("todayAveragePrice", createResult(yesterdayData.getAveragePrice(), todayData.getAveragePrice(), "averagePrice"));
         orderCount.put("sevenDayTotal", createTotal(sevenDayData));
         orderCount.put("oneMonthTotal", createTotal(oneMonthData));
         return CommonResult.success(orderCount);
@@ -153,7 +152,7 @@ public class TownOrderCountController {
         return CommonResult.success(resultMap);
     }
 
-    private void rebulidTime(Map<String, Integer> time) {
+    private void rebuildTime(Map<String, Integer> time) {
         DateTime nowTime = new DateTime();
         time.put("year", nowTime.getYear());
         time.put("month", nowTime.getMonthOfYear());
@@ -197,20 +196,9 @@ public class TownOrderCountController {
      */
     private Map<String, BigDecimal> createTotal(OrderRecordCountDTO orderRecordCountDTO) {
         HashMap<String, BigDecimal> resultMap = Maps.newHashMap();
-        if (orderRecordCountDTO.getPrice() == null) {
-            resultMap.put("price", BigDecimal.ZERO);
-        } else {
-            resultMap.put("price", orderRecordCountDTO.getPrice());
-        }
-        if (orderRecordCountDTO.getFrequency() == null) {
-            resultMap.put("frequency", BigDecimal.ZERO);
-        } else {
-            resultMap.put("frequency", BigDecimal.valueOf(orderRecordCountDTO.getFrequency()));
-        }
-        if (orderRecordCountDTO.getPeopleNum() == null) {
-            resultMap.put("peopleNum", BigDecimal.ZERO);
-        }
-        resultMap.put("peopleNum", BigDecimal.valueOf(orderRecordCountDTO.getPeopleNum()));
+        resultMap.put("price", orderRecordCountDTO.getPrice() == null ? BigDecimal.ZERO : orderRecordCountDTO.getPrice());
+        resultMap.put("frequency", orderRecordCountDTO.getFrequency() == null ? BigDecimal.ZERO : BigDecimal.valueOf(orderRecordCountDTO.getFrequency()));
+        resultMap.put("peopleNum", orderRecordCountDTO.getPeopleNum() == null ? BigDecimal.ZERO : BigDecimal.valueOf(orderRecordCountDTO.getPeopleNum()));
         return resultMap;
     }
 
