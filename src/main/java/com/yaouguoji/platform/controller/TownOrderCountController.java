@@ -33,6 +33,10 @@ public class TownOrderCountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TownOrderCountController.class);
 
+    private static final int SEVEN_DAYS = 7;
+
+    private static final int THIRTY_DAYS = 30;
+
     @Reference
     private OrderRecordService orderRecordService;
 
@@ -137,15 +141,15 @@ public class TownOrderCountController {
      * @return
      */
     @GetMapping("/order/type/count")
-    public CommonResult selectTypeCount() {
-        Map<String, Map<Integer, Object>> resultMap = Maps.newHashMap();
-        Map<Integer, Object> sevenDaysCountMap = orderRecordService.selectTypeCount(MonthConstant.SEVEN_DAYS);
+    public CommonResult selectTypeCount(){
+        Map<String,Map<Integer,Object>> resultMap = Maps.newHashMap();
+        Map<Integer,Object> sevenDaysCountMap = orderRecordService.selectTypeCount(SEVEN_DAYS);
         if (CollectionUtils.isEmpty(sevenDaysCountMap)) {
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-        resultMap.put("sevenDay", sevenDaysCountMap);
-        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(MonthConstant.THIRTY_DAYS);
-        if (CollectionUtils.isEmpty(oneMonthCountMap)) {
+        resultMap.put("sevenDay",sevenDaysCountMap);
+        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(THIRTY_DAYS);
+        if (CollectionUtils.isEmpty(oneMonthCountMap)){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
         resultMap.put("oneMonth", oneMonthCountMap);
