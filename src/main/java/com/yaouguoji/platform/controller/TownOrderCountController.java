@@ -7,10 +7,12 @@ import com.xianbester.api.dto.OrderRecordRequest;
 import com.xianbester.api.service.OrderRecordService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
+import com.yaouguoji.platform.constant.MonthConstant;
 import com.yaouguoji.platform.enums.HttpStatus;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +36,36 @@ public class TownOrderCountController {
 
     @Reference
     private OrderRecordService orderRecordService;
+
+    /**
+     * 按时间段查询订单类型分布
+     *
+     * @param start
+     * @param end
+     * @return
+     */
+    @GetMapping(value = "/total/orderTypeDistribution")
+    public CommonResult orderTypeDistribution(String start, String end) {
+        if (start == null && end == null) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date startTime = sdf.parse(start);
+            Date endTime = sdf.parse(end);
+            if (startTime.after(endTime)) {
+                return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "开始时间必须小于结束时间");
+            }
+            Map<String, Integer> stringIntegerMap = orderRecordService.orderTypeDistribution(startTime, endTime);
+            if (CollectionUtils.isEmpty(stringIntegerMap)) {
+                return CommonResult.fail(404, "该时间段无数据");
+            }
+            return CommonResult.success(stringIntegerMap);
+        } catch (ParseException e) {
+            LOGGER.error("时间参数异常!", e);
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+    }
 
     /**
      * 今日销售额与频率
@@ -81,8 +113,8 @@ public class TownOrderCountController {
 
     @GetMapping("/town/orderRecordCount")
     public CommonResult townOrderRecordCount() {
-//        Date now = new Date("2018/10/30");
-        Date now = new Date();
+        Date now = new Date("2018/10/30");
+//        Date now = new Date();
         Date before24h = new DateTime(now).minusHours(24).toDate();
         Date before48h = new DateTime(now).minusHours(48).toDate();
         Date before7Days = new DateTime(now).minusDays(7).toDate();
@@ -99,6 +131,27 @@ public class TownOrderCountController {
         orderCount.put("sevenDayTotal", createTotal(sevenDayData));
         orderCount.put("oneMonthTotal", createTotal(oneMonthData));
         return CommonResult.success(orderCount);
+    }
+
+    /**
+     * 7日或30日订单业态分布
+     *
+     * @return
+     */
+    @GetMapping("/order/type/count")
+    public CommonResult selectTypeCount() {
+        Map<String, Map<Integer, Object>> resultMap = Maps.newHashMap();
+        Map<Integer, Object> sevenDaysCountMap = orderRecordService.selectTypeCount(MonthConstant.SEVEN_DAYS);
+        if (CollectionUtils.isEmpty(sevenDaysCountMap)) {
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
+        resultMap.put("sevenDay", sevenDaysCountMap);
+        Map<Integer, Object> oneMonthCountMap = orderRecordService.selectTypeCount(MonthConstant.THIRTY_DAYS);
+        if (CollectionUtils.isEmpty(oneMonthCountMap)) {
+            return CommonResult.fail(HttpStatus.NOT_FOUND);
+        }
+        resultMap.put("oneMonth", oneMonthCountMap);
+        return CommonResult.success(resultMap);
     }
 
     private void rebulidTime(Map<String, Integer> time) {
@@ -128,14 +181,17 @@ public class TownOrderCountController {
             fieldClass.setAccessible(true);
             BigDecimal beforeValue = (BigDecimal) fieldClass.get(beforeData);
             BigDecimal afterValue = (BigDecimal) fieldClass.get(afterData);
-            if (afterData == null) {
+            if (afterValue == null) {
                 resultMap.put(field, BigDecimal.ZERO);
-            } else {
-                resultMap.put(field, afterValue);
+                resultMap.put("raise", BigDecimal.ZERO);
+                return resultMap;
             }
-            if (beforeData.equals(BigDecimal.ZERO)) {
-                if (afterData.equals(BigDecimal.ZERO)) {
+            resultMap.put(field, afterValue);
+            if (beforeValue.equals(BigDecimal.ZERO) || beforeValue == null) {
+                //当第一个比较值为0时，后一个比较值，为0：返回增长为0；不为0：返回增长500%
+                if (afterValue.equals(BigDecimal.ZERO)) {
                     resultMap.put("raise", BigDecimal.ZERO);
+                    return resultMap;
                 }
                 resultMap.put("raise", BigDecimal.valueOf(5));
                 return resultMap;
