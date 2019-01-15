@@ -113,8 +113,8 @@ public class TownOrderCountController {
 
     @GetMapping("/town/orderRecordCount")
     public CommonResult townOrderRecordCount() {
-        Date now = new Date("2018/10/30");
-//        Date now = new Date();
+//        Date now = new Date("2018/10/30");
+        Date now = new Date();
         Date before24h = new DateTime(now).minusHours(24).toDate();
         Date before48h = new DateTime(now).minusHours(48).toDate();
         Date before7Days = new DateTime(now).minusDays(7).toDate();
@@ -124,10 +124,10 @@ public class TownOrderCountController {
         OrderRecordCountDTO sevenDayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before7Days, now));
         OrderRecordCountDTO oneMonthData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(beforeOneMonth, now));
         Map<String, Map<String, BigDecimal>> orderCount = Maps.newHashMap();
-        orderCount.put("frequency", createResult(twoDayData, oneDayData, "frequency"));
-        orderCount.put("price", createResult(twoDayData, oneDayData, "price"));
-        orderCount.put("peopleNum", createResult(twoDayData, oneDayData, "peopleNum"));
-        orderCount.put("averagePrice", createResult(twoDayData, oneDayData, "averagePrice"));
+        orderCount.put("todayFrequency", createResult(twoDayData, oneDayData, "frequency"));
+        orderCount.put("todayPrice", createResult(twoDayData, oneDayData, "price"));
+        orderCount.put("todayPeopleNum", createResult(twoDayData, oneDayData, "peopleNum"));
+        orderCount.put("todayAveragePrice", createResult(twoDayData, oneDayData, "averagePrice"));
         orderCount.put("sevenDayTotal", createTotal(sevenDayData));
         orderCount.put("oneMonthTotal", createTotal(oneMonthData));
         return CommonResult.success(orderCount);
