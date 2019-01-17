@@ -2,9 +2,12 @@ package com.yaouguoji.platform.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Maps;
+import com.xianbester.api.dto.OrderRecordCountDTO;
+import com.xianbester.api.dto.OrderRecordRequest;
 import com.xianbester.api.service.OrderRecordService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.common.CommonResultBuilder;
+import com.yaouguoji.platform.constant.MonthConstant;
 import com.yaouguoji.platform.enums.HttpStatus;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -79,12 +83,12 @@ public class TownOrderCountController {
         try {
             if (start.compareTo("") == 0) {
                 Map<String, Integer> time = Maps.newHashMap();
-                rebulidTime(time);
+                rebuildTime(time);
                 start = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " 00:00:00";
             }
             if (end.compareTo("") == 0) {
                 Map<String, Integer> time = Maps.newHashMap();
-                rebulidTime(time);
+                rebuildTime(time);
                 end = time.get("year") + "-" + time.get("month") + "-" + time.get("day") + " " + time.get("hour") + ":" + time.get("minute") + ":" + time.get("second");
             }
             Date startTime = sdf.parse(start);
@@ -95,8 +99,8 @@ public class TownOrderCountController {
             if (endTime.after(new Date())) {
                 return CommonResult.fail(HttpStatus.PARAMETER_ERROR.value, "结束时间必须小于当前时间");
             }
-            Map<String, BigDecimal> todayPriceAndFrequency = orderRecordService.todayPriceAndFrequency(startTime, endTime);
-            if (CollectionUtils.isEmpty(todayPriceAndFrequency)) {
+            OrderRecordCountDTO todayPriceAndFrequency = orderRecordService.townOrderRecordCount(createOrderRecordRequest(startTime, endTime));
+            if (todayPriceAndFrequency == null) {
                 return new CommonResultBuilder().code(200)
                         .message("无数据")
                         .data("price", 0)
@@ -108,6 +112,27 @@ public class TownOrderCountController {
             LOGGER.error("时间参数异常!", e);
             return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
+    }
+
+    @GetMapping("/town/orderRecordCount")
+    public CommonResult townOrderRecordCount() {
+        Date now = new Date();
+        Date before24h = new DateTime(now).minusHours(24).toDate();
+        Date before48h = new DateTime(now).minusHours(48).toDate();
+        Date before7Days = new DateTime(now).minusDays(7).toDate();
+        Date before30Days = new DateTime(now).minusDays(30).toDate();
+        OrderRecordCountDTO todayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before24h, now));
+        OrderRecordCountDTO yesterdayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before48h, before24h));
+        OrderRecordCountDTO sevenDayData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before7Days, now));
+        OrderRecordCountDTO oneMonthData = orderRecordService.townOrderRecordCount(createOrderRecordRequest(before30Days, now));
+        Map<String, Map<String, BigDecimal>> orderCount = Maps.newHashMap();
+        orderCount.put("todayFrequency", createResult(BigDecimal.valueOf(yesterdayData.getFrequency()), BigDecimal.valueOf(todayData.getFrequency()), "frequency"));
+        orderCount.put("todayPrice", createResult(yesterdayData.getPrice(), todayData.getPrice(), "price"));
+        orderCount.put("todayPeopleNum", createResult(BigDecimal.valueOf(yesterdayData.getPeopleNum()), BigDecimal.valueOf(todayData.getPeopleNum()), "peopleNum"));
+        orderCount.put("todayAveragePrice", createResult(yesterdayData.getAveragePrice(), todayData.getAveragePrice(), "averagePrice"));
+        orderCount.put("sevenDayTotal", createTotal(sevenDayData));
+        orderCount.put("oneMonthTotal", createTotal(oneMonthData));
+        return CommonResult.success(orderCount);
     }
 
     /**
@@ -127,11 +152,11 @@ public class TownOrderCountController {
         if (CollectionUtils.isEmpty(oneMonthCountMap)){
             return CommonResult.fail(HttpStatus.NOT_FOUND);
         }
-        resultMap.put("oneMonth",oneMonthCountMap);
+        resultMap.put("oneMonth", oneMonthCountMap);
         return CommonResult.success(resultMap);
     }
 
-    private void rebulidTime(Map<String, Integer> time) {
+    private void rebuildTime(Map<String, Integer> time) {
         DateTime nowTime = new DateTime();
         time.put("year", nowTime.getYear());
         time.put("month", nowTime.getMonthOfYear());
@@ -141,4 +166,57 @@ public class TownOrderCountController {
         time.put("second", nowTime.getSecondOfMinute());
     }
 
+    /**
+     * 计算增长，生成新的map集合
+     *
+     * @param beforeValue
+     * @param afterValue
+     * @return
+     */
+    Map<String, BigDecimal> createResult(BigDecimal beforeValue, BigDecimal afterValue, String name) {
+        HashMap<String, BigDecimal> resultMap = Maps.newHashMap();
+        if (afterValue == null) {
+            resultMap.put(name, BigDecimal.ZERO);
+        } else {
+            resultMap.put(name, afterValue);
+        }
+        if (beforeValue == null || beforeValue.equals(BigDecimal.ZERO)) {
+            if (resultMap.get(name).equals(BigDecimal.ZERO)) {
+                resultMap.put("raise", BigDecimal.ZERO);
+                return resultMap;
+            }
+            resultMap.put("raise", BigDecimal.valueOf(5));
+            return resultMap;
+        }
+        resultMap.put("raise", resultMap.get(name).divide(beforeValue, 2, BigDecimal.ROUND_HALF_UP).subtract(BigDecimal.valueOf(1)));
+        return resultMap;
+    }
+
+    /**
+     * 生成概况
+     *
+     * @param orderRecordCountDTO
+     * @return
+     */
+    private Map<String, BigDecimal> createTotal(OrderRecordCountDTO orderRecordCountDTO) {
+        HashMap<String, BigDecimal> resultMap = Maps.newHashMap();
+        resultMap.put("price", orderRecordCountDTO.getPrice() == null ? BigDecimal.ZERO : orderRecordCountDTO.getPrice());
+        resultMap.put("frequency", orderRecordCountDTO.getFrequency() == null ? BigDecimal.ZERO : BigDecimal.valueOf(orderRecordCountDTO.getFrequency()));
+        resultMap.put("peopleNum", orderRecordCountDTO.getPeopleNum() == null ? BigDecimal.ZERO : BigDecimal.valueOf(orderRecordCountDTO.getPeopleNum()));
+        return resultMap;
+    }
+
+    /**
+     * 创建service层传入参数
+     *
+     * @param start
+     * @param end
+     * @return
+     */
+    private OrderRecordRequest createOrderRecordRequest(Date start, Date end) {
+        OrderRecordRequest orderRecordRequest = new OrderRecordRequest();
+        orderRecordRequest.setStartTime(start);
+        orderRecordRequest.setEndTime(end);
+        return orderRecordRequest;
+    }
 }
