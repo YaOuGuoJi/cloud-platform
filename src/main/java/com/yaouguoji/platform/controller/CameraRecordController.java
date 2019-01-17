@@ -27,11 +27,11 @@ public class CameraRecordController {
      */
     @GetMapping("/queryVisitors/queryOneMonthVisitors")
     public CommonResult queryOneMonthVisitors() {
-        Map<String, Integer> OneMonthTotalVisitors = cameraRecordService.queryVisitorsByTime(ONE_MONTH);
-        if (OneMonthTotalVisitors.isEmpty()) {
+        Map<String, Integer> oneMonthTotalVisitors = cameraRecordService.queryVisitorsByTime(ONE_MONTH);
+        if (oneMonthTotalVisitors.isEmpty()) {
             return CommonResult.fail(404, "无数据");
         }
-        return CommonResult.success(OneMonthTotalVisitors);
+        return CommonResult.success(oneMonthTotalVisitors);
     }
 
     /**
