@@ -99,30 +99,17 @@ public class BigEventController {
             map.put("newApply", newApply);
             return CommonResult.success(map);
         }
-        try {
-            for (BigEventDTO bigEventDTO : eventListInMonth) {
-                if (bigEventDTO.getBeginTime().before(start) && bigEventDTO.getEndTime().after(start)) {
-                    String locationIds = bigEventDTO.getLocation();
-                    List<String> locationIdList = Stream.of(locationIds.split(",")).collect(Collectors.toList());
-                    Integer result = cameraRecordService.queryParticipantByTime(locationIdList, start, bigEventDTO.getEndTime());
-                    int eventOnlineApplyNum = bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum();
-                    int newApplyNum = bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply();
-                    offline += result;
-                    online += eventOnlineApplyNum;
-                    newApply += newApplyNum;
-                }
-                int onlineApply = bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum();
-                int offlineApply = bigEventDTO.getEventJoinNum() == null ? 0 : bigEventDTO.getEventJoinNum();
-                int newAppluNum = bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply();
-                online += onlineApply;
-                offline += offlineApply;
-                newApply += newAppluNum;
+        for (BigEventDTO bigEventDTO : eventListInMonth) {
+            if (bigEventDTO.getBeginTime().before(start) && bigEventDTO.getEndTime().after(start)) {
+                String locationIds = bigEventDTO.getLocation();
+                List<String> locationIdList = Stream.of(locationIds.split(",")).collect(Collectors.toList());
+                offline += cameraRecordService.queryParticipantByTime(locationIdList, start, bigEventDTO.getEndTime());
+                online += bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum();
+                newApply += bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply();
             }
-        } catch (Exception e) {
-            map.put("online", online);
-            map.put("offline", offline);
-            map.put("newApply", newApply);
-            return CommonResult.success(map);
+            online += bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum();
+            offline += bigEventDTO.getEventJoinNum() == null ? 0 : bigEventDTO.getEventJoinNum();
+            newApply += bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply();
         }
         map.put("online", online);
         map.put("offline", offline);
