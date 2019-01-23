@@ -88,9 +88,7 @@ public class BigEventController {
     public CommonResult numberOfParticipantsInMonthEvent() {
         Date start = new DateTime().minusDays(ONE_MONTH).toDate();
         Date end = new Date();
-        int online = 0;
-        int offline = 0;
-        int newApply = 0;
+        int online = 0, offline = 0, newApply = 0;
         Map<String, Integer> map = Maps.newHashMap();
         List<BigEventDTO> eventListInMonth = bigEventService.findEventListInMonth(start, end);
         if (CollectionUtils.isEmpty(eventListInMonth)) {
