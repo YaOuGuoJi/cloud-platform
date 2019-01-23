@@ -137,7 +137,9 @@ public class BigEventController {
      */
     @GetMapping("/event/countEventMonth")
     public CommonResult numberOfEventInMonth() {
-        Integer result = bigEventService.countEventInMonth(ONE_MONTH);
+        Date start = new DateTime().minusDays(ONE_MONTH).toDate();
+        Date end = new Date();
+        Integer result = bigEventService.countEventInMonth(start, end);
         Map<String, Integer> map = Maps.newHashMap();
         map.put("totalInMonth", result);
         return CommonResult.success(map);
@@ -157,8 +159,8 @@ public class BigEventController {
         }
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByPhoneNum(phoneNum);
         if (userInfoDTO == null) {
-            String newApply = bigEventDTO.getNewApply() + 1 + "";
-            String applyNum = bigEventDTO.getEventApplyNum() + 1 + "";
+            Integer newApply = bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply() + 1;
+            Integer applyNum = bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum() + 1;
             int updateNewApply = bigEventService.updateByUniqueField("NewApply", newApply, bigEventDTO.getId());
             int updateApply = bigEventService.updateByUniqueField("EventApplyNum", applyNum, bigEventDTO.getId());
             if (updateNewApply < 0 || updateApply < 0) {
