@@ -2,10 +2,12 @@ package com.yaouguoji.platform.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Maps;
+import com.xianbester.api.constant.OrderStatus;
 import com.xianbester.api.dto.BigEventDTO;
 import com.xianbester.api.dto.UserInfoDTO;
 import com.xianbester.api.service.BigEventService;
 import com.xianbester.api.service.CameraRecordService;
+import com.xianbester.api.service.OrderRecordService;
 import com.xianbester.api.service.UserInfoService;
 import com.yaouguoji.platform.common.CommonResult;
 import com.yaouguoji.platform.enums.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,9 @@ public class BigEventController {
 
     @Reference
     private UserInfoService userInfoService;
+
+    @Reference
+    private OrderRecordService orderRecordService;
 
     @ModelAttribute
     public BigEventDTO get(Integer eventId) {
@@ -98,10 +104,15 @@ public class BigEventController {
             return CommonResult.success(map);
         }
         for (BigEventDTO bigEventDTO : eventListInMonth) {
+            String locationIds = bigEventDTO.getLocation();
+            List<String> locationIdList = Stream.of(locationIds.split(",")).collect(Collectors.toList());
             if (bigEventDTO.getBeginTime().before(start) && bigEventDTO.getEndTime().after(start)) {
-                String locationIds = bigEventDTO.getLocation();
-                List<String> locationIdList = Stream.of(locationIds.split(",")).collect(Collectors.toList());
                 offline += cameraRecordService.queryParticipantByTime(locationIdList, start, bigEventDTO.getEndTime());
+                online += bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum();
+                newApply += bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply();
+            }
+            if (bigEventDTO.getBeginTime().before(end) && bigEventDTO.getEndTime().after(end)) {
+                offline += cameraRecordService.queryParticipantByTime(locationIdList, bigEventDTO.getBeginTime(), end);
                 online += bigEventDTO.getEventApplyNum() == null ? 0 : bigEventDTO.getEventApplyNum();
                 newApply += bigEventDTO.getNewApply() == null ? 0 : bigEventDTO.getNewApply();
             }
@@ -112,6 +123,42 @@ public class BigEventController {
         map.put("online", online);
         map.put("offline", offline);
         map.put("newApply", newApply);
+        return CommonResult.success(map);
+    }
+
+    /**
+     * 查询一月内活动总金额
+     *
+     * @return
+     */
+    @GetMapping("/event/amountInMonth")
+    public CommonResult eventAmountInMonth() {
+        Date start = new DateTime().minusDays(ONE_MONTH).toDate();
+        Date end = new Date();
+        List<BigEventDTO> eventListInMonth = bigEventService.findEventListInMonth(start, end);
+        Map<String, BigDecimal> map = Maps.newHashMap();
+        BigDecimal amount = new BigDecimal("0.00");
+        if (CollectionUtils.isEmpty(eventListInMonth)) {
+            map.put("amountInMonth", amount);
+            return CommonResult.success(map);
+        }
+        for (BigEventDTO bigEventDTO : eventListInMonth) {
+            String shopIds = bigEventDTO.getShopIdList();
+            List<String> shopIdList = Stream.of(shopIds).collect(Collectors.toList());
+            if (bigEventDTO.getBeginTime().before(start) && bigEventDTO.getEndTime().after(start)) {
+                BigDecimal totalAmountInInterval =
+                        orderRecordService.findAmountInMonthByShopIdList(shopIdList, start, bigEventDTO.getEndTime(), OrderStatus.COMPLETE);
+                amount = amount.add(totalAmountInInterval == null ? new BigDecimal("0.00") : totalAmountInInterval);
+            }
+            if (bigEventDTO.getBeginTime().before(end) && bigEventDTO.getEndTime().after(end)) {
+                BigDecimal totalAmountInInterval =
+                        orderRecordService.findAmountInMonthByShopIdList(shopIdList, bigEventDTO.getBeginTime(), end, OrderStatus.COMPLETE);
+                amount = amount.add(totalAmountInInterval == null ? new BigDecimal("0.00") : totalAmountInInterval);
+            }
+            BigDecimal totalAmountInMonth = orderRecordService.findAmountInMonthByShopIdList(shopIdList, start, end, OrderStatus.COMPLETE);
+            amount = amount.add(totalAmountInMonth == null ? new BigDecimal("0.00") : totalAmountInMonth);
+        }
+        map.put("amountInMonth", amount);
         return CommonResult.success(map);
     }
 
