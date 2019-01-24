@@ -78,7 +78,7 @@ public class CameraRecordController {
      */
     @GetMapping("/now/peopleSpread")
     public CommonResult queryAreaPeopleNum() {
-        List<TownCountDTO> townCountDTOs = cameraRecordService.locationPeopleCount(new DateTime(new Date()).minusMonths(10).toDate(), new Date());
+        List<TownCountDTO> townCountDTOs = cameraRecordService.locationPeopleCount(new DateTime(new Date()).minusHours(3).toDate(), new Date());
         if (CollectionUtils.isEmpty(townCountDTOs)) {
             return CommonResult.fail(404, "暂时没有数据");
         }
