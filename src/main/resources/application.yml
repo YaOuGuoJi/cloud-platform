@@ -12,6 +12,7 @@ spring:
     default-domain: cloud-platform-web
   dubbo:
     application:
+      logger: slf4j
       name: cloud-platform-web
       registry:
         address: zookeeper://39.106.38.77:2181
